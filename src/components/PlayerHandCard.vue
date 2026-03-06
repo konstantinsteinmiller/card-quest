@@ -1,6 +1,7 @@
 <template lang="pug">
   div.flex.items-center.justify-center.rounded-xl.transition-all.duration-300(
     :class="isActive ? 'ring-2 ring-blue-500 bg-blue-900/40' : 'opacity-60'"
+    class="min-h-[var(--hand-card-size)] min-w-[var(--hand-card-size)]"
   )
     div.flex.p-1(class="flex-row gap-0.5 landscape:flex-col lg:flex-col lg:gap-2")
       div(

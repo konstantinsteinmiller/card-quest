@@ -1,13 +1,16 @@
 <template lang="pug">
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
-    class="select-none"
+    class="select-none landscape:p-0.5"
   )
-    // Main Game Layout
+    //- Top Score Bar
+    ScoreBoard(:board="board")
+
+    //- Main Game Layout
     div.flex.items-center.justify-center.w-full.h-full.gap-1(
       class="flex-col landscape:flex-row lg:flex-row lg:gap-4"
     )
-      // NPC Hand
-      div.flex-shrink-0.flex.items-center.justify-center.w-full(
+      //- NPC Hand Container
+      div.hand-container.flex-shrink-0.flex.items-center.justify-center.w-full(
         class="h-auto landscape:w-auto landscape:h-full"
       )
         EnemyHandCard(
@@ -15,7 +18,7 @@
           :is-active="turn === 'npc'"
         )
 
-      // 3x3 Board - flex-grow removed per request
+      //- 3x3 Board
       div.flex.items-center.justify-center.bg-slate-700.p-1.rounded-lg.shadow-2xl(
         class="max-w-full max-h-full sm:p-2"
       )
@@ -30,8 +33,8 @@
               )
                 FairyCardDisplay(v-if="slot.card" :card="slot.card")
 
-      // Player Hand
-      div.flex-shrink-0.flex.items-center.justify-center.w-full(
+      //- Player Hand Container
+      div.hand-container.flex-shrink-0.flex.items-center.justify-center.w-full(
         class="h-auto landscape:w-auto landscape:h-full"
       )
         PlayerHandCard(
@@ -42,7 +45,7 @@
           @select="handleTapSelect"
         )
 
-    // Minimalist Floating Reset
+    //- Reset Button
     button.absolute.bottom-4.right-4.bg-slate-800.rounded-full(
       @click="resetGame"
       class="p-2 opacity-40 hover:opacity-100 transition-opacity z-50"
@@ -58,6 +61,7 @@ import {useInteraction} from '@/use/useInteraction'
 import PlayerHandCard from '@/components/PlayerHandCard'
 import EnemyHandCard from '@/components/EnemyHandCard'
 import FairyCardDisplay from '@/components/FairyCardDisplay'
+import ScoreBoard from '@/components/ScoreBoard'
 
 const {turn, playerHand, npcHand, board, resetGame, placeCard} = useMatch()
 const {
@@ -78,11 +82,11 @@ onMounted(() => {
 <style lang="sass">
 :root
   --board-card-size: 31vw
-  --hand-card-size: 16vw
+  --hand-card-size: 18.5vw
 
   @media (orientation: landscape)
-    --board-card-size: 26vh
-    --hand-card-size: 14vh
+    --board-card-size: 24vh
+    --hand-card-size: 15.5vh
 
   @media (min-width: 1024px)
     --board-card-size: 160px
@@ -99,7 +103,11 @@ onMounted(() => {
   width: 100%
   height: 100%
 
-.flex-shrink-0
+// CRITICAL: Keep hand container from collapsing
+.hand-container
+  min-height: var(--hand-card-size)
+  min-width: var(--hand-card-size)
+
   .fairy-card
     width: var(--hand-card-size)
     height: var(--hand-card-size)
