@@ -1,21 +1,28 @@
 <template lang="pug">
-  div.flex.flex-col.gap-2
-    h3.text-center.text-blue-300 Player
-    div.flex.flex-col.gap-2
+  div.flex.items-center.justify-center.rounded-xl.transition-all.duration-300(
+    :class="isActive ? 'ring-2 ring-blue-500 bg-blue-900/40' : 'opacity-60'"
+  )
+    div.flex.p-1(class="flex-row gap-0.5 landscape:flex-col lg:flex-col lg:gap-2")
       div(
         v-for="card in cards"
         :key="card.id"
         draggable="true"
         @dragstart="emit('dragstart', $event, card)"
-        class="cursor-grab active:cursor-grabbing transform transition-transform hover:-translate-x-2"
+        @click.stop="emit('select', card)"
+        class="cursor-pointer transition-all duration-200"
+        :class="[selectedId === card.id ? '-translate-y-2 ring-2 ring-green-400 rounded-lg z-10' : 'hover:scale-105']"
       )
         FairyCardDisplay(:card="card")
 </template>
 
 <script setup lang="ts">
-import type {FairyCard} from '@/types/game'
+import type { FairyCard } from '@/types/game'
 import FairyCardDisplay from '@/components/FairyCardDisplay'
 
-defineProps<{ cards: FairyCard[] }>()
-const emit = defineEmits(['dragstart'])
+defineProps<{
+  cards: FairyCard[]
+  isActive: boolean
+  selectedId: string | null
+}>()
+const emit = defineEmits(['dragstart', 'select'])
 </script>

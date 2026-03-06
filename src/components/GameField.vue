@@ -1,161 +1,102 @@
 <template lang="pug">
-  div.min-h-screen.bg-slate-900.text-white.p-8.flex.flex-col.items-center.justify-center.gap-8
-    h1.text-3xl.font-bold.text-purple-400 Fairy Card Battle
-
-    // Status Bar
-    div.flex.gap-10.items-center.bg-slate-800.p-4.rounded-xl.shadow-lg
-      div(:class="{'text-blue-400 font-bold scale-110': turn === 'player'}") Player Turn
-      div.text-2xl VS
-      div(:class="{'text-red-400 font-bold scale-110': turn === 'npc'}") NPC Turn
-
-    div.flex.gap-12.items-start
+  div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-2.touch-none(class="select-none")
+    // Main Game Area
+    div.flex.items-center.justify-center.w-full.h-full.gap-2(
+      class="flex-col landscape:flex-row lg:flex-row lg:gap-8"
+    )
       // NPC Hand
-      EnemyHandCard(:cards="npcHand")
+      EnemyHandCard.order-1(
+        :cards="npcHand"
+        :is-active="turn === 'npc'"
+        class="hand-wrapper-npc"
+      )
 
       // 3x3 Board
-      div.grid.grid-cols-3.gap-2.bg-slate-700.p-2.rounded-lg.shadow-2xl
-        template(v-for="(row, y) in board" :key="y")
-          div.flex.gap-2(v-for="(slot, x) in row" :key="x")
-            div.w-32.h-44.bg-slate-800.rounded-md.border-2.border-dashed.border-slate-600.relative(
-              @dragover.prevent
-              @drop="onDrop($event, x, y)"
-              :class="{'border-purple-500 bg-slate-700': !slot.card}"
-            )
-              transition(name="flip")
+      div.order-2.bg-slate-700.p-1.rounded-lg.shadow-2xl(
+        class="max-w-[98vw] sm:p-2"
+      )
+        div.grid.grid-cols-3.gap-1(class="sm:gap-2")
+          template(v-for="(row, y) in board" :key="y")
+            div.contents(v-for="(slot, x) in row" :key="x")
+              div.game-slot.bg-slate-800.rounded-md.border-2.border-dashed.border-slate-600.relative.overflow-hidden(
+                @dragover.prevent
+                @drop="handleDrop($event, x, y)"
+                @click="handleSlotTap(x, y)"
+                :class="{'border-purple-500 bg-slate-700': !slot.card}"
+              )
                 FairyCardDisplay(v-if="slot.card" :card="slot.card")
 
       // Player Hand
-      PlayerHandCard(:cards="playerHand" @dragstart="handleDragStart")
+      PlayerHandCard.order-3(
+        :cards="playerHand"
+        :is-active="turn === 'player'"
+        :selected-id="selectedCardId"
+        @dragstart="handleDragStart"
+        @select="handleTapSelect"
+        class="hand-wrapper-player"
+      )
 
-    button.mt-4.px-6.py-2.bg-purple-600.rounded-full(@click="resetGame") Reset Game
+    // Minimalist Floating Reset
+    button.absolute.bottom-4.right-4.bg-slate-800.rounded-full(
+      @click="resetGame"
+      class="p-2 opacity-40 hover:opacity-100 transition-opacity z-50"
+    )
+      span.text-xl 🔄
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, watch} from 'vue'
-import type {FairyCard, BoardSlot} from '@/types/game'
+import { onMounted } from 'vue'
+// Composables located in @/use/
+import { useMatch } from '@/use/useMatch'
+import { useNPC } from '@/use/useNPC'
+import { useInteraction } from '@/use/useInteraction'
+// Components
 import PlayerHandCard from '@/components/PlayerHandCard'
 import EnemyHandCard from '@/components/EnemyHandCard'
 import FairyCardDisplay from '@/components/FairyCardDisplay'
 
-const turn = ref<'player' | 'npc'>('player')
-const playerHand = ref<FairyCard[]>([])
-const npcHand = ref<FairyCard[]>([])
-const board = ref<BoardSlot[][]>([])
+const { turn, playerHand, npcHand, board, resetGame, placeCard } = useMatch()
+const { selectedCardId, handleDragStart, handleDrop, handleTapSelect, handleSlotTap } = useInteraction(playerHand, placeCard)
 
-// Initialize 3x3 board
-const initBoard = () => {
-  board.value = Array.from({length: 3}, (_, y) =>
-    Array.from({length: 3}, (_, x) => ({x, y, card: null}))
-  )
-}
+// Initialize NPC AI
+useNPC(turn, npcHand, board, placeCard)
 
-const generateRandomCard = (owner: 'player' | 'npc'): FairyCard => ({
-  id: Math.random().toString(36).substring(2, 9),
-  name: 'Fairy',
-  values: {
-    top: Math.floor(Math.random() * 10) + 1,
-    right: Math.floor(Math.random() * 10) + 1,
-    bottom: Math.floor(Math.random() * 10) + 1,
-    left: Math.floor(Math.random() * 10) + 1
-  },
-  owner
+onMounted(() => {
+  resetGame()
 })
-
-const resetGame = () => {
-  initBoard()
-  playerHand.value = Array.from({length: 5}, () => generateRandomCard('player'))
-  npcHand.value = Array.from({length: 5}, () => generateRandomCard('npc'))
-  turn.value = 'player'
-}
-
-// Battle Logic
-const evaluateCapture = (x: number, y: number) => {
-  const currentCard = board.value[y][x].card
-  if (!currentCard) return
-
-  const neighbors = [
-    {dx: 0, dy: -1, curSide: 'top', oppSide: 'bottom'},
-    {dx: 1, dy: 0, curSide: 'right', oppSide: 'left'},
-    {dx: 0, dy: 1, curSide: 'bottom', oppSide: 'top'},
-    {dx: -1, dy: 0, curSide: 'left', oppSide: 'right'}
-  ]
-
-  neighbors.forEach(({dx, dy, curSide, oppSide}) => {
-    const nx = x + dx
-    const ny = y + dy
-
-    if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
-      const targetSlot = board.value[ny][nx]
-      if (targetSlot.card && targetSlot.card.owner !== currentCard.owner) {
-        const attackerVal = (currentCard.values as any)[curSide]
-        const defenderVal = (targetSlot.card.values as any)[oppSide]
-
-        if (attackerVal > defenderVal) {
-          targetSlot.card.owner = currentCard.owner
-        }
-      }
-    }
-  })
-}
-
-// Interaction
-const handleDragStart = (event: DragEvent, card: FairyCard) => {
-  if (turn.value !== 'player') return
-  event.dataTransfer?.setData('cardId', card.id)
-}
-
-const onDrop = (event: DragEvent, x: number, y: number) => {
-  if (turn.value !== 'player' || board.value[y][x].card) return
-
-  const cardId = event.dataTransfer?.getData('cardId')
-  const cardIndex = playerHand.value.findIndex(c => c.id === cardId)
-
-  if (cardIndex !== -1) {
-    const card = playerHand.value.splice(cardIndex, 1)[0]
-    board.value[y][x].card = card
-    evaluateCapture(x, y)
-    turn.value = 'npc'
-  }
-}
-
-// NPC AI Logic
-const npcMove = () => {
-  if (turn.value !== 'npc') return
-
-  setTimeout(() => {
-    // Find empty slots
-    const emptySlots: { x: number, y: number }[] = []
-    board.value.forEach((row, y) => {
-      row.forEach((slot, x) => {
-        if (!slot.card) emptySlots.push({x, y})
-      })
-    })
-
-    if (emptySlots.length > 0 && npcHand.value.length > 0) {
-      const randomSlot = emptySlots[Math.floor(Math.random() * emptySlots.length)]
-      const card = npcHand.value.splice(0, 1)[0]
-      board.value[randomSlot.y][randomSlot.x].card = card
-      evaluateCapture(randomSlot.x, randomSlot.y)
-      turn.value = 'player'
-    }
-  }, 1000)
-}
-
-watch(turn, (newTurn) => {
-  if (newTurn === 'npc') npcMove()
-})
-
-onMounted(resetGame)
 </script>
 
-<style lang="scss">
-.flip-enter-active {
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-}
+<style lang="sass">
+:root
+  // Board fills width in portrait, height in landscape
+  --board-card-size: min(12vh, 31vw)
+  // Hand cards are slightly smaller to ensure they fit 5 in a row
+  --hand-card-size: min(9vh, 18vw)
 
-.flip-enter-from {
-  transform: rotateY(180deg);
-  opacity: 0;
-}
+  @media (orientation: landscape)
+    --board-card-size: min(25vh, 20vw)
+    --hand-card-size: min(15vh, 12vw)
+
+  @media (min-width: 1024px)
+    --board-card-size: 140px
+    --hand-card-size: 110px
+
+.game-slot
+  width: var(--board-card-size)
+  height: var(--board-card-size)
+  display: flex
+  align-items: stretch
+  justify-content: stretch
+
+.hand-wrapper-player, .hand-wrapper-npc
+  .fairy-card
+    width: var(--hand-card-size)
+    height: var(--hand-card-size)
+
+.touch-none
+  touch-action: none
+
+.select-none
+  user-select: none
+  -webkit-tap-highlight-color: transparent
 </style>
