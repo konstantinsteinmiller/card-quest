@@ -1,4 +1,3 @@
-// src/use/useNPC.ts
 import {watch} from 'vue'
 import type {FairyCard, BoardSlot} from '@/types/game'
 

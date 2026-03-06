@@ -1,10 +1,12 @@
 import {ref, computed} from 'vue'
 import type {FairyCard, BoardSlot} from '@/types/game'
+import { useModels } from '@/use/useModels'
 
 export const useMatch = () => {
   const turn = ref<'player' | 'npc'>('player')
   const playerHand = ref<FairyCard[]>([])
   const npcHand = ref<FairyCard[]>([])
+  const {fairyModels} = useModels()
 
   const board = ref<BoardSlot[][]>(Array.from({length: 3}, (_, y) =>
     Array.from({length: 3}, (_, x) => ({x, y, card: null}))
@@ -15,17 +17,23 @@ export const useMatch = () => {
     return board.value.every(row => row.every(slot => slot.card !== null))
   })
 
-  const generateRandomCard = (owner: 'player' | 'npc'): FairyCard => ({
-    id: Math.random().toString(36).substring(2, 9),
-    name: 'Fairy',
-    values: {
-      top: Math.floor(Math.random() * 9) + 1,
-      right: Math.floor(Math.random() * 9) + 1,
-      bottom: Math.floor(Math.random() * 9) + 1,
-      left: Math.floor(Math.random() * 9) + 1
-    },
-    owner
-  })
+  const generateRandomCard = (owner: 'player' | 'npc'): FairyCard => {
+    const randomFairy = Math.floor(Math.random() * fairyModels.length)
+    const fairyName = fairyModels[randomFairy]?.name
+
+    return {
+      id: Math.random().toString(36).substring(2, 9),
+      name: `${fairyName}`,
+      values: {
+        top: Math.floor(Math.random() * 9) + 1,
+        right: Math.floor(Math.random() * 9) + 1,
+        bottom: Math.floor(Math.random() * 9) + 1,
+        left: Math.floor(Math.random() * 9) + 1
+      },
+      owner,
+      image: `/models/${fairyModels[randomFairy]?.model}/preview_400x400.webp`
+    }
+  }
 
   const resetGame = () => {
     board.value.forEach(row => row.forEach(slot => {
