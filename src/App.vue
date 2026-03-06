@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <h1>You did it!</h1>
+  <h1 class="text-green-400 text-2xl">You did it!</h1>
   <p>
     Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
     documentation
@@ -9,3 +9,8 @@
 </template>
 
 <style scoped></style>
+<style lang="sass">
+p
+  color: blue
+$color: red
+</style>
