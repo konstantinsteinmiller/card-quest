@@ -4,11 +4,11 @@
     class="min-h-[var(--hand-card-size)] min-w-[var(--hand-card-size)]"
   )
     div.flex.p-1(class="flex-row gap-0.5 landscape:flex-col lg:flex-col lg:gap-2")
-      div.game-card.bg-gradient-to-br.from-red-900.to-slate-800.rounded-lg.border-2.border-red-700.flex.items-center.justify-center(
+      div.relative.game-card.rounded-lg.flex.items-center.justify-center(
         v-for="card in cards"
         :key="card.id"
       )
-        span.text-2xl 👹
+        img.absolute.inset-0.object-fill(src="/images/backside/backside-1_256x256.webp")
 </template>
 
 <script setup lang="ts">

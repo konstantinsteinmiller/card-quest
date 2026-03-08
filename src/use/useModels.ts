@@ -1,6 +1,3 @@
-import { watch } from 'vue'
-import type { GameCard, BoardSlot } from '@/types/game'
-
 /**
  * models
  */

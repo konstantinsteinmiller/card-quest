@@ -1,7 +1,7 @@
 <template lang="pug">
   //- The actual Game Field
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
-    class="select-none landscape:p-0.5 md:p-4"
+    class="inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] bg-repeat select-none landscape:p-0.5 md:p-4"
   )
     GameOverModal(
       :is-open="isGameOver"
@@ -30,18 +30,20 @@
         )
 
       //- 3x3 Board
-      div.flex.items-center.justify-center.bg-slate-700.p-1.rounded-lg.shadow-2xl(
+      div.flex.items-center.justify-center.p-1(
         class="max-w-full max-h-full sm:p-2"
       )
-        div.grid.grid-cols-3.gap-1(class="sm:gap-2")
+        div.grid.grid-cols-3(class="sm:gap-[2px]")
           template(v-for="(row, y) in board" :key="y")
             div.contents(v-for="(slot, x) in row" :key="x")
-              div.game-slot.bg-slate-800.rounded-md.border-2.border-dashed.relative.overflow-hidden(
+              div.game-slot.relative.overflow-hidden(
                 @dragover.prevent
                 @drop="turn === 'player' && handleDrop($event, x, y)"
                 @click="turn === 'player' && handleSlotTap(x, y)"
-                :class="[(!slot.card && turn === 'player') ? 'border-purple-500 bg-slate-700 cursor-pointer' : 'border-slate-600']"
+                :class="[(!slot.card && turn === 'player') ? 'cursor-pointer' : '']"
               )
+                img.absolute.inset-0(v-if="(y + x) % 2 === 0" src="/images/board/field-outer_256x256.webp")
+                img.absolute.inset-0(v-else src="/images/board/field-inner_256x256.webp")
                 CardDisplay(
                   v-if="slot.card"
                   :card="slot.card"

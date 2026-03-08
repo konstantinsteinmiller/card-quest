@@ -23,7 +23,8 @@ const view = ref<'menu' | 'game'>('menu')
 <style lang="sass">
 *
   font-family: 'Ribeye', cursive
-
+img
+  pointer-events: none
 p
   color: blue
 $color: red
