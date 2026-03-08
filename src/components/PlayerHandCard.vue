@@ -13,15 +13,15 @@
         class="cursor-pointer transition-all duration-200"
         :class="[selectedId === card.id ? '-translate-y-2 ring-2 ring-green-400 rounded-lg z-10' : 'hover:scale-105']"
       )
-        FairyCardDisplay(:card="card")
+        CardDisplay(:card="card")
 </template>
 
 <script setup lang="ts">
-import type {FairyCard} from '@/types/game'
-import FairyCardDisplay from '@/components/FairyCardDisplay'
+import type {GameCard} from '@/types/game'
+import CardDisplay from '@/components/CardDisplay.vue'
 
 defineProps<{
-  cards: FairyCard[]
+  cards: GameCard[]
   isActive: boolean
   selectedId: string | null
 }>()

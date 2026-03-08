@@ -1,6 +1,6 @@
 export type Direction = 'top' | 'right' | 'bottom' | 'left'
 
-export interface FairyCard {
+export interface GameCard {
   id: string
   name: string
   values: {
@@ -16,5 +16,5 @@ export interface FairyCard {
 export interface BoardSlot {
   x: number
   y: number
-  card: FairyCard | null
+  card: GameCard | null
 }

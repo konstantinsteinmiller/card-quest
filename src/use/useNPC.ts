@@ -1,12 +1,13 @@
 import { watch, type Ref } from 'vue'
-import type { FairyCard, BoardSlot, GameTurn } from '@/types/game'
+import type { GameCard, BoardSlot, GameTurn } from '@/types/game'
+import { type Difficulties, DIFFICULTY } from '@/utils/enums.ts'
 
 export const useNPC = (
   turn: Ref<GameTurn>,
-  npcHand: Ref<FairyCard[]>,
+  npcHand: Ref<GameCard[]>,
   board: Ref<BoardSlot[][]>,
-  placeCard: (card: FairyCard, x: number, y: number) => void,
-  difficulty: Ref<'easy' | 'medium' | 'hard'>
+  placeCard: (card: GameCard, x: number, y: number) => void,
+  difficulty: Ref<Difficulties>
 ) => {
   const makeMove = () => {
     if (turn.value !== 'npc' || npcHand.value.length === 0) return
@@ -37,7 +38,7 @@ export const useNPC = (
       })
     })
 
-    if (difficulty.value === 'easy') {
+    if (difficulty.value === DIFFICULTY.EASY) {
       return moves[Math.floor(Math.random() * moves.length)]
     }
 
@@ -69,7 +70,7 @@ export const useNPC = (
       move.score = captures
 
       // Hard Mode: Strategic positioning
-      if (difficulty.value === 'hard') {
+      if (difficulty.value === DIFFICULTY.HARD) {
         if ((move.x === 0 || move.x === 2) && (move.y === 0 || move.y === 2)) move.score += 0.6
         else if (move.x === 0 || move.x === 2 || move.y === 0 || move.y === 2) move.score += 0.3
 

@@ -4,11 +4,11 @@
 
     div.flex.flex-col.gap-1
       FButton(
-        v-for="d in ['easy', 'medium', 'hard']"
-        :key="d"
-        :type="difficulty === d ? 'primary' : 'secondary'"
-        @click="setDifficulty(d)"
-      ) {{ t(d) }}
+        v-for="difficulty in [DIFFICULTY.EASY, DIFFICULTY.MEDIUM, DIFFICULTY.HARD]"
+        :key="difficulty"
+        :type="userDifficulty === difficulty ? 'primary' : 'secondary'"
+        @click="setSettingValue('difficulty', difficulty)"
+      ) {{ t(difficulty) }}
 
       hr.border-slate-600.my-1(class="md:my-2 pt-0")
 
@@ -17,9 +17,11 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useMatch } from '@/use/useMatch'
+import useMatch from '@/use/useMatch'
+import useUser from '@/use/useUser'
 import Modal from '@/components/molecules/Modal'
 import FButton from '@/components/atoms/FButton'
+import { DIFFICULTY } from '@/utils/enums.ts'
 
 defineProps<{
   isOpen: boolean
@@ -27,10 +29,7 @@ defineProps<{
 const emit = defineEmits(['close'])
 
 const { t } = useI18n()
-const { difficulty } = useMatch()
-const setDifficulty = (d) => {
-  difficulty.value = d
-}
+const { setSettingValue, userDifficulty } = useUser()
 </script>
 
 <style lang="sass" scoped>

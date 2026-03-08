@@ -18,8 +18,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
     - [x] tap to select a card and place
 - [ ] Npc logic
     - [x] random choice
-    - [ ] smart choice
-    - [ ] different difficulty levels
+    - [x] smart choice
+    - [x] different difficulty levels
 - [ ] Fairy Models
     - [x] load fairy images
     - [ ] balanced card values

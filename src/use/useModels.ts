@@ -1,11 +1,11 @@
-import {watch} from 'vue'
-import type {FairyCard, BoardSlot} from '@/types/game'
+import { watch } from 'vue'
+import type { GameCard, BoardSlot } from '@/types/game'
 
 /**
- * fairy models
+ * models
  */
 export const useModels = () => {
-  const fairyModels = [
+  const modelsList = [
     { model: 'asha', name: 'Asha' },
     { model: 'dragon-old', name: 'Dragoire' },
     { model: 'dragon-middle', name: 'Dragorin' },
@@ -40,10 +40,10 @@ export const useModels = () => {
     { model: 'water-shark-middle', name: 'Sharkoryn' },
     { model: 'water-shark-young', name: 'Sharky' },
     { model: 'yeti-middle', name: 'Yetopa' },
-    { model: 'yeti-young', name: 'Yethog' },
+    { model: 'yeti-young', name: 'Yethog' }
   ]
 
   return {
-    fairyModels
+    modelsList
   }
 }

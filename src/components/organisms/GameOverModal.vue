@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Modal from '@/components/molecules/Modal'
+import Modal from '@/components/molecules/Modal.vue'
 import FButton from '@/components/atoms/FButton.vue'
 
 const { t } = useI18n()

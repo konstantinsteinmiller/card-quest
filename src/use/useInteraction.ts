@@ -1,9 +1,9 @@
 import { ref, type Ref } from 'vue'
-import type { FairyCard } from '@/types/game'
+import type { GameCard } from '@/types/game'
 
 export const useInteraction = (
-  playerHand: Ref<FairyCard[]>,
-  placeCard: (card: FairyCard, x: number, y: number) => boolean
+  playerHand: Ref<GameCard[]>,
+  placeCard: (card: GameCard, x: number, y: number) => boolean
 ) => {
   // This ref MUST only store the string ID, not the object
   const selectedCardId = ref<string | null>(null)

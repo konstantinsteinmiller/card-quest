@@ -28,12 +28,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { BoardSlot, FairyCard } from '@/types/game'
+import type { BoardSlot, GameCard } from '@/types/game'
 
 const props = defineProps<{
   board: BoardSlot[][]
-  playerHand: FairyCard[]
-  npcHand: FairyCard[]
+  playerHand: GameCard[]
+  npcHand: GameCard[]
 }>()
 
 const scores = computed(() => {

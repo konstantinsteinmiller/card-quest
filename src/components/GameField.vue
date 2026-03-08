@@ -1,11 +1,5 @@
 <template lang="pug">
-  ////- Show a loading screen while isReady is false
-  //div(v-if="!isReady" class="flex flex-col items-center justify-center h-screen bg-[#0f1a30]")
-  //  h1(class="text text-white text-4xl mb-4") LOADING...
-  //  div(class="w-64 h-4 bg-black/50 rounded-full overflow-hidden")
-  //    div(class="h-full bg-gradient-to-r from-yellow-400 to-orange-500 animate-pulse w-1/2")
-
-  //- The actual Game Field    //v-else
+  //- The actual Game Field
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
     class="select-none landscape:p-0.5 md:p-4"
   )
@@ -48,7 +42,7 @@
                 @click="turn === 'player' && handleSlotTap(x, y)"
                 :class="[(!slot.card && turn === 'player') ? 'border-purple-500 bg-slate-700 cursor-pointer' : 'border-slate-600']"
               )
-                FairyCardDisplay(
+                CardDisplay(
                   v-if="slot.card"
                   :card="slot.card"
                   :show-tint="true"
@@ -82,38 +76,35 @@ import { useNPC } from '@/use/useNPC'
 import { useInteraction } from '@/use/useInteraction'
 import PlayerHandCard from '@/components/PlayerHandCard'
 import EnemyHandCard from '@/components/EnemyHandCard'
-import FairyCardDisplay from '@/components/FairyCardDisplay'
+import CardDisplay from '@/components/CardDisplay.vue'
 import ScoreBoard from '@/components/ScoreBoard'
-import GameOverModal from '@/components/GameOverModal'
-import { preloadImages } from '@/utils/preloader.ts'
+import GameOverModal from '@/components/organisms/GameOverModal'
+import useUser from '@/use/useUser'
 
 const emit = defineEmits(['backToMainMenu'])
 
-const { turn, difficulty, playerHand, npcHand, board, resetGame, placeCard, isBoardFull } = useMatch()
-const { selectedCardId, handleDragStart, handleDrop, handleTapSelect, handleSlotTap } = useInteraction(playerHand, placeCard)
+const { turn, playerHand, npcHand, board, resetGame, placeCard, isBoardFull } = useMatch()
+const { userDifficulty } = useUser()
+const {
+  selectedCardId,
+  handleDragStart,
+  handleDrop,
+  handleTapSelect,
+  handleSlotTap
+} = useInteraction(playerHand, placeCard)
 
-useNPC(turn, npcHand, board, placeCard, difficulty)
-// const isReady = ref(false)
+useNPC(turn, npcHand, board, placeCard, userDifficulty)
 
 onMounted(async () => {
   resetGame()
-  // const fairyModelImagePaths = npcHand.value.concat(playerHand.value).map(card => card.image);
-  //
-  // try {
-  //   await preloadImages(fairyModelImagePaths)
-  //   console.log('preloaded image')
-  //   isReady.value = true; // Only show the game once images are in browser cache
-  // } catch (error) {
-  //   console.error("Critical error loading assets:", error)
-  // }
 })
 
 const isGameOver = ref<boolean>(false)
 watch(isBoardFull, () => {
   isBoardFull.value
     ? setTimeout(() => {
-        isGameOver.value = isBoardFull.value
-      }, 550)
+      isGameOver.value = isBoardFull.value
+    }, 550)
     : isGameOver.value = isBoardFull.value
 })
 
@@ -147,7 +138,7 @@ const scores = computed(() => {
   align-items: stretch
   justify-content: stretch
 
-.fairy-card
+.game-card
   width: 100%
   height: 100%
 
@@ -155,7 +146,7 @@ const scores = computed(() => {
   min-height: var(--hand-card-size)
   min-width: var(--hand-card-size)
 
-  .fairy-card
+  .game-card
     width: var(--hand-card-size)
     height: var(--hand-card-size)
 

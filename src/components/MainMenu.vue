@@ -10,7 +10,7 @@
 
     //FModal(v-model="showOptions" title="New Fairy!")
     //  div(class="flex flex-col items-center")
-    //    //img(src="/path/to/fairy.png" class="w-40 h-40 object-contain mb-4")
+    //
     //    p(class="text-lg opacity-90") You've unlocked a rare model!
     //
     //  template(#footer)

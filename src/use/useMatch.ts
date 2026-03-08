@@ -1,14 +1,17 @@
 import { ref, computed } from 'vue'
-import type { FairyCard, BoardSlot } from '@/types/game'
+import type { GameCard, BoardSlot } from '@/types/game'
 import { useModels } from '@/use/useModels'
 import { prependBaseUrl } from '@/utils/function'
 
-const difficulty = ref<'easy' | 'medium' | 'hard'>('medium')
+const isSplashScreenVisible = ref<boolean>(false)
+const isDbInitialized = ref<boolean>(false)
+
+
 export const useMatch = () => {
   const turn = ref<'player' | 'npc'>('player')
-  const playerHand = ref<FairyCard[]>([])
-  const npcHand = ref<FairyCard[]>([])
-  const { fairyModels } = useModels()
+  const playerHand = ref<GameCard[]>([])
+  const npcHand = ref<GameCard[]>([])
+  const { modelsList } = useModels()
 
   const board = ref<BoardSlot[][]>(Array.from({ length: 3 }, (_, y) =>
     Array.from({ length: 3 }, (_, x) => ({ x, y, card: null }))
@@ -18,9 +21,9 @@ export const useMatch = () => {
     return board.value.every(row => row.every(slot => slot.card !== null))
   })
 
-  const generateRandomCard = (owner: 'player' | 'npc'): FairyCard => {
-    const randomFairy = Math.floor(Math.random() * fairyModels.length)
-    const fairyModel = fairyModels[randomFairy]
+  const generateRandomCard = (owner: 'player' | 'npc'): GameCard => {
+    const randomModel = Math.floor(Math.random() * modelsList.length)
+    const fairyModel = modelsList[randomModel]
 
     return {
       id: Math.random().toString(36).substring(2, 9),
@@ -77,7 +80,7 @@ export const useMatch = () => {
     })
   }
 
-  const placeCard = (card: FairyCard, x: number, y: number) => {
+  const placeCard = (card: GameCard, x: number, y: number) => {
     if (board.value[y][x].card) return false
 
     // Remove from hand (Single Source of Truth)
@@ -97,12 +100,15 @@ export const useMatch = () => {
 
   return {
     turn,
-    difficulty,
     playerHand,
     npcHand,
     board,
     resetGame,
     placeCard,
-    isBoardFull
+    isBoardFull,
+    isSplashScreenVisible,
+    isDbInitialized
   }
 }
+
+export default useMatch

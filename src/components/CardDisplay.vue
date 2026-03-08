@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.fairy-card.relative.perspective-1000.w-full.h-full(class="select-none")
+  div.game-card.relative.perspective-1000.w-full.h-full(class="select-none")
     //- The 3D Wrapper
     div.w-full.h-full.relative.transition-transform.duration-700.transform-style-3d(
       :class="card.owner === 'player' ? 'rotate-y-0' : 'rotate-y-180'"
@@ -12,7 +12,7 @@
         img.absolute.inset-0.w-full.h-full.object-cover(
           :src="card.image"
           class="scale-[90%]"
-          :alt="`${card.name}-image` || 'fairy-card-image'"
+          :alt="`${card.name}-image` || 'game-card-image'"
         )
 
         //- 2. Gradient Tint Overlay
@@ -40,10 +40,10 @@
 </template>
 
 <script setup lang="ts">
-import type { FairyCard } from '@/types/game'
+import type { GameCard } from '@/types/game'
 
 defineProps<{
-  card: FairyCard,
+  card: GameCard,
   showTint?: boolean
 }>()
 </script>

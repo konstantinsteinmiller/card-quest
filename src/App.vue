@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {useI18n} from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
 import GameField from '@/components/GameField'
 import MainMenu from '@/components/MainMenu'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const view = ref<'menu' | 'game'>('menu')
 </script>
 
@@ -23,6 +23,7 @@ const view = ref<'menu' | 'game'>('menu')
 <style lang="sass">
 *
   font-family: 'Ribeye', cursive
+
 p
   color: blue
 $color: red
