@@ -1,27 +1,25 @@
 <template lang="pug">
   Modal(:is-open="isOpen")
-    h2.text-3xl.font-black.uppercase.italic.mb-6.text-outline.text-blue-300 {{ t('difficulty') }}
+    h2.text-2xl.font-black.uppercase.italic.mb-3.text-outline.text-blue-300(class="md:mb-6") {{ t('difficulty') }}
 
-    div.flex.flex-col.gap-4
-      button.diff-btn(
+    div.flex.flex-col.gap-1
+      FButton(
         v-for="d in ['easy', 'medium', 'hard']"
         :key="d"
-        :class="[difficulty === d ? 'bg-blue-600 ring-2 ring-white' : 'bg-slate-700']"
+        :type="difficulty === d ? 'primary' : 'secondary'"
         @click="setDifficulty(d)"
       ) {{ t(d) }}
 
-      hr.border-slate-600.my-2
+      hr.border-slate-600.my-1(class="md:my-2 pt-0")
 
-      button.w-full.py-3.px-6.rounded-full.font-bold.uppercase.tracking-widest.transition-all(
-        @click="emit('close')"
-        class="bg-white text-black hover:scale-105 active:scale-95 shadow-lg"
-      ) {{ t('close') }}
+      FButton(@click="emit('close')") {{ t('close') }}
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import Modal from '@/components/molecules/Modal'
 import { useMatch } from '@/use/useMatch'
+import Modal from '@/components/molecules/Modal'
+import FButton from '@/components/atoms/FButton'
 
 defineProps<{
   isOpen: boolean

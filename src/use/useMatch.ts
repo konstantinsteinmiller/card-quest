@@ -1,9 +1,10 @@
 import { ref, computed } from 'vue'
 import type { FairyCard, BoardSlot } from '@/types/game'
 import { useModels } from '@/use/useModels'
+import { prependBaseUrl } from '@/utils/function'
 
+const difficulty = ref<'easy' | 'medium' | 'hard'>('medium')
 export const useMatch = () => {
-  const difficulty = ref<'easy' | 'medium' | 'hard'>('medium')
   const turn = ref<'player' | 'npc'>('player')
   const playerHand = ref<FairyCard[]>([])
   const npcHand = ref<FairyCard[]>([])
@@ -31,7 +32,7 @@ export const useMatch = () => {
         left: Math.floor(Math.random() * 9) + 1
       },
       owner,
-      image: `/models/${fairyModel?.model}/preview_400x400.webp`
+      image: prependBaseUrl(`/models/${fairyModel?.model}/preview_400x400.webp`)
     }
   }
 

@@ -18,21 +18,15 @@
 
     //- Action Buttons
     div.flex.flex-col.gap-2(class="text-sm md:text-xl sm:gap-1")
-      button.w-full.py-3.px-6.rounded-full.font-bold.uppercase.tracking-widest.transition-all(
-        @click="emit('reset')"
-        class="bg-white text-black hover:scale-105 active:scale-95 shadow-lg"
-      ) {{ t('playAgain') }}
-
-      button.w-full.py-3.px-6.rounded-full.font-bold.uppercase.tracking-widest.transition-all(
-        @click="emit('reset'); emit('backToMainMenu')"
-        class="bg-gray-400 text-black hover:scale-105 active:scale-95 shadow-lg"
-      ) {{ t('backToMainMenu') }}
+      FButton(@click="emit('reset')") {{ t('playAgain') }}
+      FButton(type="secondary" @click="emit('reset'); emit('backToMainMenu')") {{ t('backToMainMenu') }}
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Modal from '@/components/molecules/Modal'
+import FButton from '@/components/atoms/FButton.vue'
 
 const { t } = useI18n()
 

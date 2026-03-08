@@ -9,15 +9,15 @@ const view = ref<'menu' | 'game'>('menu')
 </script>
 
 <template lang="pug">
-  //MainMenu(
-  //  v-if="view === 'menu'"
-  //  @play="view = 'game'"
-  //)
-  //GameField(
-  //  v-else
-  //  @backToMainMenu="view = 'menu'"
-  //)
-  GameField
+  MainMenu(
+    v-if="view === 'menu'"
+    @play="view = 'game'"
+  )
+  GameField(
+    v-else
+    @backToMainMenu="view = 'menu'"
+  )
+  //GameField
 </template>
 
 <style lang="sass">

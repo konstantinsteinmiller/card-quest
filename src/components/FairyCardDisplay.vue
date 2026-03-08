@@ -12,7 +12,7 @@
         img.absolute.inset-0.w-full.h-full.object-cover(
           :src="card.image"
           class="scale-[90%]"
-          alt="fairy-card-image"
+          :alt="`${card.name}-image` || 'fairy-card-image'"
         )
 
         //- 2. Gradient Tint Overlay
