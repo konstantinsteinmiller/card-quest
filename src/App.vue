@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import { RouterView } from 'vue-router'
 // if (window.location.hash !== '/') {
 //   window.location.pathname = '/'
 //   window.location.reload()

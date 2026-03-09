@@ -43,6 +43,7 @@ const showOptions = ref(false)
 const quitGame = () => {
   if (window.confirm(t('confirmQuit'))) window.close()
 }
+
 </script>
 
 <style lang="sass" scoped>

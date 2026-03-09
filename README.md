@@ -4,12 +4,14 @@ A fairy card battle game
 
 WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 
-![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/gameplay.webp)
 
 ![Card Quest menu](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/main-menu.webp)
 
-# Todo
+![NPC Card Selection](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/deck-selection.webp)
 
+![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/gameplay.webp)
+
+# Todo
 - [x] basic game field
   - [x] background image
   - [x] grid images
