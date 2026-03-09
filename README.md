@@ -22,7 +22,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
     - [x] different difficulty levels
 - [ ] Fairy Models
     - [x] load fairy images
-    - [ ] balanced card values
+  - [x] balanced card values
     - [x] add frames to Cards
         - [x] selected card frame
         - [x] not-selected card frame
@@ -37,17 +37,15 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
   - [x] background image
 - [ ] Cards can also attack diagonally
 - [ ] Trading Rules + Battle rules
-- [ ] Card selection Page
+- [x] Card selection Page
 - [ ] Card Designer from Fairy Dust
 
 ## Bugs
 
-- [ ] 
+- [ ] double selection if card is multiple times in player hand
 
 ## Nice-to-have
-
 - [ ] 
 
 ## NPC Algo:
-
 - [ ] 

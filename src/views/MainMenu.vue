@@ -8,7 +8,7 @@
     )
       // Menu
       div.flex.flex-col.gap-4.relative.z-10
-        FButton(@click="router.push({name: 'match'})") {{ t('play') }}
+        FButton(@click="router.push({ name: 'card-selection' })") {{ t('play') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
         //FButton(v-if="!isWeb" class="secondary" @click="quitGame") {{ t('quit') }}
 

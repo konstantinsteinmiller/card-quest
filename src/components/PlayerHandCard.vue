@@ -67,7 +67,7 @@ const emit = defineEmits<{
   height: var(--hand-card-size)
   // We remove overflow: hidden if it exists on any parent to allow the glow to spread
 
-  :deep(.fairy-card)
+  :deep(.game-card)
     @apply w-full h-full
 
 div

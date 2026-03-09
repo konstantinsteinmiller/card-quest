@@ -7,7 +7,6 @@
       :is-open="isGameOver"
       :scores="scores"
       @reset="resetGame"
-      @backToMainMenu="emit('backToMainMenu')"
     )
 
     ScoreBoard(
@@ -82,8 +81,6 @@ import CardDisplay from '@/components/CardDisplay'
 import ScoreBoard from '@/components/ScoreBoard'
 import GameOverModal from '@/components/organisms/GameOverModal'
 import useUser from '@/use/useUser'
-
-const emit = defineEmits(['backToMainMenu'])
 
 const { turn, playerHand, npcHand, board, resetGame, placeCard, isBoardFull } = useMatch()
 const { userDifficulty } = useUser()

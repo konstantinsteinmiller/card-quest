@@ -70,7 +70,7 @@ export const useModels = () => {
 
   return {
     allCards,
-    imgPath: modelImgPath
+    modelImgPath
   }
 }
 

@@ -1,4 +1,9 @@
 <script setup lang="ts">
+
+// if (window.location.hash !== '/') {
+//   window.location.pathname = '/'
+//   window.location.reload()
+// }
 </script>
 
 <template lang="pug">

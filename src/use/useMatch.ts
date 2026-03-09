@@ -4,12 +4,12 @@ import { useModels, modelImgPath } from '@/use/useModels'
 
 const isSplashScreenVisible = ref<boolean>(false)
 const isDbInitialized = ref<boolean>(false)
-
+export const playerSelection = ref<GameCard[]>([])
+export const playerHand = ref<GameCard[]>([])
+export const npcHand = ref<GameCard[]>([])
 
 export const useMatch = () => {
   const turn = ref<'player' | 'npc'>('player')
-  const playerHand = ref<GameCard[]>([])
-  const npcHand = ref<GameCard[]>([])
   const { allCards } = useModels()
 
   const board = ref<BoardSlot[][]>(Array.from({ length: 3 }, (_, y) =>
@@ -37,7 +37,8 @@ export const useMatch = () => {
     board.value.forEach(row => row.forEach(slot => {
       slot.card = null
     }))
-    playerHand.value = Array.from({ length: 5 }, () => generateRandomCard('player'))
+    playerHand.value = [...playerSelection.value]
+    // Array.from({ length: 5 }, () => generateRandomCard('player'))
     npcHand.value = Array.from({ length: 5 }, () => generateRandomCard('npc'))
     turn.value = 'player'
   }

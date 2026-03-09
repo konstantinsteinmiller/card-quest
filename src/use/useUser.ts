@@ -12,6 +12,7 @@ const userTutorialsDoneMap: Ref<any> = ref('{}')
 const tutorialPhase: Ref<string> = ref('')
 const allowTutorial: Ref<boolean> = ref(true)
 const isOptionsModalOpen: Ref<boolean> = ref(false)
+const userHand: Ref<any> = ref('[]')
 
 /* just for after the indexDB has loaded */
 watch(
@@ -29,7 +30,8 @@ const { storeUser } = useUserDb({
   userSoundVolume,
   userMusicVolume,
   userLanguage,
-  userTutorialsDoneMap
+  userTutorialsDoneMap,
+  userHand
 })
 
 const useUser = () => {
@@ -50,6 +52,9 @@ const useUser = () => {
       case 'tutorialsDoneMap':
         userTutorialsDoneMap.value = JSON.stringify(value)
         break
+      case 'hand':
+        userHand.value = JSON.stringify(value)
+        break
     }
 
     storeUser({
@@ -57,7 +62,8 @@ const useUser = () => {
       userSoundVolume: +userSoundVolume.value,
       userMusicVolume: +userMusicVolume.value,
       userLanguage: userLanguage.value,
-      userTutorialsDoneMap: userTutorialsDoneMap.value
+      userTutorialsDoneMap: userTutorialsDoneMap.value,
+      userHand: userHand.value
     })
   }
 
@@ -67,6 +73,7 @@ const useUser = () => {
     userMusicVolume,
     userLanguage,
     userTutorialsDoneMap,
+    userHand,
     tutorialPhase,
     allowTutorial,
     setSettingValue,

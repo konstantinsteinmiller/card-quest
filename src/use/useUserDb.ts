@@ -11,13 +11,15 @@ const useUserDb = ({
                      userSoundVolume,
                      userMusicVolume,
                      userLanguage,
-                     userTutorialsDoneMap
+                     userTutorialsDoneMap,
+                     userHand
                    }: {
   userDifficulty: Ref<string>
   userSoundVolume: Ref<number>
   userMusicVolume: Ref<number>
   userLanguage: Ref<string>
   userTutorialsDoneMap: Ref<string>
+  userHand: Ref<string>
 }) => {
   // Open our database; it is created if it doesn't already exist
   const request = window.indexedDB.open('user_db', 1)
@@ -47,6 +49,7 @@ const useUserDb = ({
     objectStore.createIndex('userMusicVolume', 'userMusicVolume', { unique: false })
     objectStore.createIndex('userLanguage', 'userLanguage', { unique: false })
     objectStore.createIndex('userTutorialsDoneMap', 'userTutorialsDoneMap', { unique: false })
+    objectStore.createIndex('userHand', 'userHand', { unique: false })
     // console.log('Database setup complete')
   })
 
@@ -65,13 +68,17 @@ const useUserDb = ({
         if (request.result.userTutorialsDoneMap) {
           userTutorialsDoneMap.value = JSON.parse(request.result.userTutorialsDoneMap)
         }
+        if (request.result.userHand) {
+          userHand.value = JSON.parse(request.result.userHand)
+        }
       } else {
         storeUser({
           userDifficulty: userDifficulty.value,
           userSoundVolume: userSoundVolume.value,
           userMusicVolume: userMusicVolume.value,
           userLanguage: userLanguage.value,
-          userTutorialsDoneMap: userTutorialsDoneMap.value
+          userTutorialsDoneMap: userTutorialsDoneMap.value,
+          userHand: userHand.value
         })
       }
       isDbInitialized.value = true
@@ -89,6 +96,10 @@ const useUserDb = ({
   function storeUser(params: any) {
     const store = db.transaction(['user_os'], 'readwrite').objectStore('user_os')
 
+    if (Object.keys(params.userHand)?.length) {
+      const clone = clonedeep(params.userHand)
+      params.userHand = JSON.stringify(clone)
+    }
     if (Object.keys(params.userTutorialsDoneMap)?.length) {
       const clone = clonedeep(params.userTutorialsDoneMap)
       params.userTutorialsDoneMap = JSON.stringify(clone)
