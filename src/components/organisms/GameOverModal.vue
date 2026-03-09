@@ -19,7 +19,7 @@
     //- Action Buttons
     div.flex.flex-col.gap-2(class="text-sm md:text-xl sm:gap-1")
       FButton(@click="emit('reset')") {{ t('playAgain') }}
-      FButton(type="secondary" @click="emit('reset'); emit('backToMainMenu')") {{ t('backToMainMenu') }}
+      FButton(type="secondary" @click="router.push({name: 'main-menu'})") {{ t('backToMainMenu') }}
 </template>
 
 <script setup lang="ts">
@@ -27,7 +27,9 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Modal from '@/components/molecules/Modal.vue'
 import FButton from '@/components/atoms/FButton.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const { t } = useI18n()
 
 const props = defineProps<{
@@ -35,7 +37,7 @@ const props = defineProps<{
   scores: { player: number; npc: number }
 }>()
 
-const emit = defineEmits(['reset', 'backToMainMenu'])
+const emit = defineEmits(['reset'])
 
 const result = computed(() => {
   if (props.scores.player > props.scores.npc) return 'win'

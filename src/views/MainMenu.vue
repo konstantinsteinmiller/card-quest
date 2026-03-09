@@ -1,6 +1,6 @@
 <template lang="pug">
   div.h-screen.w-screen.bg-slate-200.flex.items-center.justify-center.p-4(class="bg-[url('/images/bg/bg_1024x1024.webp')] bg-cover bg-center")
-    img.absolute(class="left-1/2 top-12 -translate-x-1/2 w-32 h-32 sm:top-4 sm:w-[8rem] sm:h-[8rem] md:w-[10rem] md:h-[10rem] landscape:left-2 landscape:top-2 landscape:-translate-x-0 landscape:md:left-1/2 landscape:md:top-12 landscape:md:-translate-x-1/2" src="/images/logo/logo_256x256.webp" alt="logo")
+    img.absolute(class="left-1/2 top-12 -translate-x-1/2 w-32 h-32 sm:top-4 sm:w-[8rem] sm:h-[8rem] md:w-[10rem] md:h-[10rem] landscape:left-2 landscape:top-2 landscape:-translate-x-0 landscape:md:left-1/2 landscape:md:top-12 landscape:md:-translate-x-1/2" src="/images/logo/logo_512x512.webp" alt="logo")
 
     // Menu box
     div.relative.p-10.flex.flex-col.gap-4.text-center.shadow-2xl(
@@ -8,7 +8,7 @@
     )
       // Menu
       div.flex.flex-col.gap-4.relative.z-10
-        FButton(@click="emit('play')") {{ t('play') }}
+        FButton(@click="router.push({name: 'match'})") {{ t('play') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
         //FButton(v-if="!isWeb" class="secondary" @click="quitGame") {{ t('quit') }}
 
@@ -28,11 +28,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import OptionsModal from '@/components/organisms/OptionsModal'
-import FButton from '@/components/atoms/FButton'
+import { useRouter } from 'vue-router'
+import OptionsModal from '@/components/organisms/OptionsModal.vue'
+import FButton from '@/components/atoms/FButton.vue'
 import FModal from '@/components/atoms/FModal.vue'
-import { isWeb } from '@/utils/function'
+import { isWeb } from '@/utils/function.ts'
 
+const router = useRouter()
 const { t } = useI18n()
 const emit = defineEmits(['play'])
 

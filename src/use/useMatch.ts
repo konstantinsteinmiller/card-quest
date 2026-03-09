@@ -1,7 +1,6 @@
 import { ref, computed } from 'vue'
 import type { GameCard, BoardSlot } from '@/types/game'
-import { useModels } from '@/use/useModels'
-import { prependBaseUrl } from '@/utils/function'
+import { useModels, modelImgPath } from '@/use/useModels'
 
 const isSplashScreenVisible = ref<boolean>(false)
 const isDbInitialized = ref<boolean>(false)
@@ -11,7 +10,7 @@ export const useMatch = () => {
   const turn = ref<'player' | 'npc'>('player')
   const playerHand = ref<GameCard[]>([])
   const npcHand = ref<GameCard[]>([])
-  const { modelsList } = useModels()
+  const { allCards } = useModels()
 
   const board = ref<BoardSlot[][]>(Array.from({ length: 3 }, (_, y) =>
     Array.from({ length: 3 }, (_, x) => ({ x, y, card: null }))
@@ -22,20 +21,15 @@ export const useMatch = () => {
   })
 
   const generateRandomCard = (owner: 'player' | 'npc'): GameCard => {
-    const randomModel = Math.floor(Math.random() * modelsList.length)
-    const fairyModel = modelsList[randomModel]
+    const randomModel = Math.floor(Math.random() * allCards.length)
+    const card = allCards[randomModel]
 
     return {
       id: Math.random().toString(36).substring(2, 9),
-      name: `${fairyModel?.name || 'Fairy'}`,
-      values: {
-        top: Math.floor(Math.random() * 9) + 1,
-        right: Math.floor(Math.random() * 9) + 1,
-        bottom: Math.floor(Math.random() * 9) + 1,
-        left: Math.floor(Math.random() * 9) + 1
-      },
+      name: `${card?.name || 'Fairy'}`,
+      values: { ...card.values },
       owner,
-      image: prependBaseUrl(`/models/${fairyModel?.model}/preview_400x400.webp`)
+      image: modelImgPath(card?.id || 'missing_id')
     }
   }
 
