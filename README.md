@@ -1,14 +1,12 @@
-# fairy quest
+# Card Quest
 
 A fairy card battle game
 
 WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 
-![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/gameplay.png)
+![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/gameplay.webp)
 
-![Fairy Quest menu](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/rodent-race-menu.png)
-
-![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/fairy-quest-second.png)
+![Card Quest menu](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/main-menu.webp)
 
 # Todo
 
@@ -32,6 +30,11 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
     - [x] show winner / loser / draw
     - [x] restart game button
     - [x] frame
+- [ ] Main Menu
+  - [x] start game button
+  - [x] create Logo
+  - [x] settings button
+  - [x] background image
 - [ ] Cards can also attack diagonally
 - [ ] Trading Rules + Battle rules
 - [ ] Card selection Page
