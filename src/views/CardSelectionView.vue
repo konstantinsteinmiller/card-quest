@@ -1,15 +1,18 @@
 <template lang="pug">
-  div.h-screen.w-screen.flex.flex-col.items-center.p-1.overflow-hidden(class="landscape:sm:p-1 sm:p-3 landscape:md:p-3 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] bg-repeat select-none")
+  div.h-screen.w-screen.flex.flex-col.items-center.p-1.overflow-hidden.bg-repeat.select-none(
+    class="h-[100dvh] landscape:sm:p-1 sm:p-4 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] h-full min-h-0"
+    style="padding-bottom: env(safe-area-inset-bottom); padding-top: env(safe-area-inset-top);"
+  )
     //- Main Layout
-    div.flex-1.w-full.max-w-6xl.flex.flex-col.gap-2(class="landscape:flex-row")
+    div.flex-1.w-full.p-1.h-full.max-w-6xl.flex.flex-col.gap-2(class="landscape:flex-row")
 
       //- THE BOOK (Added flex-grow to ensure it takes all available space)
       div.relative.shadow-inner.flex.flex-col.flex-grow.mr-2(class="overflow-hidden")
-        img.absolute.inset-0.w-full.h-full(src="/images/bg/book_512x401.webp")
+        img.absolute.inset-0.w-full.h-full.object-fill(src="/images/bg/book_512x401.webp")
 
         //- Collection Container
-        div.flex-1.relative.z-10.ml-1.px-5.pt-12.flex.flex-wrap.justify-center.content-start.overflow-y-auto.cursor-pointer(
-          class="gap-x-4 gap-1 sm:gap-2 sm:gap-x-2 md:gap-4 md:px-12 md:pt-15"
+        div.flex-1.relative.z-10.ml-1.px-5.pt-14.flex.flex-wrap.justify-center.content-start.overflow-y-auto.cursor-pointer(
+          class="gap-x-10 gap-2 sm:gap-2 sm:gap-x-2 md:gap-4 md:px-12 md:pt-15"
         )
           div.relative.group(
             v-for="card in paginatedCollection"
@@ -21,7 +24,7 @@
               CardDisplay(:card="card" :show-tint="false")
 
             //- Counter Badge
-            div.counter-bubble.absolute.-bottom-1.-right-1.bg-red-600.text-white.rounded-full.flex.items-center.justify-center.font-bold.z-20(
+            div.counter-bubble.absolute.-bottom-1.-right-1.bg-slate-500.text-white.rounded-full.flex.items-center.justify-center.font-bold.z-20(
               class="w-4 h-4 text-[9px] sm:w-5 sm:h-5 sm:text-[10px]"
             )
               span {{ card.count }}
@@ -49,7 +52,7 @@
       div.flex.flex-col.flex-grow.gap-1.justify-center.items-center.sidebar-container(
         class="landscape:w-28 landscape:sm:w-36 sm:w-36 portrait:h-24 portrait:w-full"
       )
-        div.rounded-xl.p-1.flex.flex-col.items-center.w-full.h-full(
+        div.rounded-xl.flex.flex-col.items-center.w-full.h-full(
           class="bg-slate-800/50 portrait:justify-center"
         )
           div.flex.flex-1.w-full.justify-center.relative.z-40(
@@ -62,7 +65,7 @@
               @select="removeFromDeck"
             )
 
-        div.flex.gap-2.mb-2.justify-center(class="landscape:flex-col landscape:sm:flex-col")
+        div.flex.gap-2.mb-4.justify-center(class="landscape:flex-col landscape:sm:flex-col")
           FButton.text-xs(
             type="secondary"
             class="sm:text-sm"
@@ -110,6 +113,7 @@ onMounted(() => {
   const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
   selectedDeck.value = [...hand]
   window.addEventListener('resize', updateDimensions)
+  window.scrollTo(0, 0)
 })
 onUnmounted(() => window.removeEventListener('resize', updateDimensions))
 
@@ -175,7 +179,7 @@ const startMatch = () => {
   border: 1px solid rgba(255, 255, 255, 0.4)
 
 .card-container
-  width: calc(37% - 4px)
+  width: calc(32% - 4px)
   aspect-ratio: 1 / 1
   @media (max-width: 800px) and (orientation: landscape)
     width: calc(21% - 8px)

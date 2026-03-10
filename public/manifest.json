@@ -1,0 +1,6 @@
+{
+  "name": "Card Quest",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/"
+}
