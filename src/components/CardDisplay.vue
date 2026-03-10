@@ -29,14 +29,15 @@
         )
 
         //- 4. Value Grid & UI (Top Layer)
-        div.absolute.inset-0.flex.items-center.justify-center.z-20(class="p-0.5 sm:p-1")
+        div.absolute.inset-0.flex.items-center.justify-center.z-20(class="")
           div.absolute.inset-0.grid.grid-cols-3.grid-rows-3.font-black.pointer-events-none(
-            class="text-[9px] sm:text-base font-[Ribeye]"
+            class="px-[8px] py-[4px] landscape:px-[6px] landscape:py-[3px] landscape:sm:px-[0.6rem] landscape:sm:py-[0.4rem] font-[Ribeye]"
+            :class="showTint ? 'text-[12px] landscape:text-[13px] landscape:md:text-[15px]' : 'text-[10px] landscape:text-[11px] landscape:md:text-[13px] landscape:sm:px-[6px] landscape:sm:py-[3px]'"
           )
-            div.col-start-2.text-center.self-start.text-outline(class="p-0.5 md:p-1" :class="showTint ? 'p-1 md:p-2' : ''") {{ card.values.top }}
-            div.row-start-2.col-start-1.flex.items-center.text-outline(class="p-1 md:p-2" :class="showTint ? 'p-2 md:p-3' : ''") {{ card.values.left }}
-            div.row-start-2.col-start-3.flex.items-center.justify-end.text-outline(class="p-1 md:p-2" :class="showTint ? 'p-2 md:p-3' : ''") {{ card.values.right }}
-            div.row-start-3.col-start-2.text-center.self-end.text-outline(class="p-0.5 md:p-1" :class="showTint ? 'p-1 md:p-2' : ''") {{ card.values.bottom }}
+            div.col-start-2.text-center.self-start.text-outline(class="") {{ card.values.top }}
+            div.row-start-2.col-start-1.flex.items-center.text-outline(class="") {{ card.values.left }}
+            div.row-start-2.col-start-3.flex.items-center.justify-end.text-outline(class="") {{ card.values.right }}
+            div.row-start-3.col-start-2.text-center.self-end.text-outline(class="") {{ card.values.bottom }}
 </template>
 
 <script setup lang="ts">
