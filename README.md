@@ -43,12 +43,14 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
   - [x] campaign
   - [ ] practice button
   - [x] version
+  - [x] mute music and sound
 - [ ] Campaign
   - [x] Campaign map and jump of to battle
   - [x] connection lines between nodes
   - [ ] Storyline
   - [ ] different levels with different NPCs
   - [ ] enemy shows known cards face up
+  - [x] make node popup pop with animation
 - [ ] Sound and bg music options
 - [ ] mute button on main menu
 - [ ] Trading Rules + Battle rules
