@@ -72,7 +72,7 @@
             )
 
         div.flex.gap-2.mb-4.justify-center(class="landscape:flex-col landscape:sm:flex-col")
-          FButton.text-xs(type="secondary" class="sm:text-sm" @click="router.push({ name: 'main-menu'})") {{ t('back') }}
+          FButton.text-xs(type="secondary" class="sm:text-sm" @click="router.push({ name: 'main-menu'})") ◀ {{ t('back') }}
           FButton.text-xs.btn-battle(
             class="sm:text-sm"
             :disabled="selectedDeck.length < 5"
@@ -283,11 +283,9 @@ const onNext = () => {
 
 <i18n>
 en:
-  back: "Back"
   ready: "Ready"
   battle: "Battle"
 de:
-  back: "Zurück"
   ready: "Bereit"
   battle: "Kampf"
 </i18n>

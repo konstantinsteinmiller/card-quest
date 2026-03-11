@@ -17,7 +17,6 @@
       :class="isLandscape ? 'h-full w-auto' : 'w-full h-auto'"
     )
       //- SVG Path Layer
-      //- viewBox 0 0 100 100 matches the % coordinates of the nodes
       svg.absolute.inset-0.w-full.h-full.pointer-events-none.overflow-visible(
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
@@ -63,7 +62,15 @@
           span.text-base.animate-pulse(v-else class="sm:text-xl") ⚔️
           div.absolute.inset-0.rounded-full.animate-ping.bg-yellow-400.opacity-40(v-if="node.unlocked && !node.completed")
 
-    //- 3. UI Overlays
+      //- 4. NodePopup placed inside the relative container to expand from map center
+      NodePopup(
+        v-if="activeNode"
+        :node="activeNode"
+        @close="selectedNodeId = null"
+        @start="startBattle"
+      )
+
+    //- 3. UI Overlays (Back Button)
     div.fixed.bottom-0.left-0.z-40.p-6(
       style="padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); padding-left: calc(1.5rem + env(safe-area-inset-left));"
     )
@@ -72,13 +79,6 @@
         size="md"
         @click="router.push({ name: 'deck' })"
       ) ◀ {{ t('back') }}
-
-    NodePopup(
-      v-if="activeNode"
-      :node="activeNode"
-      @close="selectedNodeId = null"
-      @start="startBattle"
-    )
 </template>
 
 <script setup lang="ts">
@@ -101,10 +101,6 @@ const updateOrientation = () => {
   isLandscape.value = window.innerWidth > window.innerHeight
 }
 
-/**
- * Generates a Quadratic Bezier curve between nodes.
- * The control point is offset slightly to create the "spline" look.
- */
 const getCurvePath = (startNode: CampaignNode, targetId: string) => {
   const endNode = campaignNodes.value.find(n => n.id === targetId)
   if (!endNode) return ''
@@ -114,7 +110,6 @@ const getCurvePath = (startNode: CampaignNode, targetId: string) => {
   const x2 = endNode.position.x
   const y2 = endNode.position.y
 
-  // Calculate a control point for the curve (midpoint with an offset)
   const cx = (x1 + x2) / 2 + (y2 - y1) * 0.1
   const cy = (y1 + y2) / 2 - (x2 - x1) * 0.1
 
@@ -125,7 +120,6 @@ const getPathClass = (startNode: CampaignNode, targetId: string) => {
   const endNode = campaignNodes.value.find(n => n.id === targetId)
   if (!endNode) return 'opacity-0'
 
-  // Path is highlighted if it leads to an unlocked node
   if (endNode.unlocked) return 'opacity-100 stroke-yellow-400'
   return 'opacity-50 stroke-grey-500'
 }
@@ -148,7 +142,6 @@ const startBattle = () => {
 
   button
     pointer-events: auto
-
 
 path
   transition: all 0.5s ease
