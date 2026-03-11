@@ -27,7 +27,7 @@ export const useCampaign = () => {
       npcDeck: ['asha', 'moss', 'eclipse', 'energy-female-old', 'piranha-young'],
       position: { x: 20, y: 70 },
       unlocked: true,
-      completed: false,
+      completed: true,
       unlocks: ['mountain-1'],
       knownCards: []
     },
@@ -37,7 +37,7 @@ export const useCampaign = () => {
       description: t('mountain-1-desc'),
       npcDeck: ['golem-1', 'golem-1', 'rock-1', 'rock-1', 'eagle-1'],
       position: { x: 50, y: 40 },
-      unlocked: false,
+      unlocked: true,
       completed: false,
       unlocks: ['castle-boss'],
       knownCards: []

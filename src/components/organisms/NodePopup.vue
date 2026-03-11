@@ -8,7 +8,7 @@
     )
       //- Close Button (Top Right)
       FCloseButton.absolute.w-8.h-8.flex(
-        class="!top-2 !right-2"
+        class="!top-2 !right-2 scale-100"
         @close="emit('close')"
       )
 

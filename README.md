@@ -42,9 +42,10 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
   - [x] background image
   - [x] campaign
   - [ ] practice button
+  - [x] version
 - [ ] Campaign
   - [x] Campaign map and jump of to battle
-  - [ ] connection lines between nodes
+  - [x] connection lines between nodes
   - [ ] Storyline
   - [ ] different levels with different NPCs
   - [ ] enemy shows known cards face up
