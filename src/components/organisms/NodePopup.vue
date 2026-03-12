@@ -32,10 +32,19 @@
                 alt="Card Back"
               )
 
+          div.flex.justify-center.gap-4.text-white.text-shadow.items-center
+            div.text-amber-300.text-sm {{ t('rules') }}:
+            RuleIcon(
+              v-for="rule in node.rules"
+              :key="rule"
+              :rule="rule"
+              class="mb-2"
+            )
+
         //- Action
         div.p-4.pt-0
           FButton.w-full(
-            @click="emit('start')"
+            @click="emit('start', )"
           ) {{ t('battle') }}
 </template>
 
@@ -44,6 +53,7 @@ import type { CampaignNode } from '@/use/useCampaign'
 import FCloseButton from '@/components/atoms/FCloseButton'
 import FButton from '@/components/atoms/FButton'
 import { useI18n } from 'vue-i18n'
+import RuleIcon from '@/components/atoms/RuleIcon'
 
 defineProps<{ node: CampaignNode }>()
 const emit = defineEmits(['close', 'start'])

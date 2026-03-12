@@ -1,18 +1,25 @@
 import { ref, computed } from 'vue'
 import type { GameCard, BoardSlot } from '@/types/game'
 import { useModels, modelImgPath } from '@/use/useModels'
+import { useBattleRules, type BattleRuleName } from '@/use/useBattleRules'
+import { useRouter } from 'vue-router'
 
 const isSplashScreenVisible = ref<boolean>(false)
 const isDbInitialized = ref<boolean>(false)
+export const ruleModal = ref<string | null>(null)
 export const isCampaignMatch = ref<boolean>(false)
 
 export const playerSelection = ref<GameCard[]>([])
 export const playerHand = ref<GameCard[]>([])
 export const npcHand = ref<GameCard[]>([])
 
+export const activeRules = ref<BattleRuleName[]>(['standard'])
+
 export const useMatch = () => {
   const turn = ref<'player' | 'npc'>('player')
   const { allCards } = useModels()
+  const { evaluateMatchRules } = useBattleRules()
+  const router = useRouter()
 
   const board = ref<BoardSlot[][]>(Array.from({ length: 3 }, (_, y) =>
     Array.from({ length: 3 }, (_, x) => ({ x, y, card: null }))
@@ -27,8 +34,8 @@ export const useMatch = () => {
     const card = allCards[randomModel]
 
     return {
-      id: card.id, // The base model ID
-      instanceId: Math.random().toString(36).substring(2, 11), // Unique instance ID for every card object
+      id: card.id,
+      instanceId: Math.random().toString(36).substring(2, 11),
       name: `${card?.name || 'Fairy'}`,
       values: { ...card.values },
       owner,
@@ -41,50 +48,33 @@ export const useMatch = () => {
       slot.card = null
     }))
 
-    // Create shallow copies of selection to ensure fresh objects
     playerHand.value = [...playerSelection.value]
-
-    // Generate NPC cards with unique instanceIds
+    if (playerHand.value.length === 0) {
+      //back to main menu
+      return router.replace({ name: 'deck', params: isCampaignMatch.value ? { campaign: true } : undefined })
+    }
     npcHand.value = Array.from({ length: 5 }, () => generateRandomCard('npc'))
     turn.value = 'player'
   }
 
+  /**
+   * Use the flexible Rule Engine
+   */
   const evaluateCapture = (x: number, y: number) => {
-    const attackerSlot = board.value[y][x]
-    const attackerCard = attackerSlot.card
-    if (!attackerCard || typeof attackerCard !== 'object') return
+    const attackerCard = board.value[y][x].card
+    if (!attackerCard) return
 
-    const adjacents = [
-      { dy: -1, dx: 0, atk: 'top', def: 'bottom' },
-      { dy: 1, dx: 0, atk: 'bottom', def: 'top' },
-      { dy: 0, dx: 1, atk: 'right', def: 'left' },
-      { dy: 0, dx: -1, atk: 'left', def: 'right' }
-    ]
-
-    adjacents.forEach(({ dy, dx, atk, def }) => {
-      const targetY = y + dy
-      const targetX = x + dx
-
-      if (targetY >= 0 && targetY < 3 && targetX >= 0 && targetX < 3) {
-        const defenderSlot = board.value[targetY][targetX]
-        const defenderCard = defenderSlot.card
-
-        if (defenderCard && defenderCard.owner !== attackerCard.owner) {
-          const atkVal = (attackerCard.values as any)[atk]
-          const defVal = (defenderCard.values as any)[def]
-
-          if (atkVal > defVal) {
-            defenderCard.owner = attackerCard.owner
-          }
-        }
-      }
+    evaluateMatchRules(activeRules.value, {
+      x,
+      y,
+      board: board.value,
+      attacker: attackerCard
     })
   }
 
   const placeCard = (card: GameCard, x: number, y: number) => {
     if (board.value[y][x].card) return false
 
-    // Remove from hand using instanceId to ensure we target ONLY the placed card
     if (card.owner === 'player') {
       playerHand.value = playerHand.value.filter(c => c.instanceId !== card.instanceId)
     } else {
@@ -108,7 +98,8 @@ export const useMatch = () => {
     placeCard,
     isBoardFull,
     isSplashScreenVisible,
-    isDbInitialized
+    isDbInitialized,
+    activeRules // Exposed so the UI or Campaign can adjust them
   }
 }
 

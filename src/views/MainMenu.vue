@@ -24,6 +24,14 @@
         FButton(@click="onCampaign") {{ t('campaign') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
 
+    FModal(v-if="false" v-model="showOptions" title="New Fairy!")
+      div(class="flex flex-col items-center")
+        //img(src="/path/to/fairy.png" class="w-40 h-40 object-contain mb-4")
+        p(class="text-lg opacity-90") You've unlocked a rare model!
+
+      template(#footer)
+        FButton(label="AWESOME!" @click="showOptions = false")
+
     OptionsModal(
       :is-open="showOptions"
       @close="showOptions = false"
@@ -31,13 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import OptionsModal from '@/components/organisms/OptionsModal'
 import FButton from '@/components/atoms/FButton'
-import { isCampaignMatch } from '@/use/useMatch'
+import { activeRules, isCampaignMatch } from '@/use/useMatch'
 import useUser, { version } from '@/use/useUser'
+import FModal from '@/components/atoms/FModal.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -51,6 +60,11 @@ const isMuted = computed(() => userMusicVolume.value === 0 && userSoundVolume.va
 // Store previous volumes to restore them when unmuting
 const prevMusicVol = ref(userMusicVolume.value || 0.5)
 const prevSoundVol = ref(userSoundVolume.value || 0.7)
+
+onMounted(() => {
+  isCampaignMatch.value = false
+  activeRules.value = ['standard']
+})
 
 const toggleMute = () => {
   if (!isMuted.value) {
@@ -80,3 +94,14 @@ const onCampaign = () => {
 .text-shadow
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8)
 </style>
+
+<i18n>
+en:
+  play: "Practice"
+  campaign: "Campaign"
+  settings: "Settings"
+de:
+  play: "Trainieren"
+  campaign: "Kampagne"
+  settings: "Einstellungen"
+</i18n>

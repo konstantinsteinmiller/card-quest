@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import type { GameCard } from '@/types/game'
 import useUser from '@/use/useUser'
 import { useI18n } from 'vue-i18n'
+import type { BattleRuleName, RuleContext } from '@/use/useBattleRules'
 
 export interface CampaignNode {
   id: string
@@ -13,6 +14,7 @@ export interface CampaignNode {
   completed: boolean
   unlocks: string[]
   knownCards: string[]
+  rules: BattleRuleName[]
 }
 
 export const useCampaign = () => {
@@ -29,7 +31,8 @@ export const useCampaign = () => {
       unlocked: true,
       completed: true,
       unlocks: ['mountain-1'],
-      knownCards: []
+      knownCards: [],
+      rules: ['standard']
     },
     {
       id: 'mountain-1',
@@ -40,7 +43,8 @@ export const useCampaign = () => {
       unlocked: true,
       completed: false,
       unlocks: ['castle-boss'],
-      knownCards: []
+      knownCards: [],
+      rules: ['standard', 'plus'/*, 'same'*/]
     },
     {
       id: 'castle-boss',
@@ -51,7 +55,8 @@ export const useCampaign = () => {
       unlocked: false,
       completed: false,
       unlocks: [],
-      knownCards: []
+      knownCards: [],
+      rules: ['standard', 'plus']
     }
   ])
 

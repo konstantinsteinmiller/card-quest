@@ -84,7 +84,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import type { GameCard } from '@/types/game'
 import FButton from '@/components/atoms/FButton'
 import CardDisplay from '@/components/CardDisplay'
@@ -96,6 +96,7 @@ import useUser from '@/use/useUser'
 const { setSettingValue, userHand } = useUser()
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 const { allCards } = useModels()
 
 const inventory = ref(allCards.map(c => ({ ...c, count: 2 })))
@@ -124,6 +125,8 @@ onMounted(() => {
 
   window.addEventListener('resize', updateDimensions)
   window.scrollTo(0, 0)
+  const isCampaign = route.params?.campaign === true
+  isCampaignMatch.value = isCampaign || isCampaignMatch.value
 })
 
 onUnmounted(() => window.removeEventListener('resize', updateDimensions))
@@ -284,8 +287,6 @@ const onNext = () => {
 <i18n>
 en:
   ready: "Ready"
-  battle: "Battle"
 de:
   ready: "Bereit"
-  battle: "Kampf"
 </i18n>

@@ -67,7 +67,7 @@
         v-if="activeNode"
         :node="activeNode"
         @close="selectedNodeId = null"
-        @start="startBattle"
+        @start="startBattle(activeNode.rules)"
       )
 
     //- 3. UI Overlays (Back Button)
@@ -88,7 +88,8 @@ import NodePopup from '@/components/organisms/NodePopup'
 import FButton from '@/components/atoms/FButton'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { isCampaignMatch } from '@/use/useMatch'
+import { isCampaignMatch, activeRules } from '@/use/useMatch'
+import type { BattleRuleName } from '@/use/useBattleRules.ts'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -131,7 +132,8 @@ onMounted(() => {
 
 onUnmounted(() => window.removeEventListener('resize', updateOrientation))
 
-const startBattle = () => {
+const startBattle = (rules: BattleRuleName[]) => {
+  activeRules.value = !rules.length ? ['standard'] : rules
   router.push({ name: 'match' })
 }
 </script>

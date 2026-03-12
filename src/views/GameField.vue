@@ -62,12 +62,6 @@
           @dragstart="(e, instanceId) => turn === 'player' && handleDragStart(e, instanceId)"
           @select="(instanceId) => turn === 'player' && handleTapSelect(instanceId)"
         )
-
-    button.absolute.bottom-4.right-4.bg-slate-800.rounded-full(
-      @click="resetGame"
-      class="p-2 opacity-40 hover:opacity-100 transition-opacity z-50 md:p-4 md:bottom-8 md:right-8"
-    )
-      span.text-xl.md_text-3xl 🔄
 </template>
 
 <script setup lang="ts">
@@ -95,7 +89,7 @@ const {
 
 useNPC(turn, npcHand, board, placeCard, userDifficulty)
 
-onMounted(async () => {
+onMounted(() => {
   resetGame()
 })
 

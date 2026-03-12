@@ -5,7 +5,7 @@ const emit = defineEmits(['close'])
 <template lang="pug">
   button(
     @click="emit('close')"
-    class="absolute top-0 right-0 group cursor-pointer transition-transform active:scale-40 sm:active:scale-90 scale-60 sm:scale-100 sm:top-4 sm:right-4 "
+    class="absolute top-0 right-0 group cursor-pointer hover:scale-[103%] transition-transform active:scale-40 sm:active:scale-90 scale-60 sm:scale-100 sm:top-4 sm:right-4 "
   )
     div(class="relative")
       div(class="absolute inset-0 translate-y-1 rounded-lg bg-[#6b1212]")
