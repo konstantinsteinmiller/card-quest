@@ -54,7 +54,7 @@ const close = () => {
             button(
               v-if="isClosable"
               @click="close"
-              class="hover:scale-[103%] absolute top-0 right-0 group cursor-pointer transition-transform active:scale-40 sm:active:scale-90 scale-60 sm:scale-100 sm:top-3 sm:right-3"
+              class="hover:scale-[103%] absolute top-0 right-0 group cursor-pointer transition-transform active:scale-40 sm:active:scale-90 scale-60 sm:scale-100 sm:top-2 sm:right-2 md:top-3 md:right-3"
             )
               div(class="relative")
                 div(class="absolute inset-0 translate-y-1 rounded-lg bg-[#6b1212]")

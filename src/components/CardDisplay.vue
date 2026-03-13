@@ -9,6 +9,7 @@
       )
         span.text-lg.font-black.italic.tracking-tighter.text-shadow-strong(
           :class="triggerClass"
+          class="sm:text-xl md:text-2xl"
         ) {{ activeTrigger }}
 
     //- The 3D Wrapper

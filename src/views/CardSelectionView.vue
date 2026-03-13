@@ -106,7 +106,7 @@ import CardDisplay from '@/components/CardDisplay'
 import PlayerHandCard from '@/components/PlayerHandCard'
 import { playerSelection, isCampaignMatch } from '@/use/useMatch'
 import { modelImgPath, useModels } from '@/use/useModels'
-import useUser from '@/use/useUser'
+import useUser, { orientation } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 
 const { setSettingValue, userHand } = useUser()
@@ -141,29 +141,26 @@ onMounted(() => {
 
   window.addEventListener('resize', updateDimensions)
   window.scrollTo(0, 0)
-  const isCampaign = route.params?.campaign === true
+  const isCampaign: boolean = route?.query?.campaign === true
   isCampaignMatch.value = isCampaign || isCampaignMatch.value
 })
 
 onUnmounted(() => window.removeEventListener('resize', updateDimensions))
 
-const isMobileLandscape = ref(false)
+const isMobileLandscape = computed(() => mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape')
 const isStackedSize = ref('50px')
 const isStackedMargin = ref('-22px')
 
 const itemsPerPage = computed(() => {
-  if (mobileCheck() && windowWidth.value > 500) {
-    isMobileLandscape.value = true
+  if (mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape') {
     isStackedSize.value = '50px'
     isStackedMargin.value = '-22px'
   } else {
-    isMobileLandscape.value = false
     isStackedSize.value = '70px'
     isStackedMargin.value = '0px'
   }
-  if (windowHeight.value < 650 && windowWidth.value <= 500) return 6
-  if ((windowHeight.value > 600 && windowWidth.value > 980)
-    || (isMobileLandscape.value && windowWidth.value > 600/* && windowHeight.value > 330*/)) return 12
+  if ((windowHeight.value < 620 && windowWidth.value <= 500) || (windowWidth.value <= 500 && !isMobileLandscape.value)) return 6
+  if (windowHeight.value > 600 && windowWidth.value > 980) return 12
   if (windowHeight.value > 600 && windowWidth.value > 600) return 16
   return windowWidth.value < 801 ? 8 : 16
 })
@@ -268,10 +265,10 @@ const onNext = () => {
   pointer-events: none
 
 .card-container
-  width: calc(35% - 8px)
+  width: calc(33% - 8px)
   aspect-ratio: 1 / 1
   @media (min-width: 450px)
-    width: calc(28% - 8px)
+    width: calc(27% - 8px)
   @media (max-width: 800px) and (orientation: landscape)
     width: calc(15% - 8px)
   @media (min-width: 801px)
