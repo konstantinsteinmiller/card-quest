@@ -2,6 +2,7 @@ export type Direction = 'top' | 'right' | 'bottom' | 'left'
 
 export interface GameCard {
   id: string
+  instanceId?: string
   name: string
   values: {
     top: number
@@ -10,7 +11,8 @@ export interface GameCard {
     left: number
   }
   owner: 'player' | 'npc'
-  image?: string
+  image: string
+  lastRuleTrigger?: 'Plus' | 'Same' | 'Combo' | null // Added for visual indicators
 }
 
 export interface BoardSlot {

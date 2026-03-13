@@ -1,6 +1,6 @@
 # Card Quest
 
-A card card battle game
+A fairy card battle game
 
 WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
@@ -17,6 +17,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] grid images
     - [x] visual error shake on wrong placement
     - [x] show game rules on the scoreboard
+  - [x] indicator for what rule turned the card
 - [x] static selected cards
     - [x] drag and drop for a card
     - [x] tap to select a card and place
@@ -25,7 +26,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [ ] Trading Rules + Battle rules
     - [x] plus rule
   - [x] same rule
-    - [ ] combo rule
+  - [x] combo rule
     - [ ] low card rule
   - [ ] elements rule
 - [ ] Npc logic

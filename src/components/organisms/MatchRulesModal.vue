@@ -7,8 +7,8 @@
     @update:model-value="emit('close')"
   )
     div.p-2.flex.flex-col.items-center.gap-3(class="sm:gap-4")
-      div.flex.flex-col.items-center.gap-4(v-for="rule in rules" :key="rule")
-        div.relative
+      div.flex.flex-row.items-center.gap-5.mt-2
+        div.relative.flex.flex-row.items-center.gap-2(v-for="rule in rules" :key="rule")
           div.absolute.inset-0.bg-amber-400.blur-xl.opacity-20.animate-pulse
           RuleIcon.attention-5(:rule="rule")
 

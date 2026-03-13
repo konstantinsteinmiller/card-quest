@@ -43,7 +43,7 @@
 
         //- Action
         div.p-4.pt-0
-          FButton.w-full(
+          FButton(
             :attention="true"
             @click="emit('start', )"
           ) {{ t('battle') }}

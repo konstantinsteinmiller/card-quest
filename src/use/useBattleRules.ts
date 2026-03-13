@@ -9,147 +9,115 @@ export interface RuleContext {
   attacker: GameCard
 }
 
-/**
- * Standard Rule: If attacker value > defender value in that direction.
- */
-const applyStandardRule = (ctx: RuleContext): { x: number, y: number }[] => {
-  const captures: { x: number, y: number }[] = []
-  const adjacents = [
-    { dy: -1, dx: 0, atk: 'top', def: 'bottom' },
-    { dy: 1, dx: 0, atk: 'bottom', def: 'top' },
-    { dy: 0, dx: 1, atk: 'right', def: 'left' },
-    { dy: 0, dx: -1, atk: 'left', def: 'right' }
-  ] as const
+const ADJACENTS = [
+  { dy: -1, dx: 0, atk: 'top', def: 'bottom' },
+  { dy: 1, dx: 0, atk: 'bottom', def: 'top' },
+  { dy: 0, dx: 1, atk: 'right', def: 'left' },
+  { dy: 0, dx: -1, atk: 'left', def: 'right' }
+] as const
 
-  adjacents.forEach(({ dy, dx, atk, def }) => {
-    const ny = ctx.y + dy
-    const nx = ctx.x + dx
-
+export const useBattleRules = () => {
+  const getAdj = (board: BoardSlot[][], currX: number, currY: number, dy: number, dx: number) => {
+    const ny = currY + dy
+    const nx = currX + dx
     if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
-      const defender = ctx.board[ny][nx].card
-      if (defender && defender.owner !== ctx.attacker.owner) {
-        if (ctx.attacker.values[atk] > defender.values[def]) {
-          captures.push({ x: nx, y: ny })
+      return { card: board[ny][nx].card, x: nx, y: ny }
+    }
+    return null
+  }
+
+  const runCombo = (board: BoardSlot[][], x: number, y: number, owner: string): boolean => {
+    const sourceCard = board[y][x].card
+    if (!sourceCard) return false
+    let triggered = false
+
+    ADJACENTS.forEach(({ dy, dx, atk, def }) => {
+      const neighbor = getAdj(board, x, y, dy, dx)
+      if (neighbor?.card && neighbor.card.owner !== owner) {
+        const valAtk = sourceCard.values[atk as keyof typeof sourceCard.values]
+        const valDef = neighbor.card.values[def as keyof typeof neighbor.card.values]
+
+        if (valAtk > valDef) {
+          neighbor.card.owner = owner as any
+          neighbor.card.lastRuleTrigger = 'Combo'
+          triggered = true
+          runCombo(board, neighbor.x, neighbor.y, owner)
         }
       }
-    }
-  })
-  return captures
-}
+    })
+    return triggered
+  }
 
-/**
- * Plus Rule: If (Atk Side A + Def Side A) === (Atk Side B + Def Side B),
- * and at least one is an opponent's card, they are captured.
- */
-const applyPlusRule = (ctx: RuleContext): { x: number, y: number }[] => {
-  const sums: Map<number, { x: number, y: number }[]> = new Map()
-  const adjacents = [
-    { dy: -1, dx: 0, atk: 'top', def: 'bottom' },
-    { dy: 1, dx: 0, atk: 'bottom', def: 'top' },
-    { dy: 0, dx: 1, atk: 'right', def: 'left' },
-    { dy: 0, dx: -1, atk: 'left', def: 'right' }
-  ] as const
+  const evaluateMatchRules = (activeRules: BattleRuleName[], ctx: RuleContext): boolean => {
+    let specialTriggered = false
+    const specialFlips: { x: number; y: number; card: GameCard; rule: 'Plus' | 'Same' }[] = []
 
-  adjacents.forEach(({ dy, dx, atk, def }) => {
-    const ny = ctx.y + dy
-    const nx = ctx.x + dx
-
-    if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
-      const defender = ctx.board[ny][nx].card
-      if (defender) {
-        const sum = ctx.attacker.values[atk] + defender.values[def]
-        if (!sums.has(sum)) sums.set(sum, [])
-        sums.get(sum)!.push({ x: nx, y: ny })
-      }
-    }
-  })
-
-  const captures: { x: number, y: number }[] = []
-  sums.forEach((targets) => {
-    if (targets.length >= 2) {
-      targets.forEach(t => {
-        const card = ctx.board[t.y][t.x].card
-        if (card && card.owner !== ctx.attacker.owner) {
-          captures.push(t)
+    if (activeRules.includes('plus')) {
+      const sums = new Map<number, { x: number; y: number; card: GameCard }[]>()
+      ADJACENTS.forEach(({ dy, dx, atk, def }) => {
+        const target = getAdj(ctx.board, ctx.x, ctx.y, dy, dx)
+        if (target?.card) {
+          const sum = ctx.attacker.values[atk as keyof typeof ctx.attacker.values] +
+            target.card.values[def as keyof typeof target.card.values]
+          if (!sums.has(sum)) sums.set(sum, [])
+          sums.get(sum)!.push({ x: target.x, y: target.y, card: target.card })
+        }
+      })
+      sums.forEach(list => {
+        if (list.length >= 2) {
+          list.forEach(item => {
+            if (item.card.owner !== ctx.attacker.owner) {
+              specialFlips.push({ ...item, rule: 'Plus' })
+              specialTriggered = true
+            }
+          })
         }
       })
     }
-  })
 
-  return captures
-}
-
-/**
- * Same Rule: If Attacker value === Defender value for at least 2 sides.
- */
-const applySameRule = (ctx: RuleContext): { x: number, y: number }[] => {
-  const matches: { x: number, y: number }[] = []
-  const adjacents = [
-    { dy: -1, dx: 0, atk: 'top', def: 'bottom' },
-    { dy: 1, dx: 0, atk: 'bottom', def: 'top' },
-    { dy: 0, dx: 1, atk: 'right', def: 'left' },
-    { dy: 0, dx: -1, atk: 'left', def: 'right' }
-  ] as const
-
-  adjacents.forEach(({ dy, dx, atk, def }) => {
-    const ny = ctx.y + dy
-    const nx = ctx.x + dx
-
-    if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
-      const defender = ctx.board[ny][nx].card
-      if (defender) {
-        // Check for exact value equality
-        if (ctx.attacker.values[atk] === defender.values[def]) {
-          matches.push({ x: nx, y: ny })
+    if (activeRules.includes('same')) {
+      const matches: { x: number; y: number; card: GameCard }[] = []
+      ADJACENTS.forEach(({ dy, dx, atk, def }) => {
+        const target = getAdj(ctx.board, ctx.x, ctx.y, dy, dx)
+        if (target?.card) {
+          const valAtk = ctx.attacker.values[atk as keyof typeof ctx.attacker.values]
+          const valDef = target.card.values[def as keyof typeof target.card.values]
+          if (valAtk === valDef) matches.push({ x: target.x, y: target.y, card: target.card })
         }
+      })
+      if (matches.length >= 2) {
+        matches.forEach(item => {
+          if (item.card.owner !== ctx.attacker.owner) {
+            specialFlips.push({ ...item, rule: 'Same' })
+            specialTriggered = true
+          }
+        })
       }
     }
-  })
 
-  const captures: { x: number, y: number }[] = []
-  // Rule only triggers if at least 2 sides match
-  if (matches.length >= 2) {
-    matches.forEach(m => {
-      const card = ctx.board[m.y][m.x].card
-      if (card && card.owner !== ctx.attacker.owner) {
-        captures.push(m)
-      }
-    })
-  }
-
-  return captures
-}
-
-const applyComboRule = (): { x: number, y: number }[] => {
-  return []
-}
-
-export const useBattleRules = () => {
-  const rulesMap: Record<BattleRuleName, (ctx: RuleContext) => { x: number, y: number }[]> = {
-    standard: applyStandardRule,
-    plus: applyPlusRule,
-    same: applySameRule,
-    combo: applyComboRule
-  }
-
-  const evaluateMatchRules = (activeRules: BattleRuleName[], ctx: RuleContext) => {
-    const totalCaptures = new Set<string>()
-
-    activeRules.forEach(ruleName => {
-      const ruleFn = rulesMap[ruleName]
-      if (ruleFn) {
-        const results = ruleFn(ctx)
-        results.forEach(pos => totalCaptures.add(`${pos.x},${pos.y}`))
+    specialFlips.forEach(f => {
+      f.card.owner = ctx.attacker.owner
+      f.card.lastRuleTrigger = f.rule
+      if (activeRules.includes('combo')) {
+        const comboResult = runCombo(ctx.board, f.x, f.y, ctx.attacker.owner)
+        if (comboResult) specialTriggered = true
       }
     })
 
-    totalCaptures.forEach(coord => {
-      const [cx, cy] = coord.split(',').map(Number)
-      const targetCard = ctx.board[cy][cx].card
-      if (targetCard) {
-        targetCard.owner = ctx.attacker.owner
-      }
-    })
+    if (activeRules.includes('standard')) {
+      ADJACENTS.forEach(({ dy, dx, atk, def }) => {
+        const target = getAdj(ctx.board, ctx.x, ctx.y, dy, dx)
+        if (target?.card && target.card.owner !== ctx.attacker.owner) {
+          const valAtk = ctx.attacker.values[atk as keyof typeof ctx.attacker.values]
+          const valDef = target.card.values[def as keyof typeof target.card.values]
+          if (valAtk > valDef) {
+            target.card.owner = ctx.attacker.owner
+          }
+        }
+      })
+    }
+
+    return specialTriggered
   }
 
   return { evaluateMatchRules }

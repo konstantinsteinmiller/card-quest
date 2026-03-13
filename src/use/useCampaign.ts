@@ -51,12 +51,24 @@ export const useCampaign = () => {
       name: t('node4'),
       description: t('mountain-2-desc'),
       npcDeck: ['golem-1', 'golem-1', 'rock-1', 'rock-1', 'eagle-1'],
-      position: { x: 85, y: 40 },
+      position: { x: 82, y: 40 },
+      unlocked: true,
+      completed: false,
+      unlocks: ['mountain-3'],
+      knownCards: [],
+      rules: ['standard', 'same']
+    },
+    {
+      id: 'mountain-3',
+      name: t('node5'),
+      description: t('mountain-3-desc'),
+      npcDeck: ['golem-1', 'golem-1', 'rock-1', 'rock-1', 'eagle-1'],
+      position: { x: 90, y: 30 },
       unlocked: true,
       completed: false,
       unlocks: ['castle-boss'],
       knownCards: [],
-      rules: ['standard', 'same']
+      rules: ['standard', 'same', 'plus', 'combo']
     },
     {
       id: 'castle-boss',

@@ -34,13 +34,15 @@ onMounted(() => {
         div.icon.flex.justify-center.mb-2
           div.icon.flex.justify-center(class="landscape:w-24 landscape:h-24 landscape:sm:w-24 landscape:sm:h-24")
             img.w-full.h-full(v-if="ruleModal === 'standard'" class="bg-white rounded-sm border-3 border-black"
-              src="/images/icons/standard-rule_128x128.webp")
+              src="/images/icons/rules/standard-rule_128x128.webp")
             img.w-full.h-full(v-else-if="ruleModal === 'plus'" class="bg-white rounded-sm border-3 border-amber-500"
-              src="/images/icons/plus-rule_128x128.webp")
+              src="/images/icons/rules/plus-rule_128x128.webp")
             img.w-full.h-full(v-else-if="ruleModal === 'same'" class="bg-white rounded-sm border-3 border-rose-500"
-              src="/images/icons/same-rule_128x128.webp")
-            img.w-full.h-full(v-else-if="ruleModal === 'combo'" class="bg-white rounded-sm border-23 border-blue-500"
-              src="/images/icons/same-rule_128x128.webp")
+              src="/images/icons/rules/same-rule_128x128.webp")
+            img.w-full.h-full(v-else-if="ruleModal === 'combo'" class="bg-white rounded-sm border-3 border-blue-500"
+              src="/images/icons/rules/combo-rule_128x128.webp")
+            img.w-full.h-full(v-else-if="ruleModal === 'elements'" class="bg-white rounded-sm border-3 border-blue-500"
+              src="/images/icons/rules/elements-rule_128x128.webp")
 
       template(#footer)
         FButton(:label="t('close')" @click="ruleModal = null")
