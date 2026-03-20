@@ -13,16 +13,17 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 # Todo
 
 - [x] basic game field
-    - [x] background image
-    - [x] grid images
-    - [x] visual error shake on wrong placement
-    - [x] show game rules on the scoreboard
+  - [x] background image
+  - [x] grid images
+  - [x] visual error shake on wrong placement
+  - [x] show game rules on the scoreboard
   - [x] indicator for what rule turned the card
 - [x] static selected cards
-    - [x] drag and drop for a card
-    - [x] tap to select a card and place
+  - [x] drag and drop for a card
+  - [x] tap to select a card and place
   - [ ] move placeholder showing what effect the placed card would have with eventual +1 or -1 calculation
   - [ ] placeholder shows element effects.
+  - [ ] show values involved in battle by highlighting them
 - [ ] Trading Rules + Battle rules
     - [x] plus rule
   - [x] same rule
@@ -61,21 +62,29 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [ ] enemy shows known cards face up
     - [x] make node popup pop with animation
 - [ ] Sound and bg music options
-- [ ] mute button on main menu
+- [x] mute button on main menu
 - [x] Card selection Page
     - [x] animate card selection
     - [x] Name
     - [ ] element
+- [ ] dark mode adjustment
+- [ ] Trade rules
+  - [ ] one rules
+  - [ ] all rules
+  - [ ] random rules
 
 ## Refactorings
 
-- [ ] replace remaining Modals with FModal
+- [x] replace remaining Modals with FModal
+- [ ] rule icons redo
+- [ ] layout cards book
+- [ ] oak texture redo
 
 ## Bugs
 
 - [x] double selection if card is multiple times in player hand
 - [x] mobile layout changes on landscape
-- [ ] tap outside Popup doesnt work
+- [x] tap outside Popup doesnt work
 
 ## Nice-to-have
 

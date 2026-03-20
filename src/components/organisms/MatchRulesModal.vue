@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import type { BattleRuleName } from '@/use/useBattleRules'
-import FModal from '@/components/atoms/FModal.vue'
+import FModal from '@/components/molecules/FModal.vue'
 import FButton from '@/components/atoms/FButton'
 import FSwitch from '@/components/atoms/FSwitch.vue'
 import RuleIcon from '@/components/atoms/RuleIcon'

@@ -1,35 +1,47 @@
 <template lang="pug">
-  Modal(:is-open="isOpen")
-    h2.text-2xl.font-black.uppercase.italic.mb-3.text-outline.text-blue-300(class="md:mb-6") {{ t('difficulty') }}
+  FModal(
+    :model-value="isOpen"
+    :is-closable="false"
+    :title="t('difficulty')"
+    :tabs="[{ label: t('difficulty'), value: 'diff' }, { label: t('audio'), value: 'sound' }]"
+    v-model:activeTab="currentTab"
+    @update:model-value="emit('close')"
+  )
+    div(v-if="currentTab === 'diff'")
+      div(class="flex flex-col gap-1")
+        FButton(
+          v-for="difficulty in [DIFFICULTY.EASY, DIFFICULTY.MEDIUM, DIFFICULTY.HARD]"
+          :key="difficulty"
+          :type="userDifficulty === difficulty ? 'primary' : 'secondary'"
+          @click="setSettingValue('difficulty', difficulty)"
+        ) {{ t(difficulty) }}
 
-    div.flex.flex-col.gap-1
-      FButton(
-        v-for="difficulty in [DIFFICULTY.EASY, DIFFICULTY.MEDIUM, DIFFICULTY.HARD]"
-        :key="difficulty"
-        :type="userDifficulty === difficulty ? 'primary' : 'secondary'"
-        @click="setSettingValue('difficulty', difficulty)"
-      ) {{ t(difficulty) }}
-
-      hr.border-slate-600.my-1(class="md:my-2 pt-0")
-
-      FButton(@click="emit('close')") {{ t('close') }}
+        hr(class="border-slate-600 my-1 md:my-2 pt-0")
+    div(v-else) Audio Settings...
+      hr(class="border-slate-600 my-1 md:my-2 pt-0")
+    FButton(@click="emit('close')") {{ t('close') }}
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { useMatch } from '@/use/useMatch'
 import useUser from '@/use/useUser'
-import Modal from '@/components/molecules/Modal'
+import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
-import { DIFFICULTY } from '@/utils/enums.ts'
+import { DIFFICULTY } from '@/utils/enums'
+import { ref } from 'vue'
 
 defineProps<{
   isOpen: boolean
 }>()
-const emit = defineEmits(['close'])
+
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
 
 const { t } = useI18n()
 const { setSettingValue, userDifficulty } = useUser()
+
+const currentTab = ref('diff')
 </script>
 
 <style lang="sass" scoped>
@@ -39,13 +51,13 @@ const { setSettingValue, userDifficulty } = useUser()
 
 <i18n>
 en:
-  difficulty: "AI Difficulty"
+  difficulty: "Difficulty"
   easy: "Novice"
   medium: "Squire"
   hard: "Master"
   close: "Save & Close"
 de:
-  difficulty: "KI Schwierigkeit"
+  difficulty: "Schwierigkeit"
   easy: "Anfänger"
   medium: "Knappe"
   hard: "Meister"

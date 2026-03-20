@@ -46,7 +46,7 @@ import OptionsModal from '@/components/organisms/OptionsModal'
 import FButton from '@/components/atoms/FButton'
 import { activeRules, isCampaignMatch } from '@/use/useMatch'
 import useUser, { version } from '@/use/useUser'
-import FModal from '@/components/atoms/FModal.vue'
+import FModal from '@/components/molecules/FModal'
 
 const router = useRouter()
 const { t } = useI18n()

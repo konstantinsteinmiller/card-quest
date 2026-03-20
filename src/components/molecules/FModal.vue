@@ -1,18 +1,27 @@
 <script setup lang="ts">
+import FTabs, { type TabOption } from '@/components/atoms/FTabs'
+
 interface Props {
-  modelValue: boolean | any;
-  title?: string;
-  isClosable?: boolean;
+  modelValue: boolean | any
+  title?: string
+  isClosable?: boolean
+  tabs?: TabOption[]
+  activeTab?: string | number
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isClosable: true
+  isClosable: true,
+  tabs: () => []
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:activeTab'])
 
 const close = () => {
   emit('update:modelValue', false)
+}
+
+const handleTabChange = (val: string | number) => {
+  emit('update:activeTab', val)
 }
 </script>
 
@@ -32,23 +41,30 @@ const close = () => {
       //- Modal Container
       div(class="relative w-full max-w-lg")
 
-        //- Header Ribbon (The yellow title bar)
-        div(class="absolute -top-6 left-1/2 -translate-x-1/2 z-10 scale-70 sm:scale-100")
-          div(class="relative")
-            //- Shadow of the ribbon
-            div(class="absolute inset-0 translate-y-1 rounded-lg bg-[#1a2b4b]")
-            //- Main Ribbon Body
-            div(class="relative flex items-center justify-center bg-gradient-to-b from-[#ffcd00] to-[#f7a000] border-4 border-[#0f1a30] px-10 py-2 rounded-xl")
-              span(class="brawl-text text-2xl md:text-3xl text-white uppercase tracking-wider whitespace-nowrap")
-                | {{ title }}
+        //- Header Area (Tabs or Ribbon)
+        div(class="absolute -top-10 left-0 right-0 z-10")
+          //- CASE 1: Tabs provided
+          template(v-if="tabs && tabs.length > 0")
+            FTabs(
+              :model-value="activeTab"
+              @update:model-value="handleTabChange"
+              :options="tabs"
+            )
+
+          //- CASE 2: Single Title Ribbon
+          template(v-else-if="title")
+            div(class="flex justify-center scale-70 sm:scale-100")
+              div(class="relative")
+                div(class="absolute inset-0 translate-y-1 rounded-lg bg-[#1a2b4b]")
+                div(class="relative flex items-center justify-center bg-gradient-to-b from-[#ffcd00] to-[#f7a000] border-4 border-[#0f1a30] px-10 py-2 rounded-xl")
+                  span(class="brawl-text text-2xl md:text-3xl text-white uppercase tracking-wider whitespace-nowrap")
+                    | {{ title }}
 
         //- The Main Frame
         div(class="relative")
-          //- The "Bottom Shadow" of the whole modal
           div(class="absolute inset-0 translate-y-2 rounded-[1.5rem] sm:rounded-[2.5rem] bg-[#0c1626]")
 
-          //- The Modal Body
-          div(class="relative bg-[#1a2b4b] border-[5px] border-[#0f1a30] rounded-[1.25rem] sm:rounded-[2rem] pt-7 pb-4 px-2 sm:px-4 sm:pt-6 sm:pb-4 md:p-8 md:pb-6 md:pt-10")
+          div(class="relative bg-[#1a2b4b] border-[5px] border-[#0f1a30] rounded-[1.25rem] sm:rounded-[2rem] pt-7 pb-0 px-2 sm:px-4 sm:pt-6  md:p-8 md:pb-2 md:pt-10")
 
             //- Close Button (X)
             button(
@@ -67,12 +83,11 @@ const close = () => {
               slot
 
             //- Footer Area for Actions
-            div(class="mt-3 flex justify-center gap-4")
+            div(class="mt-2 flex justify-center gap-4 mb-2")
               slot(name="footer")
 </template>
 
 <style scoped lang="sass">
-// Pop animation for the Brawl Stars feel
 .pop-enter-active
   animation: bounce-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)
 

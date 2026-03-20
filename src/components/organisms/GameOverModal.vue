@@ -1,45 +1,51 @@
 <template lang="pug">
-  Modal(:is-open="isOpen")
-    //- Result Header
-    h2.font-black.uppercase.italic.tracking-tighter.mb-2.text-outline(
-      class="text-2xl sm::text-3xl md:text-5xl"
-      :class="[result === 'win' ? 'text-blue-400' : result === 'lose' ? 'text-red-400' : 'text-slate-300']"
-    ) {{ t(result) }}
-
+  FModal(
+    :model-value="isOpen"
+    :is-closable="false"
+    :title="t(result)"
+  )
     //- Score Display
-    div.flex.items-center.justify-center.gap-6.my-6(class="sm:my-3")
-      div.flex.flex-col.items-center
-        span.text-2xl 👹
-        span.text-3xl.font-bold {{ scores.npc }}
-      div.text-2xl.font-italic.text-slate-500 VS
-      div.flex.flex-col.items-center
-        span.text-2xl 🧚
-        span.text-3xl.font-bold {{ scores.player }}
+    div(class="flex items-center justify-center gap-6 my-6 sm:my-3")
+      div(class="flex flex-col items-center")
+        span(class="text-2xl") 👹
+        span(class="text-3xl font-bold") {{ scores.npc }}
 
-    //- Action Buttons
-    div.flex.flex-col.gap-2(class="text-sm md:text-xl sm:gap-1")
-      FButton(@click="emit('reset')") {{ t('playAgain') }}
-      FButton(type="secondary" @click="router.push({name: 'main-menu'})") {{ t('backToMainMenu') }}
+      div(class="text-2xl italic text-slate-500 font-black") VS
+
+      div(class="flex flex-col items-center")
+        span(class="text-2xl") 🧚
+        span(class="text-3xl font-bold") {{ scores.player }}
+
+    //- Action Buttons in Footer Slot
+    template(#footer)
+      div(class="flex flex-col gap-2 w-full max-w-[280px] text-sm md:text-xl sm:gap-1")
+        FButton(@click="emit('reset')") {{ t('playAgain') }}
+        FButton(
+          type="secondary"
+          @click="router.push({ name: 'main-menu' })"
+        ) {{ t('backToMainMenu') }}
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Modal from '@/components/molecules/Modal.vue'
-import FButton from '@/components/atoms/FButton.vue'
 import { useRouter } from 'vue-router'
-
-const router = useRouter()
-const { t } = useI18n()
+import FModal from '@/components/molecules/FModal'
+import FButton from '@/components/atoms/FButton'
 
 const props = defineProps<{
   isOpen: boolean
   scores: { player: number; npc: number }
 }>()
 
-const emit = defineEmits(['reset'])
+const emit = defineEmits<{
+  (e: 'reset'): void
+}>()
 
-const result = computed(() => {
+const router = useRouter()
+const { t } = useI18n()
+
+const result = computed((): 'win' | 'lose' | 'draw' => {
   if (props.scores.player > props.scores.npc) return 'win'
   if (props.scores.npc > props.scores.player) return 'lose'
   return 'draw'

@@ -2,7 +2,7 @@
 import { RouterView } from 'vue-router'
 import { onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import FModal from '@/components/atoms/FModal'
+import FModal from '@/components/molecules/FModal.vue'
 import FButton from '@/components/atoms/FButton'
 import { playerSelection, ruleModal } from '@/use/useMatch'
 import { isMobileLandscape, orientation } from '@/use/useUser'
