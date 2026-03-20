@@ -20,8 +20,8 @@
     )
       // Menu
       div.flex.flex-col.gap-4.relative.z-10
-        FButton(@click="router.push({ name: 'deck' })") {{ t('play') }}
         FButton(@click="onCampaign") {{ t('campaign') }}
+        FButton(@click="router.push({ name: 'deck' })") {{ t('play') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
 
     FModal(v-if="false" v-model="showOptions" title="New Card!")

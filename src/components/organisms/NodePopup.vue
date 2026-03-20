@@ -31,11 +31,11 @@
           h2(class="text-xl font-black text-yellow-400 uppercase tracking-wide text-shadow") {{ node.name }}
 
         //- Body
-        div(class="p-5 text-center")
-          p(class="text-sm text-white mb-4 italic text-shadow") "{{ node.description }}"
+        div(class="p-5 text-center" :class="{ '!p-1 !pb-2': isMobileLandscape }")
+          p(class="text-sm text-white mb-4 italic text-shadow" :class="{ '!mb-2': isMobileLandscape }") "{{ node.description }}"
 
           //- Tiny Deck Preview
-          div(class="flex justify-center gap-1 mb-5")
+          div(class="flex justify-center gap-1 mb-5" :class="{ '!mb-2': isMobileLandscape }")
             div(
               v-for="i in 5"
               :key="i"
@@ -58,7 +58,7 @@
             )
 
         //- Action Footer
-        div(class="p-4 pt-0")
+        div(class="p-4 pt-0" :class="{ '!pb-2': isMobileLandscape }")
           FButton(
             :attention="true"
             @click="emit('start')"
@@ -71,6 +71,9 @@ import FCloseButton from '@/components/atoms/FCloseButton'
 import FButton from '@/components/atoms/FButton'
 import RuleIcon from '@/components/atoms/RuleIcon'
 import { useI18n } from 'vue-i18n'
+import { isMobileLandscape, orientation } from '@/use/useUser'
+import { computed, ref } from 'vue'
+import { mobileCheck } from '@/utils/function.ts'
 
 defineProps<{
   node: CampaignNode
@@ -82,6 +85,9 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+const windowWidth = ref(window.innerWidth)
+const isMobileLandscape = computed(() => mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape')
 </script>
 
 <style lang="sass" scoped>

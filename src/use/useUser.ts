@@ -7,6 +7,7 @@ import { mobileCheck } from '@/utils/function'
 const windowWidth = ref(window.innerWidth)
 export const orientation = ref(mobileCheck() && windowWidth.value > 500 ? 'landscape' : 'portrait')
 export const isMobileLandscape = computed(() => mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape')
+export const isMobilePortrait = computed(() => mobileCheck() && windowWidth.value <= 500)
 
 export const version: string = import.meta.env.VITE_APP_VERSION
 const userDifficulty: Ref<Difficulties> = ref(DIFFICULTY.HARD)

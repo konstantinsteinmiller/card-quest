@@ -25,15 +25,15 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [ ] placeholder shows element effects.
   - [ ] show values involved in battle by highlighting them
 - [ ] Trading Rules + Battle rules
-    - [x] plus rule
+  - [x] plus rule
   - [x] same rule
   - [x] combo rule
-    - [ ] low card rule
+  - [ ] low card rule
   - [ ] elements rule
 - [ ] Npc logic
-    - [x] random choice
-    - [x] smart choice
-    - [x] different difficulty levels
+  - [x] random choice
+  - [x] smart choice
+  - [x] different difficulty levels
 - [x] Card Models
     - [x] load card images
     - [x] elements in model
@@ -67,16 +67,20 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] animate card selection
     - [x] Name
     - [ ] element
-- [ ] dark mode adjustment
+- [ ] (native) dark mode adjustment
 - [ ] Trade rules
   - [ ] one rules
   - [ ] all rules
   - [ ] random rules
+- [ ] Crazy Web games SDK
+  - [ ] make game launchable
+  - [ ] ads
+  - [ ] performance tracking
 
 ## Refactorings
 
 - [x] replace remaining Modals with FModal
-- [ ] rule icons redo
+- [x] rule icons redo
 - [ ] layout cards book
 - [ ] oak texture redo
 

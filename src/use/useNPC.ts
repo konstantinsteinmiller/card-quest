@@ -33,6 +33,8 @@ export const useNPC = (
       return moves[Math.floor(Math.random() * moves.length)]
     }
 
+    const isLowRule = activeRules.value.includes('low')
+
     moves.forEach((move) => {
       const card = npcHand.value.find(c => c.instanceId === move.cardInstanceId)!
       let score = 0
@@ -46,21 +48,34 @@ export const useNPC = (
         if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
           const target = board.value[ny][nx].card
           if (target) {
+            const valAtk = card.values[adj.side]
+            const valDef = target.values[adj.opp]
+
+            // Plus Rule Logic
             if (activeRules.value.includes('plus')) {
-              const sum = card.values[adj.side] + target.values[adj.opp]
+              const sum = valAtk + valDef
               if (!sums.has(sum)) sums.set(sum, [])
               sums.get(sum)!.push({ x: nx, y: ny, card: target })
             }
+
+            // Same Rule Logic
             if (activeRules.value.includes('same')) {
-              if (card.values[adj.side] === target.values[adj.opp]) sameMatches.push({ x: nx, y: ny, card: target })
+              if (valAtk === valDef) sameMatches.push({ x: nx, y: ny, card: target })
             }
-            if (activeRules.value.includes('standard') && target.owner === 'player') {
-              if (card.values[adj.side] > target.values[adj.opp]) score += 1
+
+            // Standard or Low Capture Logic
+            if (target.owner === 'player') {
+              if (isLowRule) {
+                if (valAtk < valDef) score += 1
+              } else if (activeRules.value.includes('standard')) {
+                if (valAtk > valDef) score += 1
+              }
             }
           }
         }
       })
 
+      // Process Plus/Same Results
       if (activeRules.value.includes('plus')) {
         sums.forEach(list => {
           if (list.length >= 2) {
@@ -83,6 +98,7 @@ export const useNPC = (
         })
       }
 
+      // Combo Logic (respects Low rule for subsequent flips)
       if (activeRules.value.includes('combo') && specialCaptured.length > 0) {
         specialCaptured.forEach(sc => {
           ADJ.forEach(adj => {
@@ -90,9 +106,15 @@ export const useNPC = (
             const ny = sc.y + adj.dy
             if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
               const victim = board.value[ny][nx].card
-              const isAlreadyCaptured = specialCaptured.some(s => s.x === nx && s.y === ny)
-              if (victim && victim.owner === 'player' && !isAlreadyCaptured) {
-                if (sc.card.values[adj.side] > victim.values[adj.opp]) score += 1.2
+              if (victim && victim.owner === 'player' && !specialCaptured.some(s => s.x === nx && s.y === ny)) {
+                const scVal = sc.card.values[adj.side]
+                const vicVal = victim.values[adj.opp]
+
+                if (isLowRule) {
+                  if (scVal < vicVal) score += 1.2
+                } else {
+                  if (scVal > vicVal) score += 1.2
+                }
               }
             }
           })
@@ -101,10 +123,12 @@ export const useNPC = (
 
       move.score = score
       if (difficulty.value === DIFFICULTY.HARD) {
+        // Corners are valuable defensive positions
         if ((move.x === 0 || move.x === 2) && (move.y === 0 || move.y === 2)) move.score += 0.4
       }
     })
 
+    // Sort to get the highest score move
     moves.sort((a, b) => b.score - a.score)
     return moves[0]
   }
@@ -123,6 +147,8 @@ export const useNPC = (
   watch(turn, (newTurn) => {
     if (newTurn === 'npc') makeMove()
   }, { immediate: true })
+
+  return { makeMove }
 }
 
 export default useNPC

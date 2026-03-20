@@ -22,3 +22,16 @@ export interface BoardSlot {
 }
 
 export type GameTurn = 'player' | 'npc'
+
+export interface GameState {
+  board: BoardSlot[][];
+  playerHand: GameCard[];
+  npcHand: GameCard[];
+  turn: 'player' | 'npc';
+  activeRules: string[]; // e.g., ['plus', 'same', 'low']
+  score: {
+    player: number;
+    npc: number;
+  };
+  winner: 'player' | 'npc' | 'draw' | null;
+}

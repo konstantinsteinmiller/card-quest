@@ -30,12 +30,14 @@ export default {
     },
     rule: {
       standard: 'Normal',
+      low: 'Low',
       same: 'Same',
       plus: 'Plus',
       combo: 'Combo'
     },
     'rule-desc': {
       standard: 'Higher number turns the lower number card.',
+      low: 'Lower number turns the higher number card.',
       same: 'If your cards attack value = defense value on at least two sides, you will capture those cards.',
       plus: 'With Plus, you add adjacent numbers (each side is separate). If they have the same sum, you capture each card.',
       combo: 'This rule is only applicable when \'Same\' or \'Plus\' are active. Once you activate either rule, any cards adjacent to the flips are compared as if you had actively placed that card down yourself. Combo captures normally (greater number captures lower number), and does not apply \'Plus\' or \'Same\' again.'
@@ -73,12 +75,14 @@ export default {
     },
     rule: {
       standard: 'Normal',
+      low: 'Niedrig',
       same: 'Gleich',
       plus: 'Plus',
       combo: 'Combo'
     },
     'rule-desc': {
       standard: 'Die höhere Zahl erobert die niedrigere.',
+      low: 'Die kleinere Zahl erobert die höhere.',
       same: 'Gleich ist eine einfache Regel. Wenn Angreiferwert = Verteidigungswert auf mindestens zwei Seiten deiner Karte, eroberst du diese Karten.',
       plus: 'Mit Plus addierst du benachbarte Zahlen (jede Seite ist separat). Wenn sie die gleiche Summe haben, eroberst du jede Karte.',
       combo: 'Diese Regel gilt nur, wenn \'Gleich\' oder \'Plus\' aktiv sind. Sobald du eine der beiden Regeln aktivierst, werden alle Karten, die an die Flips angrenzen, so verglichen, als hättest du diese Karte selbst aktiv platziert. Combo erobert Normal (höhere Zahl erobert niedrigere Zahl) und wendet \'Plus\' oder \'Gleich\' nicht erneut an.'
