@@ -30,14 +30,14 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] same rule
   - [x] combo rule
   - [x] low card rule
-  - [ ] elements rule
+  - [ ] Opt: elements rule
 
 - [ ] Trade rules
   - [ ] one rules
   - [ ] all rules
   - [ ] random rules
 
-- [ ] Npc logic
+- [x] Npc logic
   - [x] random choice
   - [x] smart choice
   - [x] different difficulty levels
@@ -75,22 +75,28 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] make node popup pop with animation
   - [ ] save progress after campaign battle
 
-- [ ] OptionsModal
-  - [ ] language options
-- [ ] Sound and bg music options
+- [x] OptionsModal
+  - [x] music
   - [x] Slider component
-  - [x] Volume slider for music and sound effects
-  - [ ] bg music
-  - [ ] sound effect for card placement
-  - [ ] sound effect for card turn
-  - [ ] sound effect for plus, same, combo
+  - [x] FSelect component
+  - [x] do not ask rules again
+  - [x] language options
+    - [x] Volume slider for music and sound effects
+
+- [ ] Sound and bg music
+    - [ ] bg music
+    - [ ] sound effect for card placement
+    - [ ] sound effect for card turn
+    - [ ] sound effect for plus, same, combo
 
 - [x] mute button on main menu
 - [x] Card selection Page
     - [x] animate card selection
     - [x] Name
     - [ ] element
+
 - [ ] (native) dark mode adjustment
+
 - [ ] Crazy Web games SDK
   - [ ] make game launchable
   - [ ] ads

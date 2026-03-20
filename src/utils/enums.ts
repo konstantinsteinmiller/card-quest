@@ -24,3 +24,14 @@ export const ELEMENTS = {
 } as const
 
 export type Element = (typeof ELEMENTS)[keyof typeof ELEMENTS]
+
+export const LANGUAGES: Array<string> = [
+  'en',
+  'de',
+  'es',
+  'fr',
+  'jp',
+  'kr',
+  'ru',
+  'zh'
+]

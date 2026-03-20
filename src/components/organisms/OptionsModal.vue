@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue' // Added computed
 import { useI18n } from 'vue-i18n'
 import useUser from '@/use/useUser'
 import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
 import FSwitch from '@/components/atoms/FSwitch'
 import FSlider from '@/components/atoms/FSlider'
-import { DIFFICULTY } from '@/utils/enums'
+import FSelect from '@/components/atoms/FSelect' // Import FSelect
+import { DIFFICULTY, LANGUAGES } from '@/utils/enums' // Import LANGUAGES
 import { prependBaseUrl } from '@/utils/function'
 
 defineProps<{
@@ -18,9 +19,31 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const { setSettingValue, userDifficulty, userSkipRulesModal, userSoundVolume, userMusicVolume } = useUser()
+const { locale }: any = useI18n({ useScope: 'global' })
+
+const {
+  setSettingValue,
+  userLanguage,
+  userDifficulty,
+  userSkipRulesModal,
+  userSoundVolume,
+  userMusicVolume
+} = useUser()
 
 const currentTab = ref('general')
+
+watch(userLanguage, (newValue: string) => {
+  locale.value = newValue
+})
+
+// Map the string array to the Option interface for FSelect
+const languagesList = computed(() => {
+  return LANGUAGES.map(locale => ({
+    value: locale,
+    label: `${t(locale)} (${locale})`,
+    locale: userLanguage.value
+  }))
+})
 </script>
 
 <template lang="pug">
@@ -36,9 +59,20 @@ const currentTab = ref('general')
   )
     //- General Tab
     div(v-if="currentTab === 'general'")
-      div(class="flex flex-col gap-4 p-2")
+      div(class="flex flex-col gap-2 p-2")
+        //- Language Selection
+        div(class="flex flex-col gap-2")
+          FSelect(
+            :label="t('language')"
+            :options="languagesList"
+            :model-value="userLanguage"
+            @update:model-value="setSettingValue('language', $event)"
+          )
+
+        hr(class="border-slate-600 my-1 md:my-2 pt-0")
+
         div(class="flex items-center justify-between")
-          span(class="text-sm font-medium text-slate-200") {{ t('showRulesModal') }}
+          span(class="text-sm md:text-base font-black text-white uppercase italic") {{ t('showRulesModal') }}
           FSwitch(
             :model-value="!userSkipRulesModal"
             @update:model-value="setSettingValue('skipRulesModal', !$event)"
@@ -59,7 +93,8 @@ const currentTab = ref('general')
     //- Audio Tab
     div(v-else).flex.flex-col.justify-between.items-center
       FSlider.px-4(class="!py-1 !pb-3 !max-w-[300px]" :model-value="userSoundVolume" @update:modelValue="setSettingValue('sound', $event)" :label="t('soundEffects')" :min="0" :max="100" :step="1")
-      FSlider.px-4(class="!py-1 !pb-2 !max-w-[300px]" :model-value="userMusicVolume" @update:modelValue="setSettingValue('music', $event)" :label="t('music')" :min="0" :max="100" :step="1")    hr(class="border-slate-600 my-1 md:my-2 pt-0")
+      FSlider.px-4(class="!py-1 !pb-2 !max-w-[300px]" :model-value="userMusicVolume" @update:modelValue="setSettingValue('music', $event)" :label="t('music')" :min="0" :max="100" :step="1")
+      hr(class="border-slate-600 my-1 md:my-2 pt-0")
 
     template(#footer)
       FButton.w-full(@click="emit('close')") {{ t('close') }}
@@ -68,6 +103,9 @@ const currentTab = ref('general')
 <style lang="sass" scoped>
 .diff-btn
   @apply py-3 px-6 rounded-lg uppercase font-bold transition-all hover:brightness-125
+
+span
+  text-shadow: 2px 2px 0 #000
 </style>
 
 <i18n lang="yaml">
@@ -76,6 +114,7 @@ en:
   general: "General"
   difficulty: "Difficulty"
   audio: "Audio"
+  language: "Language"
   showRulesModal: "Show Match Rules before game"
   audioSettingsPlaceholder: "Audio Settings coming soon..."
   easy: "Novice"
@@ -84,11 +123,20 @@ en:
   close: "Save & Close"
   soundEffects: "Sound Effects"
   music: "Music"
+  en: "English"
+  de: "German"
+  fr: "French"
+  es: "Spanish"
+  jp: "Japan"
+  kr: "Korean"
+  zh: "Chinese"
+  ru: "Russian"
 de:
   options: "Optionen"
   general: "Allgemein"
   difficulty: "Schwierigkeit"
   audio: "Audio"
+  language: "Sprache"
   showRulesModal: "Kampfregeln vor dem Spiel anzeigen"
   audioSettingsPlaceholder: "Audio-Einstellungen folgen in Kürze..."
   easy: "Anfänger"
@@ -97,4 +145,144 @@ de:
   close: "Speichern & Schließen"
   soundEffects: "Soundeffekte"
   music: "Musik"
+  en: "Englisch"
+  de: "Deutsch"
+  fr: "Französisch"
+  es: "Spanisch"
+  jp: "Japanisch"
+  kr: "Koreanisch"
+  zh: "Chinesisch"
+  ru: "Russisch"
+fr:
+  options: "Options"
+  general: "Général"
+  difficulty: "Difficulté"
+  audio: "Audio"
+  language: "Langue"
+  showRulesModal: "Afficher les règles avant le match"
+  audioSettingsPlaceholder: "Paramètres audio bientôt disponibles..."
+  easy: "Novice"
+  medium: "Écuyer"
+  hard: "Maître"
+  close: "Sauvegarder et Fermer"
+  soundEffects: "Effets Sonores"
+  music: "Musique"
+  en: "Anglais"
+  de: "Allemand"
+  fr: "Français"
+  es: "Espagnol"
+  jp: "Japonais"
+  kr: "Coréen"
+  zh: "Chinois"
+  ru: "Russe"
+es:
+  options: "Opciones"
+  general: "General"
+  difficulty: "Dificultad"
+  audio: "Audio"
+  language: "Idioma"
+  showRulesModal: "Mostrar reglas antes del juego"
+  audioSettingsPlaceholder: "Ajustes de audio próximamente..."
+  easy: "Novicio"
+  medium: "Escudero"
+  hard: "Maestro"
+  close: "Guardar y Cerrar"
+  soundEffects: "Efectos de Sonido"
+  music: "Música"
+  en: "Inglés"
+  de: "Alemán"
+  fr: "Francés"
+  es: "Español"
+  jp: "Japonés"
+  kr: "Coreano"
+  zh: "Chino"
+  ru: "Ruso"
+jp:
+  options: "オプション"
+  general: "全般"
+  difficulty: "難易度"
+  audio: "オーディオ"
+  language: "言語"
+  showRulesModal: "対戦前にルールを表示する"
+  audioSettingsPlaceholder: "オーディオ設定は近日公開予定..."
+  easy: "初級"
+  medium: "従騎士"
+  hard: "マスター"
+  close: "保存して閉じる"
+  soundEffects: "効果音"
+  music: "音楽"
+  en: "英語"
+  de: "ドイツ語"
+  fr: "フランス語"
+  es: "スペイン語"
+  jp: "日本語"
+  kr: "韓国語"
+  zh: "中国語"
+  ru: "ロシア語"
+kr:
+  options: "옵션"
+  general: "일반"
+  difficulty: "난이도"
+  audio: "오디오"
+  language: "언어"
+  showRulesModal: "경기 전 규칙 표시"
+  audioSettingsPlaceholder: "오디오 설정이 곧 추가될 예정입니다..."
+  easy: "초보"
+  medium: "종자"
+  hard: "마스터"
+  close: "저장 후 닫기"
+  soundEffects: "음향 효과"
+  music: "음악"
+  en: "영어"
+  de: "독일어"
+  fr: "프랑스어"
+  es: "스페인어"
+  jp: "일본어"
+  kr: "한국어"
+  zh: "중국어"
+  ru: "러시아어"
+zh:
+  options: "选项"
+  general: "常规"
+  difficulty: "难度"
+  audio: "音频"
+  language: "语言"
+  showRulesModal: "游戏前显示比赛规则"
+  audioSettingsPlaceholder: "音频设置即将推出..."
+  easy: "新手"
+  medium: "侍从"
+  hard: "大师"
+  close: "保存并关闭"
+  soundEffects: "音效"
+  music: "音乐"
+  en: "英语"
+  de: "德语"
+  fr: "法语"
+  es: "西班牙语"
+  jp: "日语"
+  kr: "韩语"
+  zh: "中文"
+  ru: "俄语"
+ru:
+  options: "Опции"
+  general: "Общие"
+  difficulty: "Сложность"
+  audio: "Аудио"
+  language: "Язык"
+  showRulesModal: "Показывать правила перед игрой"
+  audioSettingsPlaceholder: "Настройки звука скоро появятся..."
+  easy: "Новичок"
+  medium: "Оруженосец"
+  hard: "Мастер"
+  close: "Сохранить и Закрыть"
+  soundEffects: "Звуковые эффекты"
+  music: "Музыка"
+  en: "Английский"
+  de: "Немецкий"
+  fr: "Французский"
+  es: "Испанский"
+  jp: "Японский"
+  kr: "Корейский"
+  zh: "Китайский"
+  ru: "Русский"
 </i18n>

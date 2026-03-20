@@ -38,8 +38,9 @@ const selectTab = (value: string | number) => {
       div(
         :class="[\
           'relative px-4 py-2 sm:px-8 sm:py-3 border-x-4 border-t-4 border-[#0f1a30] rounded-t-xl sm:rounded-t-2xl font-black uppercase italic tracking-wider transition-colors',\
-          modelValue === tab.value \
-            ? 'bg-gradient-to-b from-[#ffcd00] to-[#f7a000] text-white shadow-[inset_0_4px_0_rgba(255,255,255,0.4)]' \
+          tab.icon ? 'cursor-pointer': '', \
+            modelValue === tab.value \
+            ? 'bg-gradient-to-b from-[#ffcd00] to-[#f7a000] text-white shadow-[inset_0_4px_0_rgba(255,255,255,0.4)]'\
             : 'bg-[#2a4372] opacity-80 text-[#8fa7d1] hover:bg-[#34538d]'\
         ]"
       )
