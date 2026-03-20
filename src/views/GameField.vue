@@ -8,6 +8,14 @@
       @close="showRules = false"
     )
 
+    CardTradeModal(
+      :is-open="showTradeModal"
+      :scores="scores"
+      :player-hand="tradePlayerCards"
+      :npc-hand="tradeNpcCards"
+      @continue="handleTradeContinue"
+    )
+
     GameOverModal(
       :is-open="isGameOver"
       :scores="scores"
@@ -81,6 +89,7 @@ import CardDisplay from '@/components/CardDisplay'
 import ScoreBoard from '@/components/ScoreBoard'
 import GameOverModal from '@/components/organisms/GameOverModal'
 import MatchRulesModal from '@/components/organisms/MatchRulesModal'
+import CardTradeModal from '@/components/organisms/CardTradeModal'
 import useUser from '@/use/useUser'
 
 const { turn, playerHand, npcHand, board, resetGame, placeCard, isBoardFull, activeRules } = useMatch()
@@ -105,13 +114,41 @@ onMounted(() => {
 })
 
 const isGameOver = ref<boolean>(false)
+const showTradeModal = ref<boolean>(false)
+
 watch(isBoardFull, () => {
-  isBoardFull.value
-    ? setTimeout(() => {
-      isGameOver.value = isBoardFull.value
+  if (isBoardFull.value) {
+    setTimeout(() => {
+      showTradeModal.value = true
     }, 550)
-    : isGameOver.value = isBoardFull.value
+  } else {
+    isGameOver.value = false
+    showTradeModal.value = false
+  }
 })
+
+// Calculate the total cards assigned to each player to present on the Trade Modal
+const tradePlayerCards = computed(() => {
+  const cards = [...playerHand.value]
+  board.value.forEach(row => row.forEach(slot => {
+    if (slot.card && slot.card.owner === 'player') cards.push(slot.card)
+  }))
+  return cards
+})
+
+const tradeNpcCards = computed(() => {
+  const cards = [...npcHand.value]
+  board.value.forEach(row => row.forEach(slot => {
+    if (slot.card && slot.card.owner === 'npc') cards.push(slot.card)
+  }))
+  return cards
+})
+
+// Triggered when the user clicks 'continue' on the Trade Modal
+const handleTradeContinue = () => {
+  showTradeModal.value = false
+  isGameOver.value = true
+}
 
 const scores = computed(() => {
   let pS = playerHand.value.length

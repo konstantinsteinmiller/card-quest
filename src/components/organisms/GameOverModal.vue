@@ -6,15 +6,13 @@
   )
     //- Score Display
     div(class="flex items-center justify-center gap-6 my-6 sm:my-3")
-      div(class="flex flex-col items-center")
-        span(class="text-2xl") 👹
-        span(class="text-3xl font-bold") {{ scores.npc }}
+      div.flex.flex-col.items-center(class="")
+        span.text-red-500.text-2xl.font-bold(class="") {{ scores.npc }}
 
       div(class="text-2xl italic text-slate-500 font-black") VS
 
-      div(class="flex flex-col items-center")
-        span(class="text-2xl") 🧚
-        span(class="text-3xl font-bold") {{ scores.player }}
+      div.flex.flex-col.items-center(class="")
+        span.text-blue-500.text-2xl.font-bold(class="") {{ scores.player }}
 
     //- Action Buttons in Footer Slot
     template(#footer)
