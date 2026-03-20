@@ -42,7 +42,7 @@ const handleTabChange = (val: string | number) => {
       div(class="relative w-full max-w-lg")
 
         //- Header Area (Tabs or Ribbon)
-        div(class="absolute -top-10 left-0 right-0 z-10")
+        div(class="absolute -top-10 left-0 translate-y-2 right-0 z-10")
           //- CASE 1: Tabs provided
           template(v-if="tabs && tabs.length > 0")
             FTabs(

@@ -54,6 +54,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] show winner / loser / draw
     - [x] restart game button
     - [x] frame
+  - [ ] continue Campaign
+
 - [x] Main Menu
     - [x] start game button
     - [x] create Logo
@@ -71,7 +73,18 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [ ] different levels with different NPCs
     - [ ] enemy shows known cards face up
     - [x] make node popup pop with animation
+  - [ ] save progress after campaign battle
+
+- [ ] OptionsModal
+  - [ ] language options
 - [ ] Sound and bg music options
+  - [x] Slider component
+  - [x] Volume slider for music and sound effects
+  - [ ] bg music
+  - [ ] sound effect for card placement
+  - [ ] sound effect for card turn
+  - [ ] sound effect for plus, same, combo
+
 - [x] mute button on main menu
 - [x] Card selection Page
     - [x] animate card selection

@@ -1,11 +1,36 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import useUser from '@/use/useUser'
+import FModal from '@/components/molecules/FModal'
+import FButton from '@/components/atoms/FButton'
+import FSwitch from '@/components/atoms/FSwitch'
+import FSlider from '@/components/atoms/FSlider'
+import { DIFFICULTY } from '@/utils/enums'
+import { prependBaseUrl } from '@/utils/function'
+
+defineProps<{
+  isOpen: boolean
+}>()
+
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+
+const { t } = useI18n()
+const { setSettingValue, userDifficulty, userSkipRulesModal, userSoundVolume, userMusicVolume } = useUser()
+
+const currentTab = ref('general')
+</script>
+
 <template lang="pug">
   FModal(
     :model-value="isOpen"
     :is-closable="false"
     :title="t('options')"
-    :tabs="[{ label: t('general'), value: 'general', icon: '/images/icons/settings-icon_128x128.webp' },\
-            { label: t('difficulty'), value: 'diff', icon: '/images/icons/difficulty-icon_128x128.webp' },\
-            { label: t('audio'), value: 'sound', icon: '/images/icons/sound-icon_128x128.webp' }]"
+    :tabs="[{ label: t('general'), value: 'general', icon: prependBaseUrl('/images/icons/settings-icon_128x128.webp') },\
+            { label: t('difficulty'), value: 'diff', icon: prependBaseUrl('/images/icons/difficulty-icon_128x128.webp') },\
+            { label: t('audio'), value: 'sound', icon: prependBaseUrl('/images/icons/sound-icon_128x128.webp') }]"
     v-model:activeTab="currentTab"
     @update:model-value="emit('close')"
   )
@@ -32,36 +57,13 @@
         hr(class="border-slate-600 my-1 md:my-2 pt-0")
 
     //- Audio Tab
-    div(v-else)
-      div(class="p-4 text-center italic text-slate-400") {{ t('audioSettingsPlaceholder') }}
-      hr(class="border-slate-600 my-1 md:my-2 pt-0")
+    div(v-else).flex.flex-col.justify-between.items-center
+      FSlider.px-4(class="!py-1 !pb-3 !max-w-[300px]" :model-value="userSoundVolume" @update:modelValue="setSettingValue('sound', $event)" :label="t('soundEffects')" :min="0" :max="100" :step="1")
+      FSlider.px-4(class="!py-1 !pb-2 !max-w-[300px]" :model-value="userMusicVolume" @update:modelValue="setSettingValue('music', $event)" :label="t('music')" :min="0" :max="100" :step="1")    hr(class="border-slate-600 my-1 md:my-2 pt-0")
 
     template(#footer)
       FButton.w-full(@click="emit('close')") {{ t('close') }}
 </template>
-
-<script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import useUser from '@/use/useUser'
-import FModal from '@/components/molecules/FModal'
-import FButton from '@/components/atoms/FButton'
-import FSwitch from '@/components/atoms/FSwitch.vue'
-import { DIFFICULTY } from '@/utils/enums'
-import { ref } from 'vue'
-
-defineProps<{
-  isOpen: boolean
-}>()
-
-const emit = defineEmits<{
-  (e: 'close'): void
-}>()
-
-const { t } = useI18n()
-const { setSettingValue, userDifficulty, userSkipRulesModal } = useUser()
-
-const currentTab = ref('general')
-</script>
 
 <style lang="sass" scoped>
 .diff-btn
@@ -80,6 +82,8 @@ en:
   medium: "Squire"
   hard: "Master"
   close: "Save & Close"
+  soundEffects: "Sound Effects"
+  music: "Music"
 de:
   options: "Optionen"
   general: "Allgemein"
@@ -91,4 +95,6 @@ de:
   medium: "Knappe"
   hard: "Meister"
   close: "Speichern & Schließen"
+  soundEffects: "Soundeffekte"
+  music: "Musik"
 </i18n>

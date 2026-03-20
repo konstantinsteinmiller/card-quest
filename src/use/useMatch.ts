@@ -5,7 +5,9 @@ import { useBattleRules, type BattleRuleName } from '@/use/useBattleRules'
 import { useRouter } from 'vue-router'
 import { setupDebugBoard } from '../../tests/fixtures/debugBoard'
 
-export const isDebug = ref(!!JSON.parse(localStorage.getItem('debug') ?? 'false'))
+const debugSaved = localStorage.getItem('debug') || 'false'
+export const isDebug = ref(!!JSON.parse(debugSaved))
+
 const isSplashScreenVisible = ref<boolean>(false)
 const isDbInitialized = ref<boolean>(false)
 export const ruleModal = ref<string | null | any>(null)
