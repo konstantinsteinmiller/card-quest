@@ -18,22 +18,30 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] visual error shake on wrong placement
   - [x] show game rules on the scoreboard
   - [x] indicator for what rule turned the card
+  - [x] rules modal
+  - [x] reset dont ask again on rulesModal
+
 - [x] static selected cards
   - [x] drag and drop for a card
   - [x] tap to select a card and place
-  - [ ] move placeholder showing what effect the placed card would have with eventual +1 or -1 calculation
-  - [ ] placeholder shows element effects.
-  - [ ] show values involved in battle by highlighting them
-- [ ] Trading Rules + Battle rules
+
+- [ ] Battle rules
   - [x] plus rule
   - [x] same rule
   - [x] combo rule
-  - [ ] low card rule
+  - [x] low card rule
   - [ ] elements rule
+
+- [ ] Trade rules
+  - [ ] one rules
+  - [ ] all rules
+  - [ ] random rules
+
 - [ ] Npc logic
   - [x] random choice
   - [x] smart choice
   - [x] different difficulty levels
+
 - [x] Card Models
     - [x] load card images
     - [x] elements in model
@@ -41,11 +49,12 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] add frames to Cards
     - [x] selected card frame
     - [x] not-selected card frame
+
 - [x] GameOverModal
     - [x] show winner / loser / draw
     - [x] restart game button
     - [x] frame
-- [ ] Main Menu
+- [x] Main Menu
     - [x] start game button
     - [x] create Logo
     - [x] settings button
@@ -54,6 +63,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] practice button
     - [x] version
     - [x] mute music and sound
+
 - [ ] Campaign
     - [x] Campaign map and jump of to battle
     - [x] connection lines between nodes
@@ -68,10 +78,6 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] Name
     - [ ] element
 - [ ] (native) dark mode adjustment
-- [ ] Trade rules
-  - [ ] one rules
-  - [ ] all rules
-  - [ ] random rules
 - [ ] Crazy Web games SDK
   - [ ] make game launchable
   - [ ] ads
@@ -82,6 +88,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] replace remaining Modals with FModal
 - [x] rule icons redo
 - [ ] layout cards book
+- [ ] redo book pager arrows
 - [ ] oak texture redo
 
 ## Bugs
@@ -96,6 +103,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [ ] Card Designer from Fairy Dust
 - [ ] 100 card designs
 - [ ] more campaign tracks
+- [ ] move placeholder showing what effect the placed card would have with eventual +1 or -1 calculation
+- [ ] placeholder shows element effects.
+- [ ] show values involved in battle by highlighting them
 
 ## NPC Algo:
 

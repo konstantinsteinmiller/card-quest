@@ -1,6 +1,5 @@
 <template lang="pug">
   FModal(
-    v-if="!userSkipRulesModal"
     :model-value="isOpen"
     :title="t('matchRules')"
     :is-closable="true"
@@ -30,9 +29,9 @@
 
 <script setup lang="ts">
 import type { BattleRuleName } from '@/use/useBattleRules'
-import FModal from '@/components/molecules/FModal.vue'
+import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
-import FSwitch from '@/components/atoms/FSwitch.vue'
+import FSwitch from '@/components/atoms/FSwitch'
 import RuleIcon from '@/components/atoms/RuleIcon'
 import { useI18n } from 'vue-i18n'
 import useUser from '@/use/useUser'
@@ -52,7 +51,7 @@ const { userSkipRulesModal, setSettingValue } = useUser()
   text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000
 </style>
 
-<i18n>
+<i18n lang="yaml">
 en:
   matchRules: "Match Rules"
   doNotBother: "Don't show again"

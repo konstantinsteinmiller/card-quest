@@ -84,7 +84,7 @@ import MatchRulesModal from '@/components/organisms/MatchRulesModal'
 import useUser from '@/use/useUser'
 
 const { turn, playerHand, npcHand, board, resetGame, placeCard, isBoardFull, activeRules } = useMatch()
-const { userDifficulty } = useUser()
+const { userDifficulty, userSkipRulesModal } = useUser()
 const {
   selectedCardId,
   errorSlot,
@@ -100,7 +100,7 @@ const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'standard'))
 
 onMounted(() => {
-  showRules.value = true
+  showRules.value = !userSkipRulesModal.value
   resetGame()
 })
 

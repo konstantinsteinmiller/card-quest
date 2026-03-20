@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 export interface TabOption {
   label: string
   value: string | number
@@ -18,7 +19,7 @@ const selectTab = (value: string | number) => {
 </script>
 
 <template lang="pug">
-  div(class="flex items-end justify-center gap-1 px-4")
+  div(class="flex items-end justify-center gap-0 px-4")
     button(
       v-for="tab in options"
       :key="tab.value"
@@ -36,13 +37,15 @@ const selectTab = (value: string | number) => {
       //- Tab Body
       div(
         :class="[\
-        'relative px-4 py-2 sm:px-8 sm:py-3 border-x-4 border-t-4 border-[#0f1a30] rounded-t-xl sm:rounded-t-2xl font-black uppercase italic tracking-wider transition-colors',\
-        modelValue === tab.value \
-          ? 'bg-gradient-to-b from-[#ffcd00] to-[#f7a000] text-white shadow-[inset_0_4px_0_rgba(255,255,255,0.4)]' \
-          : 'bg-[#2a4372] text-[#8fa7d1] hover:bg-[#34538d]'\
-      ]"
+          'relative px-4 py-2 sm:px-8 sm:py-3 border-x-4 border-t-4 border-[#0f1a30] rounded-t-xl sm:rounded-t-2xl font-black uppercase italic tracking-wider transition-colors',\
+          modelValue === tab.value \
+            ? 'bg-gradient-to-b from-[#ffcd00] to-[#f7a000] text-white shadow-[inset_0_4px_0_rgba(255,255,255,0.4)]' \
+            : 'bg-[#2a4372] opacity-80 text-[#8fa7d1] hover:bg-[#34538d]'\
+        ]"
       )
-        span(class="brawl-text text-sm sm:text-lg") {{ tab.label }}
+        div.w-8.h-8.object-fill(v-if="tab.icon")
+          img.object-fill(:src="tab.icon" class="")
+        span(v-else class="brawl-text text-sm sm:text-lg") {{ tab.label }}
 </template>
 
 <style lang="sass" scoped>
