@@ -14,8 +14,11 @@ export const ruleModal = ref<string | null | any>(null)
 export const isCampaignMatch = ref<boolean>(false)
 
 export const playerSelection = ref<GameCard[]>([])
+
 export const playerHand = ref<GameCard[]>([])
 export const npcHand = ref<GameCard[]>([])
+export const originalPlayerHand = ref<GameCard[]>([])
+export const originalNpcHand = ref<GameCard[]>([])
 
 export const board = ref<BoardSlot[][]>(Array.from({ length: 3 }, (_, y) =>
   Array.from({ length: 3 }, (_, x) => ({ x, y, card: null }))
@@ -51,21 +54,44 @@ export const useMatch = () => {
     board.value.forEach(row => row.forEach(slot => {
       slot.card = null
     }))
-    playerHand.value = [...playerSelection.value]
+    originalPlayerHand.value = JSON.parse(JSON.stringify(playerSelection.value))
+    playerHand.value = JSON.parse(JSON.stringify(originalPlayerHand.value))
     if (playerHand.value.length === 0) {
       return router.replace({ name: 'deck', query: isCampaignMatch.value ? { campaign: 'true' } : undefined })
     }
-    npcHand.value = Array.from({ length: 5 }, () => generateRandomCard('npc'))
+
+    originalNpcHand.value = Array.from({ length: 5 }, () => generateRandomCard('npc'))
+    npcHand.value = JSON.parse(JSON.stringify(originalNpcHand.value))
   }
 
   const resetGame = () => {
     if (isDebug?.value) {
+      board.value.forEach(row => row.forEach(slot => {
+        slot.card = null
+      }))
       setupDebugBoard()
+      setTimeout(() => {
+        try {
+          const func = async () => {
+            const useUser = await import(`@/use/useUser`)
+            const { setSettingValue } = useUser.default()
+            setSettingValue('hand', [...originalPlayerHand.value])
+          }
+          func()
+        } catch (e) {
+          console.log('e: ', e)
+        }
+      }, 300)
+      // setupGame()
     } else {
       setupGame()
     }
+
     turn.value = 'player'
     isThinking.value = false
+    // turn.value = Math.random() > 0.5 ? 'player' : 'npc'
+    // console.log('turn.value: ', turn.value)
+    // isThinking.value = turn.value === 'player' ? false : true
   }
 
   const evaluateCapture = (x: number, y: number): boolean => {
@@ -105,6 +131,8 @@ export const useMatch = () => {
     turn,
     playerHand,
     npcHand,
+    originalPlayerHand,
+    originalNpcHand,
     board,
     resetGame,
     placeCard,

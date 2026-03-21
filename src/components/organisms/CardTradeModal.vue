@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import FReward from '@/components/atoms/FReward.vue'
-import TradeHand from '@/components/molecules/TradeHand.vue'
+import FReward from '@/components/atoms/FReward'
+import TradeHand from '@/components/molecules/TradeHand'
 import CardDisplay from '@/components/CardDisplay'
 import useUser from '@/use/useUser'
+import type { GameCard } from '@/types/game'
 
 interface Props {
   isOpen: boolean
@@ -20,11 +21,19 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const { userHand, setSettingValue } = useUser()
+const { setSettingValue } = useUser()
 
-const tradeComplete = ref(false)
+const playerDeck = ref<GameCard[]>([...props.playerHand])
+const npcDeck = ref<GameCard[]>([...props.npcHand])
+
+watch(() => props.playerHand, (newVal) => {
+  playerDeck.value = [...props.playerHand]
+  npcDeck.value = [...props.npcHand]
+})
+
+const tradeComplete = ref<boolean>(false)
 const animatingCard = ref<any>(null)
-const flyDirectionClass = ref('')
+const flyDirectionClass = ref<string>('')
 const selectedCardId = ref<string | null>(null)
 
 const isWin = computed(() => props.scores.player > props.scores.npc)
@@ -48,31 +57,23 @@ watch(() => props.isOpen, (newVal) => {
       tradeComplete.value = true
     } else if (isLose.value) {
       // NPC takes a moment to "think" before picking a player card
-      setTimeout(() => executeNpcPick(), 2000)
+      setTimeout(() => executeNpcPick(), 1000)
     }
   }
 })
 
-const parseUserHand = (): any[] => {
-  try {
-    return JSON.parse(userHand.value === '[]' || !userHand.value ? '[]' : userHand.value)
-  } catch (e) {
-    return []
-  }
-}
-
 const executeNpcPick = () => {
-  if (!props.playerHand || props.playerHand.length === 0) {
+  if (!playerDeck.value || playerDeck.value.length === 0) {
     tradeComplete.value = true
     return
   }
 
   // Best card logic: highest total value points
-  let bestCard = props.playerHand[0]
+  let bestCard = playerDeck.value[0]
   let maxPoints = -1
 
-  props.playerHand.forEach(card => {
-    const points = card.values.reduce((a: number, b: number) => a + b, 0)
+  playerDeck.value.forEach(card => {
+    const points = card.values['left'] + card.values['right'] + card.values['top'] + card.values['bottom']
     if (points > maxPoints) {
       maxPoints = points
       bestCard = card
@@ -80,24 +81,31 @@ const executeNpcPick = () => {
   })
 
   // Select card visually before moving
-  selectedCardId.value = bestCard.instanceId || bestCard.id
+  selectedCardId.value = bestCard.instanceId
 
   setTimeout(() => {
     animateCardTransfer(bestCard, 'up')
 
-    // Update global state: remove from player hand
-    const parsedHand = parseUserHand()
-    const index = parsedHand.findIndex((c: any) => c.id === (bestCard.instanceId || bestCard.id))
-    if (index !== -1) {
-      parsedHand.splice(index, 1)
-      setSettingValue('hand', parsedHand)
-    }
+    // Update global state: remove from player deck
+    playerDeck.value = props.playerHand.filter((c: any) => c.instanceId !== (bestCard.instanceId))
+    npcDeck.value = [...props.npcHand, { ...bestCard, owner: 'npc' }]
+    // console.log('playerDeck.value: ',
+    //   playerDeck.value.map(c => ({
+    //     name: c.name, owner: c.owner
+    //   })),
+    //   npcDeck.value.map(c => ({
+    //     name: c.name, owner: c.owner
+    //   }))
+    // )
+    // setSettingValue('hand', [...playerDeck.value])
+    // update collection here
+    // setSettingValue('collection', [...userCollection.value, bestCard]) // remove bestCard from collection
   }, 800)
 }
 
 const handleEnemyCardSelect = (id: string) => {
   if (!isWin.value || tradeComplete.value || animatingCard.value) return
-  const card = props.npcHand.find(c => (c.instanceId || c.id) === id)
+  const card = npcDeck.value.find(c => (c.instanceId) === id)
   if (card) {
     selectedCardId.value = id
     // Small delay to show selection ring before flying
@@ -108,9 +116,13 @@ const handleEnemyCardSelect = (id: string) => {
 const processPlayerPick = (card: any) => {
   animateCardTransfer(card, 'down')
   // Update global state: add to player hand
-  const parsedHand = parseUserHand()
-  parsedHand.push(card)
-  setSettingValue('hand', parsedHand)
+  npcDeck.value = npcDeck.value.filter((c: any) => c.instanceId !== (card.instanceId))
+  playerDeck.value = [...playerDeck.value, { ...card, owner: 'player' }]
+
+  // console.log('playerDeck.value: ', playerDeck.value.map(c => c.name), npcDeck.value.map(c => c.name))
+
+  // update collection here
+  // setSettingValue('collection', [...userCollection.value, card])
 }
 
 const animateCardTransfer = (card: any, direction: 'up' | 'down') => {
@@ -150,7 +162,7 @@ const animateCardTransfer = (card: any, direction: 'up' | 'down') => {
       div.flex.flex-col.items-center.w-full
         span.text-red-400.font-bold.uppercase.tracking-wider.mb-2.text-xs.brawl-text(class="md:text-base") {{ t('enemyCards') }}
         TradeHand(
-          :cards="npcHand"
+          :cards="npcDeck"
           :is-active="isWin && !tradeComplete"
           :selected-id="selectedCardId"
           :class="{'opacity-50 grayscale': !isWin || tradeComplete}"
@@ -166,7 +178,7 @@ const animateCardTransfer = (card: any, direction: 'up' | 'down') => {
       //- Player Hand
       div.flex.flex-col.items-center.w-full
         TradeHand(
-          :cards="playerHand"
+          :cards="playerDeck"
           :is-active="false"
           :class="{'opacity-50 grayscale': tradeComplete}"
         )

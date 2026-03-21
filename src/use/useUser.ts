@@ -10,6 +10,7 @@ export const isMobileLandscape = computed(() => mobileCheck() && windowWidth.val
 export const isMobilePortrait = computed(() => mobileCheck() && windowWidth.value <= 500)
 
 export const version: string = import.meta.env.VITE_APP_VERSION
+
 const userDifficulty: Ref<Difficulties> = ref(DIFFICULTY.HARD)
 const userSoundVolume: Ref<number> = ref(0.7)
 const userMusicVolume: Ref<number> = ref(0.05)

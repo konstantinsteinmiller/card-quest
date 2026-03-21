@@ -30,6 +30,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] same rule
   - [x] combo rule
   - [x] low card rule
+  - [ ] Opt: open rule
   - [ ] Opt: elements rule
 
 - [ ] Trade rules

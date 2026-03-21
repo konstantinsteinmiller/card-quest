@@ -2,6 +2,7 @@
 import type { GameCard, BoardSlot } from '@/types/game'
 
 export type BattleRuleName = 'standard' | 'plus' | 'same' | 'combo' | 'low'
+export type TradeRuleName = 'one' | 'all' | 'random' | 'conquered'
 
 export interface RuleContext {
   x: number

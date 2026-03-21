@@ -15,7 +15,7 @@
         span.font-black.leading-none(class="text-lg sm:text-2xl landscape:text-lg") {{ scores.npc }}
 
     //- Rules
-    div(v-if="activeRules.length").z-1.text-slate-500.font-italic.gap-3.flex.items-center(class="text-[10px] sm:text-base")
+    div(v-if="activeRules.length" class="text-[10px] sm:text-base").z-1.text-slate-500.font-italic.gap-3.flex.items-center
       RuleIcon(class="scale-85 hover:scale-110" v-for="rule in activeRules" :key="rule" :rule="rule" :icon-only="true")
 
 

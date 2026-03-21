@@ -5,7 +5,7 @@
       class="z-[100] bg-black/60"
       @click="handleOverlayClick"
     )
-      div.relative.w-full.h-full.flex.flex-col.items-center.justify-center(@click.stop)
+      div.relative.w-full.h-full.flex.flex-col.items-center.justify-center
         slot
 
       //- Centered Continue Text
@@ -19,8 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+
 
 const props = defineProps<{
   modelValue: boolean

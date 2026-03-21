@@ -110,7 +110,7 @@ export const useCampaign = () => {
 
   // Sync with User Storage on initialization
   const syncProgress = () => {
-    if (!userCampaign.value || !userCampaign.value.length) {
+    if (!userCampaign.value || !userCampaign.value.length || userCampaign.value === '[]') {
       setSettingValue('campaign', campaignNodes.value.map(node => ({
         id: node.id,
         completed: node.completed,

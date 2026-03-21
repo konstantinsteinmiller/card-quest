@@ -11,15 +11,15 @@
     CardTradeModal(
       :is-open="showTradeModal"
       :scores="scores"
-      :player-hand="tradePlayerCards"
-      :npc-hand="tradeNpcCards"
+      :player-hand="originalPlayerHand"
+      :npc-hand="originalNpcHand"
       @continue="handleTradeContinue"
     )
 
     GameOverModal(
       :is-open="isGameOver"
       :scores="scores"
-      @reset="resetGame"
+      @reset="onContinue"
     )
 
     ScoreBoard(
@@ -92,7 +92,18 @@ import MatchRulesModal from '@/components/organisms/MatchRulesModal'
 import CardTradeModal from '@/components/organisms/CardTradeModal'
 import useUser from '@/use/useUser'
 
-const { turn, playerHand, npcHand, board, resetGame, placeCard, isBoardFull, activeRules } = useMatch()
+const {
+  turn,
+  playerHand,
+  npcHand,
+  board,
+  resetGame,
+  placeCard,
+  isBoardFull,
+  activeRules,
+  originalPlayerHand,
+  originalNpcHand
+} = useMatch()
 const { userDifficulty, userSkipRulesModal } = useUser()
 const {
   selectedCardId,
@@ -111,6 +122,8 @@ const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'sta
 onMounted(() => {
   showRules.value = !userSkipRulesModal.value
   resetGame()
+  isGameOver.value = false
+  showTradeModal.value = false
 })
 
 const isGameOver = ref<boolean>(false)
@@ -125,29 +138,19 @@ watch(isBoardFull, () => {
     isGameOver.value = false
     showTradeModal.value = false
   }
-})
-
-// Calculate the total cards assigned to each player to present on the Trade Modal
-const tradePlayerCards = computed(() => {
-  const cards = [...playerHand.value]
-  board.value.forEach(row => row.forEach(slot => {
-    if (slot.card && slot.card.owner === 'player') cards.push(slot.card)
-  }))
-  return cards
-})
-
-const tradeNpcCards = computed(() => {
-  const cards = [...npcHand.value]
-  board.value.forEach(row => row.forEach(slot => {
-    if (slot.card && slot.card.owner === 'npc') cards.push(slot.card)
-  }))
-  return cards
-})
+}, { immediate: true })
 
 // Triggered when the user clicks 'continue' on the Trade Modal
 const handleTradeContinue = () => {
   showTradeModal.value = false
   isGameOver.value = true
+}
+
+const onContinue = () => {
+  showRules.value = !userSkipRulesModal.value
+  isGameOver.value = false
+  showTradeModal.value = false
+  resetGame()
 }
 
 const scores = computed(() => {

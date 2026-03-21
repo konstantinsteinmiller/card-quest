@@ -4,7 +4,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
-import { playerSelection, ruleModal } from '@/use/useMatch'
+import { ruleModal } from '@/use/useMatch'
 import { isMobileLandscape, orientation } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 

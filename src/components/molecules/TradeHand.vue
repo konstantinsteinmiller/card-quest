@@ -18,13 +18,13 @@ const emit = defineEmits<{
   )
     div.relative.transition-all.duration-300(
       v-for="card in cards"
-      :key="card.instanceId || card.id"
+      :key="card.instanceId"
       class="aspect-1/1 w-[14vw] h-[14vw] sm:w-[80px] sm:h-[80px] landscape:w-[12vh] landscape:h-[12vh]"
       :class="[\
       isActive ? 'cursor-pointer hover:scale-110' : '',\
-      selectedId === (card.instanceId || card.id) ? 'ring-4 ring-yellow-400 rounded-lg scale-110 z-10' : ''\
+      selectedId === (card.instanceId) ? 'ring-4 ring-yellow-400 rounded-lg scale-110 z-10' : ''\
     ]"
-      @click="isActive && emit('select', card.instanceId || card.id)"
+      @click="isActive && emit('select', card.instanceId)"
     )
       CardDisplay(
         :card="card"
