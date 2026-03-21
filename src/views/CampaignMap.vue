@@ -1,3 +1,65 @@
+
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useCampaign, type CampaignNode } from '@/use/useCampaign'
+import NodePopup from '@/components/organisms/NodePopup'
+import FButton from '@/components/atoms/FButton'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { isCampaignMatch, activeRules } from '@/use/useMatch'
+import type { BattleRuleName } from '@/use/useBattleRules.ts'
+
+const { t } = useI18n()
+const router = useRouter()
+const { campaignNodes, selectedNodeId, activeNode, syncProgress } = useCampaign()
+
+syncProgress()
+
+isCampaignMatch.value = true
+
+const isLandscape = ref(window.innerWidth > window.innerHeight)
+const updateOrientation = () => {
+  isLandscape.value = window.innerWidth > window.innerHeight
+}
+
+const getCurvePath = (startNode: CampaignNode, targetId: string) => {
+  const endNode = campaignNodes.value.find(n => n.id === targetId)
+  if (!endNode) return ''
+
+  const x1 = startNode.position.x
+  const y1 = startNode.position.y
+  const x2 = endNode.position.x
+  const y2 = endNode.position.y
+
+  const cx = (x1 + x2) / 2 + (y2 - y1) * 0.1
+  const cy = (y1 + y2) / 2 - (x2 - x1) * 0.1
+
+  return `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`
+}
+
+const getPathClass = (startNode: CampaignNode, targetId: string) => {
+  const endNode = campaignNodes.value.find(n => n.id === targetId)
+  if (!endNode) return 'opacity-0'
+
+  if (endNode.unlocked) return 'opacity-100 stroke-yellow-400'
+  return 'opacity-50 stroke-grey-500'
+}
+
+onMounted(() => {
+  syncProgress()
+  window.addEventListener('resize', updateOrientation)
+  updateOrientation()
+})
+
+onUnmounted(() => window.removeEventListener('resize', updateOrientation))
+
+const startBattle = (rules: BattleRuleName[]) => {
+  activeRules.value = !rules.length ? ['standard'] : rules
+  router.push({ name: 'match' })
+}
+</script>
+
 <template lang="pug">
   div.relative.w-screen.h-screen.bg-slate-900.overflow-hidden.flex.items-center.justify-center
     //- 1. Backgrounds
@@ -80,63 +142,6 @@
         @click="router.push({ name: 'deck' })"
       ) {{ t('back') }}
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useCampaign, type CampaignNode } from '@/use/useCampaign'
-import NodePopup from '@/components/organisms/NodePopup'
-import FButton from '@/components/atoms/FButton'
-import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import { isCampaignMatch, activeRules } from '@/use/useMatch'
-import type { BattleRuleName } from '@/use/useBattleRules.ts'
-
-const { t } = useI18n()
-const router = useRouter()
-const { campaignNodes, selectedNodeId, activeNode } = useCampaign()
-
-isCampaignMatch.value = true
-
-const isLandscape = ref(window.innerWidth > window.innerHeight)
-const updateOrientation = () => {
-  isLandscape.value = window.innerWidth > window.innerHeight
-}
-
-const getCurvePath = (startNode: CampaignNode, targetId: string) => {
-  const endNode = campaignNodes.value.find(n => n.id === targetId)
-  if (!endNode) return ''
-
-  const x1 = startNode.position.x
-  const y1 = startNode.position.y
-  const x2 = endNode.position.x
-  const y2 = endNode.position.y
-
-  const cx = (x1 + x2) / 2 + (y2 - y1) * 0.1
-  const cy = (y1 + y2) / 2 - (x2 - x1) * 0.1
-
-  return `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`
-}
-
-const getPathClass = (startNode: CampaignNode, targetId: string) => {
-  const endNode = campaignNodes.value.find(n => n.id === targetId)
-  if (!endNode) return 'opacity-0'
-
-  if (endNode.unlocked) return 'opacity-100 stroke-yellow-400'
-  return 'opacity-50 stroke-grey-500'
-}
-
-onMounted(() => {
-  window.addEventListener('resize', updateOrientation)
-  updateOrientation()
-})
-
-onUnmounted(() => window.removeEventListener('resize', updateOrientation))
-
-const startBattle = (rules: BattleRuleName[]) => {
-  activeRules.value = !rules.length ? ['standard'] : rules
-  router.push({ name: 'match' })
-}
-</script>
 
 <style lang="sass" scoped>
 .node-layer-container

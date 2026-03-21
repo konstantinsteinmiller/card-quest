@@ -120,10 +120,7 @@ const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'standard'))
 
 onMounted(() => {
-  showRules.value = !userSkipRulesModal.value
   resetGame()
-  isGameOver.value = false
-  showTradeModal.value = false
 })
 
 const isGameOver = ref<boolean>(false)
@@ -135,6 +132,7 @@ watch(isBoardFull, () => {
       showTradeModal.value = true
     }, 550)
   } else {
+    showRules.value = !userSkipRulesModal.value
     isGameOver.value = false
     showTradeModal.value = false
   }

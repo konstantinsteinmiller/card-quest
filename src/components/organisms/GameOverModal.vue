@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
-// import { useCampaign } from '@/use/useCampaign.ts'
+import { activeNode, useCampaign } from '@/use/useCampaign.ts'
 
 const props = defineProps<{
   isOpen: boolean
@@ -24,12 +24,16 @@ const result = computed((): 'win' | 'lose' | 'draw' => {
   return 'draw'
 })
 
+const onContinue = () => {
+  if (result.value === 'win') {
+    completeNode(activeNode.value.id)
+  }
+  emit('reset')
+  router.push({ name: 'campaign' })
+}
 
-// const { campaignNodes, selectedNodeId, activeNode } = useCampaign()
+const { activeNode, completeNode } = useCampaign()
 onMounted(() => {
-  // console.log('selectedNodeId: ', selectedNodeId)
-  // console.log('activeNode: ', activeNode)
-  // console.log('campaignNodes: ', campaignNodes)
 })
 </script>
 
@@ -52,7 +56,7 @@ onMounted(() => {
     //- Action Buttons in Footer Slot
     template(#footer)
       div(class="flex flex-col gap-2 w-full max-w-[280px] text-sm md:text-xl sm:gap-1")
-        FButton(@click="router.push({ name: 'campaign' })") {{ t('continue') }}
+        FButton(@click="onContinue") {{ t('continue') }}
         FButton(
           type="secondary"
           @click="router.push({ name: 'main-menu' })"

@@ -62,7 +62,6 @@ const useUser = () => {
         userDifficulty.value = value
         break
       case 'skipRulesModal':
-        console.log('userSkipRulesModal: ', userSkipRulesModal.value, value)
         userSkipRulesModal.value = value
         break
       case 'tutorialsDoneMap':

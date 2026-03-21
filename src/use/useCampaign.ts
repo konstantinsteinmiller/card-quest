@@ -1,8 +1,7 @@
 import { ref, computed } from 'vue'
-import type { GameCard } from '@/types/game'
 import useUser from '@/use/useUser'
 import { useI18n } from 'vue-i18n'
-import type { BattleRuleName, RuleContext } from '@/use/useBattleRules'
+import type { BattleRuleName } from '@/use/useBattleRules'
 
 export interface CampaignNode {
   id: string
@@ -17,11 +16,19 @@ export interface CampaignNode {
   rules: BattleRuleName[]
 }
 
-export const useCampaign = () => {
-  const { t } = useI18n()
-  const { setSettingValue, userCampaign } = useUser()
+export const selectedNodeId = ref<string | null>(null)
+export const campaignNodes = ref<CampaignNode[]>([])
 
-  const campaignNodes = ref<CampaignNode[]>([
+// Dynamic active node based on selection
+export const activeNode = computed(() =>
+  campaignNodes.value.find(n => n.id === selectedNodeId.value) || null
+)
+
+export const useCampaign = () => {
+  const { setSettingValue, userCampaign } = useUser()
+  const { t } = useI18n()
+
+  campaignNodes.value = [
     {
       id: 'node1-1',
       name: t('node1-1.name'),
@@ -106,7 +113,7 @@ export const useCampaign = () => {
       knownCards: [],
       rules: ['standard', 'plus']
     }
-  ])
+  ]
 
   // Sync with User Storage on initialization
   const syncProgress = () => {
@@ -116,8 +123,9 @@ export const useCampaign = () => {
         completed: node.completed,
         knownCards: node.knownCards
       })))
-    } else if (userCampaign.value.constructor === Array) {
-      userCampaign.value?.forEach((saved: any) => {
+    } else if (typeof userCampaign.value === 'string') {
+      const campaignList = JSON.parse(userCampaign.value)
+      campaignList?.forEach((saved: any) => {
         const node = campaignNodes.value.find(n => n.id === saved.id)
         if (node) {
           node.completed = saved.completed
@@ -134,16 +142,8 @@ export const useCampaign = () => {
     }
   }
 
-  syncProgress()
-
-  const selectedNodeId = ref<string | null>(null)
-
-  // Dynamic active node based on selection
-  const activeNode = computed(() =>
-    campaignNodes.value.find(n => n.id === selectedNodeId.value) || null
-  )
-
   const completeNode = (id: string) => {
+    syncProgress()
     const node = campaignNodes.value.find(n => n.id === id)
     if (node) {
       node.completed = true
@@ -151,13 +151,18 @@ export const useCampaign = () => {
         const nextNode = campaignNodes.value.find(n => n.id === nextId)
         if (nextNode) nextNode.unlocked = true
       })
-      setSettingValue('campaign', campaignNodes.value.map(n => ({ id: n.id, completed: n.completed })))
+      console.log('node: ', node)
+      setSettingValue('campaign', campaignNodes.value.map(n => ({
+        id: n.id, completed: n.completed,
+        knownCards: node.knownCards
+      })))
     }
   }
 
   return {
     campaignNodes,
     selectedNodeId,
+    syncProgress,
     activeNode,
     completeNode
   }

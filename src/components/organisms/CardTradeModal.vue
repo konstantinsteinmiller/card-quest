@@ -4,8 +4,9 @@ import { useI18n } from 'vue-i18n'
 import FReward from '@/components/atoms/FReward'
 import TradeHand from '@/components/molecules/TradeHand'
 import CardDisplay from '@/components/CardDisplay'
-import useUser from '@/use/useUser'
+import useUser, { orientation } from '@/use/useUser'
 import type { GameCard } from '@/types/game'
+import { mobileCheck } from '@/utils/function.ts'
 
 interface Props {
   isOpen: boolean
@@ -22,6 +23,8 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const { setSettingValue } = useUser()
+
+const isMobileLandscape = computed(() => mobileCheck() && window.innerWidth > 500 && orientation.value === 'landscape')
 
 const playerDeck = ref<GameCard[]>([...props.playerHand])
 const npcDeck = ref<GameCard[]>([...props.npcHand])
@@ -143,7 +146,7 @@ const animateCardTransfer = (card: any, direction: 'up' | 'down') => {
     @continue="emit('continue')"
   )
     //- Ribbon Score Header (FModal style)
-    div.relative.mb-10.scale-90(class="sm:scale-100")
+    div.relative.mb-10.scale-90(class="sm:scale-100" :class="{ '!mb-2 -mt-2': isMobileLandscape }")
       div.absolute.inset-0.translate-y-1.rounded-lg(class="bg-[#1a2b4b]")
       div.relative.flex.items-center.justify-center.bg-gradient-to-b.border-4.px-10.py-2.rounded-xl(
         class="from-[#ffcd00] to-[#f7a000] border-[#0f1a30] min-w-[280px]"
@@ -156,8 +159,10 @@ const animateCardTransfer = (card: any, direction: 'up' | 'down') => {
           span.text-4xl.font-black.text-blue-600.brawl-text {{ scores.player }}
 
     //- Trade Area
-    div.flex.flex-col.items-center.justify-center.w-full.flex-1.gap-4.relative(class="max-h-[80vh] md:gap-10")
-
+    div.flex.flex-col.items-center.justify-center.w-full.flex-1.gap-4.relative(
+      class="max-h-[80vh] md:gap-10"
+      :class="{ '!flex-row': isMobileLandscape }"
+    )
       //- NPC Hand
       div.flex.flex-col.items-center.w-full
         span.text-red-400.font-bold.uppercase.tracking-wider.mb-2.text-xs.brawl-text(class="md:text-base") {{ t('enemyCards') }}
@@ -182,7 +187,10 @@ const animateCardTransfer = (card: any, direction: 'up' | 'down') => {
           :is-active="false"
           :class="{'opacity-50 grayscale': tradeComplete}"
         )
-        span.text-blue-400.font-bold.uppercase.tracking-wider.mt-2.text-xs.brawl-text(class="md:text-base") {{ t('yourCards') }}
+        span.text-blue-400.font-bold.uppercase.tracking-wider.mt-2.text-xs.brawl-text(
+          class="md:text-base"
+          :class="{ '-order-1 mt-0 mb-2': isMobileLandscape }"
+        ) {{ t('yourCards') }}
 
     //- Flying Card Overlay (aspect ratio fixed)
     Transition(name="fly")

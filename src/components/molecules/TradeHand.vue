@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import CardDisplay from '@/components/CardDisplay'
+import { mobileCheck } from '@/utils/function'
+import { orientation } from '@/use/useUser'
 
 defineProps<{
   cards: any[]
@@ -10,12 +13,12 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'select', id: string): void
 }>()
+
+const isMobileLandscape = computed(() => mobileCheck() && window.innerWidth > 500 && orientation.value === 'landscape')
 </script>
 
 <template lang="pug">
-  div.grid.gap-2.justify-items-center(
-    class="grid-cols-5 landscape:grid-cols-2 md:grid-cols-5"
-  )
+  div.grid.gap-2.grid-cols-5.justify-items-center
     div.relative.transition-all.duration-300(
       v-for="card in cards"
       :key="card.instanceId"

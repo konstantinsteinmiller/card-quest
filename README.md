@@ -34,7 +34,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [ ] Opt: elements rule
 
 - [ ] Trade rules
-  - [ ] one rules
+  - [x] one rules
+    - [ ] save collection update
+    - [ ] add one rule to campaign nodes
   - [ ] all rules
   - [ ] random rules
 
@@ -55,7 +57,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] show winner / loser / draw
     - [x] restart game button
     - [x] frame
-  - [ ] continue Campaign
+  - [x] continue Campaign
 
 - [x] Main Menu
     - [x] start game button
@@ -70,11 +72,13 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [ ] Campaign
     - [x] Campaign map and jump of to battle
     - [x] connection lines between nodes
+  - [ ] set npc cards from the campaign node
     - [ ] Storyline
     - [ ] different levels with different NPCs
     - [ ] enemy shows known cards face up
     - [x] make node popup pop with animation
-  - [ ] save progress after campaign battle
+  - [x] save progress after campaign battle
+  - [ ] save knownCards of enemy
 
 - [x] OptionsModal
   - [x] music
@@ -82,7 +86,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] FSelect component
   - [x] do not ask rules again
   - [x] language options
-    - [x] Volume slider for music and sound effects
+  - [x] Volume slider for music and sound effects
 
 - [ ] Sound and bg music
     - [ ] bg music

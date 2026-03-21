@@ -82,7 +82,6 @@ export const useMatch = () => {
           console.log('e: ', e)
         }
       }, 300)
-      // setupGame()
     } else {
       setupGame()
     }
