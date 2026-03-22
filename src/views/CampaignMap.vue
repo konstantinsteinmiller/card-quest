@@ -1,5 +1,3 @@
-
-
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useCampaign, type CampaignNode } from '@/use/useCampaign'
@@ -136,7 +134,7 @@ const startBattle = (rules: BattleRuleName[]) => {
     )
       FButton(
         type="secondary"
-        size="md"
+        size="lg"
         @click="router.push({ name: 'deck' })"
       ) {{ t('back') }}
 </template>

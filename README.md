@@ -80,7 +80,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] make node popup pop with animation
   - [x] save progress after campaign battle
   - [x] save knownCards of enemy
-  - [ ] random player starts
+  - [x] random player starts
 
 - [x] OptionsModal
   - [x] music

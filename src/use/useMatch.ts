@@ -106,11 +106,9 @@ export const useMatch = () => {
       }
     }
 
-    turn.value = 'player'
+    // turn.value = 'player'
+    turn.value = Math.random() > 0.5 ? 'player' : 'npc'
     isThinking.value = false
-    // turn.value = Math.random() > 0.5 ? 'player' : 'npc'
-    // console.log('turn.value: ', turn.value)
-    // isThinking.value = turn.value === 'player' ? false : true
   }
 
   const evaluateCapture = (x: number, y: number): boolean => {
