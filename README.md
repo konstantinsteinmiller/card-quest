@@ -35,7 +35,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 - [ ] Trade rules
   - [x] one rules
-    - [ ] save collection update
+    - [x] save collection update
     - [ ] add one rule to campaign nodes
   - [ ] all rules
   - [ ] random rules
@@ -81,6 +81,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] save progress after campaign battle
   - [x] save knownCards of enemy
   - [x] random player starts
+  - [ ] able to create new low cards if player has none left
 
 - [x] OptionsModal
   - [x] music

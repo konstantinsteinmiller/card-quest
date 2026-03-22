@@ -21,6 +21,7 @@ const tutorialPhase: Ref<string> = ref('')
 const allowTutorial: Ref<boolean> = ref(true)
 const isOptionsModalOpen: Ref<boolean> = ref(false)
 const userHand: Ref<any> = ref('[]')
+const userCollection: Ref</*StoredCollectionCard[] | */string> = ref('[]')
 const userCampaign: Ref<any> = ref('[]')
 const userSkipRulesModal: Ref<boolean> = ref(false)
 
@@ -42,6 +43,7 @@ const { storeUser } = useUserDb({
   userLanguage,
   userTutorialsDoneMap,
   userHand,
+  userCollection,
   userCampaign,
   userSkipRulesModal
 })
@@ -70,6 +72,9 @@ const useUser = () => {
       case 'hand':
         userHand.value = JSON.stringify(value)
         break
+      case 'collection':
+        userCollection.value = JSON.stringify(value)
+        break
       case 'campaign':
         userCampaign.value = JSON.stringify(value)
         break
@@ -83,6 +88,7 @@ const useUser = () => {
       userSkipRulesModal: userSkipRulesModal.value,
       userTutorialsDoneMap: userTutorialsDoneMap.value,
       userHand: userHand.value,
+      userCollection: userCollection.value,
       userCampaign: userCampaign.value
     })
   }
@@ -94,6 +100,7 @@ const useUser = () => {
     userLanguage,
     userTutorialsDoneMap,
     userHand,
+    userCollection,
     userCampaign,
     userSkipRulesModal,
     tutorialPhase,

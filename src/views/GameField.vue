@@ -8,7 +8,7 @@
       @close="showRules = false"
     )
 
-    CardTradeModal(
+    CardTrade(
       :is-open="showTradeModal"
       :scores="scores"
       :player-hand="originalPlayerHand"
@@ -89,7 +89,7 @@ import CardDisplay from '@/components/CardDisplay'
 import ScoreBoard from '@/components/ScoreBoard'
 import GameOverModal from '@/components/organisms/GameOverModal'
 import MatchRulesModal from '@/components/organisms/MatchRulesModal'
-import CardTradeModal from '@/components/organisms/CardTradeModal'
+import CardTrade from '@/components/CardTrade'
 import useUser from '@/use/useUser'
 import useCampaign from '@/use/useCampaign'
 

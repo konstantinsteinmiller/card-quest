@@ -1,7 +1,8 @@
 <template lang="pug">
   div.flex.flex-col.items-center.p-1.overflow-hidden.bg-repeat.select-none(
-    class="h-[100dvh] portrait:p-2 landscape:p-1 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')]"
+    class="h-[100dvh] landscape:p-1 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')]"
     style="padding-bottom: env(safe-area-inset-bottom); padding-top: env(safe-area-inset-top);"
+    :class="{ 'p-0': isMobilePortrait }"
   )
     //- Animation Overlay
     div.flying-card(v-if="flyingCard" :style="flyingStyle")
@@ -105,17 +106,17 @@ import FButton from '@/components/atoms/FButton'
 import CardDisplay from '@/components/CardDisplay'
 import PlayerHandCard from '@/components/PlayerHandCard'
 import { playerSelection, isPracticeMatch } from '@/use/useMatch'
-import useModels, { modelImgPath } from '@/use/useModels'
-import useUser, { orientation } from '@/use/useUser'
+import useModels, { modelImgPath, type StoredCollectionCard } from '@/use/useModels'
+import useUser, { orientation, isMobilePortrait, isMobileLandscape } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 
-const { setSettingValue, userHand } = useUser()
+const { setSettingValue, userHand, userCollection } = useUser()
 const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
-const { allCards } = useModels()
+const { getSortedCollection, cardCollection, saveCollection } = useModels()
 
-const inventory = ref(allCards.map(c => ({ ...c, count: 2 })))
+const inventory = ref(cardCollection)
 const selectedDeck = ref<GameCard[]>([])
 const currentPage = ref(0)
 const windowWidth = ref(window.innerWidth)
@@ -136,20 +137,19 @@ onMounted(() => {
   const isPractice: boolean = route?.query?.practice === true
   isPracticeMatch.value = isPractice || isPracticeMatch.value
 })
-
 onUnmounted(() => window.removeEventListener('resize', updateDimensions))
+
+watch(userCollection, () => {
+  if (!userCollection.value) return
+
+  inventory.value = getSortedCollection()
+}, { immediate: true })
 
 watch(userHand, () => {
   const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
   selectedDeck.value = Array.isArray(hand) ? [...hand] : []
-
-  selectedDeck.value.forEach(card => {
-    const inv = inventory.value.find(i => i.id === card.id)
-    if (inv && inv.count > 0) inv.count--
-  })
 }, { immediate: true })
 
-const isMobileLandscape = computed(() => mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape')
 const isStackedSize = ref('50px')
 const isStackedMargin = ref('-22px')
 
@@ -167,8 +167,8 @@ const itemsPerPage = computed(() => {
   return windowWidth.value < 801 ? 8 : 16
 })
 
-const collection = computed(() => inventory.value.map(item => ({
-  ...item, owner: 'player' as const, image: modelImgPath(item.id)
+const collection = computed(() => inventory.value.map(card => ({
+  ...card, owner: 'player' as const, image: modelImgPath(card.id)
 })))
 
 const totalPages = computed(() => Math.ceil(collection.value.length / itemsPerPage.value))
@@ -209,6 +209,8 @@ const addToDeck = (cardTemplate: any, event: MouseEvent) => {
   if (invItem) {
     invItem.count--
     selectedDeck.value.push({ ...cardTemplate, instanceId: Math.random().toString(36).substring(2, 9) })
+    setSettingValue('hand', [...selectedDeck.value])
+    saveCollection(inventory.value)
   }
 }
 
@@ -233,6 +235,7 @@ const removeFromDeck = (payload: any) => {
     if (invItem) invItem.count++
     selectedDeck.value.splice(index, 1)
     setSettingValue('hand', [...selectedDeck.value])
+    saveCollection(inventory.value)
   }
 }
 

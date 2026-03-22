@@ -9,8 +9,8 @@ import type { CampaignNode } from '@/use/useCampaign'
 const debugSaved = localStorage.getItem('debug') || 'false'
 export const isDebug = ref(!!JSON.parse(debugSaved))
 
-const isSplashScreenVisible = ref<boolean>(false)
-const isDbInitialized = ref<boolean>(false)
+export const isSplashScreenVisible = ref<boolean>(false)
+export const isDbInitialized = ref<boolean>(false)
 export const ruleModal = ref<string | null | any>(null)
 export const isPracticeMatch = ref<boolean>(false)
 
@@ -57,7 +57,7 @@ export const useMatch = () => {
     }))
     originalPlayerHand.value = JSON.parse(JSON.stringify(playerSelection.value))
     playerHand.value = JSON.parse(JSON.stringify(originalPlayerHand.value))
-    if (playerHand.value.length === 0) {
+    if (playerHand.value.length < 5) {
       return router.replace({ name: 'deck', query: isPracticeMatch.value ? { practice: 'true' } : undefined })
     }
 

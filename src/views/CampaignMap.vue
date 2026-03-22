@@ -5,7 +5,7 @@ import NodePopup from '@/components/organisms/NodePopup'
 import FButton from '@/components/atoms/FButton'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { isPracticeMatch, activeRules } from '@/use/useMatch'
+import { isPracticeMatch, activeRules, playerSelection } from '@/use/useMatch'
 import type { BattleRuleName } from '@/use/useBattleRules.ts'
 
 const { t } = useI18n()
@@ -43,6 +43,11 @@ const getPathClass = (startNode: CampaignNode, targetId: string) => {
 }
 
 onMounted(() => {
+  /* if enemy picked cards from your hand, go back to deck building */
+  if (playerSelection.value.length < 5) {
+    return router.replace({ name: 'deck', query: isPracticeMatch.value ? { practice: 'true' } : undefined })
+  }
+
   selectedNodeId.value = null
   window.addEventListener('resize', updateOrientation)
   updateOrientation()

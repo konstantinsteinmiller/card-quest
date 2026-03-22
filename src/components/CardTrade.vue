@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import FReward from '@/components/atoms/FReward'
-import TradeHand from '@/components/molecules/TradeHand'
-import CardDisplay from '@/components/CardDisplay'
-import useUser, { orientation } from '@/use/useUser'
-import type { GameCard } from '@/types/game'
+import FReward from '@/components/atoms/FReward.vue'
+import TradeHand from '@/components/molecules/TradeHand.vue'
+import CardDisplay from '@/components/CardDisplay.vue'
+import useUser, { orientation } from '@/use/useUser.ts'
+import type { GameCard } from '@/types/game.ts'
 import { mobileCheck } from '@/utils/function.ts'
+import useModels from '@/use/useModels.ts'
+import { playerSelection } from '@/use/useMatch.ts'
 
 interface Props {
   isOpen: boolean
@@ -23,6 +25,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const { setSettingValue } = useUser()
+const { removeCardFromCollection, addCardToCollection } = useModels()
 
 const isMobileLandscape = computed(() => mobileCheck() && window.innerWidth > 500 && orientation.value === 'landscape')
 
@@ -90,8 +93,10 @@ const executeNpcPick = () => {
     animateCardTransfer(bestCard, 'up')
 
     // Update global state: remove from player deck
-    playerDeck.value = props.playerHand.filter((c: any) => c.instanceId !== (bestCard.instanceId))
+    playerDeck.value = props.playerHand.filter((c: any) => c.instanceId !== (bestCard?.instanceId))
+    playerSelection.value = playerSelection.value.filter((c: any) => c.instanceId !== (bestCard?.instanceId))
     npcDeck.value = [...props.npcHand, { ...bestCard, owner: 'npc' }]
+    // removeCardFromCollection(JSON.parse(JSON.stringify(bestCard)))
     // console.log('playerDeck.value: ',
     //   playerDeck.value.map(c => ({
     //     name: c.name, owner: c.owner
@@ -100,7 +105,7 @@ const executeNpcPick = () => {
     //     name: c.name, owner: c.owner
     //   }))
     // )
-    // setSettingValue('hand', [...playerDeck.value])
+    setSettingValue('hand', JSON.parse(JSON.stringify(playerDeck.value)))
     // update collection here
     // setSettingValue('collection', [...userCollection.value, bestCard]) // remove bestCard from collection
   }, 800)
@@ -122,6 +127,7 @@ const processPlayerPick = (card: any) => {
   npcDeck.value = npcDeck.value.filter((c: any) => c.instanceId !== (card.instanceId))
   playerDeck.value = [...playerDeck.value, { ...card, owner: 'player' }]
 
+  addCardToCollection(JSON.parse(JSON.stringify(card)))
   // console.log('playerDeck.value: ', playerDeck.value.map(c => c.name), npcDeck.value.map(c => c.name))
 
   // update collection here

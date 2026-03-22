@@ -1,8 +1,7 @@
 import type { Ref } from 'vue'
-import { useMatch } from '@/use/useMatch'
+import { isDbInitialized, isSplashScreenVisible } from '@/use/useMatch'
 import clonedeep from 'lodash.clonedeep'
 
-const { isSplashScreenVisible, isDbInitialized } = useMatch()
 
 let db: any
 
@@ -14,6 +13,7 @@ const useUserDb = ({
                      userSkipRulesModal,
                      userTutorialsDoneMap,
                      userHand,
+                     userCollection,
                      userCampaign
                    }: {
   userDifficulty: Ref<string>
@@ -23,6 +23,7 @@ const useUserDb = ({
   userSkipRulesModal: Ref<boolean>
   userTutorialsDoneMap: Ref<string>
   userHand: Ref<string>
+  userCollection: Ref<string>
   userCampaign: Ref<string>
 }) => {
   // Open our database; it is created if it doesn't already exist
@@ -55,6 +56,7 @@ const useUserDb = ({
     objectStore.createIndex('userSkipRulesModal', 'userSkipRulesModal', { unique: false })
     objectStore.createIndex('userTutorialsDoneMap', 'userTutorialsDoneMap', { unique: false })
     objectStore.createIndex('userHand', 'userHand', { unique: false })
+    objectStore.createIndex('userCollection', 'userCollection', { unique: false })
     objectStore.createIndex('userCampaign', 'userCampaign', { unique: false })
     // console.log('Database setup complete')
   })
@@ -81,6 +83,9 @@ const useUserDb = ({
         if (request.result.userHand) {
           userHand.value = JSON.parse(request.result.userHand)
         }
+        if (request.result.userCollection) {
+          userCollection.value = JSON.parse(request.result.userCollection)
+        }
         if (request.result.userCampaign) {
           userCampaign.value = JSON.parse(request.result.userCampaign)
         }
@@ -93,6 +98,7 @@ const useUserDb = ({
           userSkipRulesModal: userSkipRulesModal.value,
           userTutorialsDoneMap: userTutorialsDoneMap.value,
           userHand: userHand.value,
+          userCollection: userCollection.value,
           userCampaign: userCampaign.value
         })
       }
@@ -118,6 +124,10 @@ const useUserDb = ({
     if (Object.keys(params.userHand)?.length) {
       const clone = clonedeep(params.userHand)
       params.userHand = JSON.stringify(clone)
+    }
+    if (Object.keys(params.userCollection)?.length) {
+      const clone = clonedeep(params.userCollection)
+      params.userCollection = JSON.stringify(clone)
     }
     if (Object.keys(params.userCampaign)?.length) {
       const clone = clonedeep(params.userCampaign)

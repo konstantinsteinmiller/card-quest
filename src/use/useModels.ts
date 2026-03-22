@@ -1,6 +1,7 @@
 import { prependBaseUrl } from '@/utils/function'
-import { ref } from 'vue'
 import { type Element, ELEMENTS } from '@/utils/enums'
+import { isDbInitialized, isDebug } from '@/use/useMatch'
+import useUser from '@/use/useUser'
 
 export const modelImgPath = (imageName: string) => prependBaseUrl(`/models/${imageName}/preview_400x400.webp`)
 
@@ -17,6 +18,13 @@ export interface Card {
     bottom: number
     left: number
   }
+}
+
+export type InventoryCard = Card & { count: number }
+
+export interface StoredCollectionCard {
+  id: string
+  count: number
 }
 
 const useModels = () => {
@@ -110,8 +118,108 @@ const useModels = () => {
     { id: 'yeti-young', name: 'Yethog', element: ELEMENTS.ICE, values: { top: 6, right: 5, bottom: 1, left: 2 } }
   ]
 
+  const { setSettingValue, userCollection } = useUser()
+
+  const saveCollection = (collection: Array<InventoryCard | StoredCollectionCard>) => {
+    const storedCollection: StoredCollectionCard[] = collection.map(card => ({ id: card.id, count: card.count }))
+    setSettingValue('collection', storedCollection)
+  }
+
+  const startCollectionIdsList = ['mermaid-young', 'moss', 'dragon-young', 'piranha-young', 'mushroom-young', 'warrior-young', 'water-shark-young']
+  const debugCollection = allCards.map(card => ({ ...card, count: 2 }))
+  let cardCollection = isDebug.value
+    ? debugCollection
+    : allCards
+      .map(card => ({
+        ...card,
+        count: startCollectionIdsList.includes(card.id) ? 1 : 0
+      }))
+      /* first sort high cards to the end */
+      .sort((a, b) => {
+        const aPoints = Object.values(a.values).reduce((sum, val) => sum + val, 0)
+        const bPoints = Object.values(b.values).reduce((sum, val) => sum + val, 0)
+        if (aPoints < bPoints) return -1
+        if (aPoints > bPoints) return 1
+        return 0
+      })
+      /* then sort low cards with most count to the front */
+      .sort((a, b) => {
+        const aPoints = Object.values(a.values).reduce((sum, val) => sum + val, 0)
+        const bPoints = Object.values(b.values).reduce((sum, val) => sum + val, 0)
+        if (a.count > 0) return -1
+        if (a.count === 0 && aPoints < bPoints) return -1
+        if (a.count === 0 && aPoints > bPoints) return 1
+        if (a.count === 0) return 1
+        return 0
+      })
+  // /* then sort cards with most count to the front */
+  // .sort((a, b) => {
+  //   if (a.count < b.count) return -1
+  //   if (a.count > b.count) return 1
+  //   return 0
+  // })
+
+
+  const getSortedCollection = () => {
+    if (!userCollection.value) return
+
+    const storedCollection = typeof userCollection.value === 'string'
+      ? JSON.parse(userCollection.value)
+      : userCollection.value
+
+    return storedCollection
+      .map((stored: StoredCollectionCard) => {
+        const card = allCards.find(c => c.id === stored.id)
+        return { ...card, count: stored.count }
+      })
+      /* then sort low cards with most count to the front */
+      .sort((a, b) => {
+        const aPoints = Object.values(a.values).reduce((sum, val) => sum + val, 0)
+        const bPoints = Object.values(b.values).reduce((sum, val) => sum + val, 0)
+        if (a.count > 0 && aPoints < bPoints) return -1
+        if (a.count === 0 && aPoints < bPoints) return -1
+        if (a.count === 0 && aPoints > bPoints) return 1
+        if (a.count === 0) return 1
+        return 0
+      })
+      /* then sort cards with most count to the front */
+      .sort((a, b) => {
+        if (a.count < b.count) return 1
+        if (a.count > b.count) return -1
+        return 0
+      })
+  }
+
+  /* save a default card collection if there is none yet */
+  userCollection.value === '[]' && setTimeout(() => {
+    isDbInitialized.value && userCollection.value === '[]' && saveCollection(cardCollection)
+  }, 200)
+
+  const removeCardFromCollection = (card: Card) => {
+    // const storedCollection: StoredCollectionCard[] = JSON.parse(userCollection.value) ?? []
+    // const foundCard = storedCollection.find((c: StoredCollectionCard) => c.id === card.id)
+    //
+    // if (!foundCard) return
+    // foundCard.count -= 1
+    // saveCollection(storedCollection)
+  }
+
+  const addCardToCollection = (card: Card) => {
+    const storedCollection: StoredCollectionCard[] = JSON.parse(userCollection.value) ?? []
+    const foundCard = storedCollection.find((c: StoredCollectionCard) => c.id === card.id)
+
+    if (!foundCard) return
+    foundCard.count += 1
+    saveCollection(storedCollection)
+  }
+
   return {
     allCards,
+    cardCollection,
+    saveCollection,
+    getSortedCollection,
+    removeCardFromCollection,
+    addCardToCollection,
     modelImgPath
   }
 }
