@@ -4,6 +4,13 @@
     style="padding-bottom: env(safe-area-inset-bottom); padding-top: env(safe-area-inset-top);"
     :class="{ 'p-0': isMobilePortrait }"
   )
+    //- Emergency Aid Overlay
+    EmergencyAid(
+      v-if="showEmergencyAid"
+      :is-visible="showEmergencyAid"
+      @close="showEmergencyAid = false"
+    )
+
     //- Animation Overlay
     div.flying-card(v-if="flyingCard" :style="flyingStyle")
       CardDisplay(:card="flyingCard.card" :show-tint="false")
@@ -105,7 +112,8 @@ import type { GameCard } from '@/types/game'
 import FButton from '@/components/atoms/FButton'
 import CardDisplay from '@/components/CardDisplay'
 import PlayerHandCard from '@/components/PlayerHandCard'
-import { playerSelection, isPracticeMatch } from '@/use/useMatch'
+import EmergencyAid from '@/components/organisms/EmergencyAid'
+import { playerSelection, isPracticeMatch, isDbInitialized, isDebug } from '@/use/useMatch'
 import useModels, { modelImgPath, type StoredCollectionCard } from '@/use/useModels'
 import useUser, { orientation, isMobilePortrait, isMobileLandscape } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
@@ -121,6 +129,7 @@ const selectedDeck = ref<GameCard[]>([])
 const currentPage = ref(0)
 const windowWidth = ref(window.innerWidth)
 const windowHeight = ref(window.innerHeight)
+const showEmergencyAid = ref(false)
 
 const cardRefs = ref<Record<string, any>>({})
 const flyingCard = ref<{ card: any; start: DOMRect; end: DOMRect } | null>(null)
@@ -149,6 +158,25 @@ watch(userHand, () => {
   const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
   selectedDeck.value = Array.isArray(hand) ? [...hand] : []
 }, { immediate: true })
+
+// Watch for the "Bankrupt" state
+watch(inventory, (newInv) => {
+  if (!isDbInitialized.value) return
+
+  setTimeout(() => {
+    const coll = typeof userCollection.value === 'string' ? JSON.parse(userCollection.value) : userCollection.value
+    const totalCount = coll?.reduce((sum, c) => sum + c.count, 0) || 0
+    const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
+    const totalInSelection = hand.length
+
+    // Trigger if player has less than 5 cards total, and we aren't already showing the aid
+    if (totalCount + totalInSelection < 5 && !showEmergencyAid.value) {
+      setTimeout(() => {
+        showEmergencyAid.value = true
+      }, 1200)
+    }
+  }, 300)
+}, { deep: true, immediate: true })
 
 const isStackedSize = ref('50px')
 const isStackedMargin = ref('-22px')
@@ -210,7 +238,13 @@ const addToDeck = (cardTemplate: any, event: MouseEvent) => {
     invItem.count--
     selectedDeck.value.push({ ...cardTemplate, instanceId: Math.random().toString(36).substring(2, 9) })
     setSettingValue('hand', [...selectedDeck.value])
-    saveCollection(inventory.value)
+    if (/*true ||*/ isDebug.value && false) {
+      const failDeck = JSON.parse(JSON.parse('"[{\\"id\\":\\"energy-female-old\\",\\"count\\":0},{\\"id\\":\\"snowman-young\\",\\"count\\":0},{\\"id\\":\\"gargoyle-young\\",\\"count\\":0},{\\"id\\":\\"mushroom-young\\",\\"count\\":0},{\\"id\\":\\"piranha-young\\",\\"count\\":0},{\\"id\\":\\"dragon-young\\",\\"count\\":0},{\\"id\\":\\"mermaid-young\\",\\"count\\":0},{\\"id\\":\\"scorpion-young\\",\\"count\\":0},{\\"id\\":\\"yeti-young\\",\\"count\\":0},{\\"id\\":\\"water-shark-young\\",\\"count\\":0},{\\"id\\":\\"warrior-young\\",\\"count\\":0},{\\"id\\":\\"nature-butterfly-middle\\",\\"count\\":0},{\\"id\\":\\"fire-harpy\\",\\"count\\":0},{\\"id\\":\\"moss\\",\\"count\\":0},{\\"id\\":\\"household\\",\\"count\\":0},{\\"id\\":\\"snowman-middle\\",\\"count\\":0},{\\"id\\":\\"mermaid-middle\\",\\"count\\":0},{\\"id\\":\\"mushroom-middle\\",\\"count\\":0},{\\"id\\":\\"dragon-middle\\",\\"count\\":0},{\\"id\\":\\"gargoyle-middle\\",\\"count\\":0},{\\"id\\":\\"piranha-middle\\",\\"count\\":0},{\\"id\\":\\"scorpion-middle\\",\\"count\\":0},{\\"id\\":\\"yeti-middle\\",\\"count\\":0},{\\"id\\":\\"warrior-middle\\",\\"count\\":0},{\\"id\\":\\"water-shark-middle\\",\\"count\\":0},{\\"id\\":\\"asha\\",\\"count\\":0},{\\"id\\":\\"starlight\\",\\"count\\":0},{\\"id\\":\\"psi-nightmare\\",\\"count\\":0},{\\"id\\":\\"snowman-old\\",\\"count\\":0},{\\"id\\":\\"gargoyle-old\\",\\"count\\":0},{\\"id\\":\\"dragon-old\\",\\"count\\":0},{\\"id\\":\\"eclipse\\",\\"count\\":0},{\\"id\\":\\"mermaid-old\\",\\"count\\":0},{\\"id\\":\\"piranha-old\\",\\"count\\":0},{\\"id\\":\\"scorpion-old\\",\\"count\\":0}]"'))
+      console.log('failDeck: ', failDeck)
+      saveCollection(failDeck)
+    } else {
+      saveCollection(inventory.value)
+    }
   }
 }
 

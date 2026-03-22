@@ -30,7 +30,7 @@ export interface StoredCollectionCard {
 const useModels = () => {
   const allCards: Card[] = [
     { id: 'asha', name: 'Asha', element: ELEMENTS.NEUTRAL, values: { top: 9, right: 3, bottom: 9, left: 3 } },
-    { id: 'dragon-old', name: 'Dragoire', element: ELEMENTS.FIRE, values: { top: 10, right: 8, bottom: 4, left: 7 } }, // 10 = 'A'
+    { id: 'dragon-old', name: 'Dragoire', element: ELEMENTS.FIRE, values: { top: 10, right: 8, bottom: 3, left: 7 } },
     { id: 'dragon-middle', name: 'Dragorin', element: ELEMENTS.FIRE, values: { top: 7, right: 6, bottom: 3, left: 5 } },
     { id: 'dragon-young', name: 'Dragir', element: ELEMENTS.FIRE, values: { top: 4, right: 4, bottom: 2, left: 3 } },
     { id: 'eclipse', name: 'Eclipse', element: ELEMENTS.DARK, values: { top: 5, right: 10, bottom: 5, left: 9 } },
@@ -126,6 +126,7 @@ const useModels = () => {
   }
 
   const startCollectionIdsList = ['mermaid-young', 'moss', 'dragon-young', 'piranha-young', 'mushroom-young', 'warrior-young', 'water-shark-young']
+
   const debugCollection = allCards.map(card => ({ ...card, count: 2 }))
   let cardCollection = isDebug.value
     ? debugCollection
@@ -152,16 +153,9 @@ const useModels = () => {
         if (a.count === 0) return 1
         return 0
       })
-  // /* then sort cards with most count to the front */
-  // .sort((a, b) => {
-  //   if (a.count < b.count) return -1
-  //   if (a.count > b.count) return 1
-  //   return 0
-  // })
-
 
   const getSortedCollection = () => {
-    if (!userCollection.value) return
+    if (!userCollection.value) return []
 
     const storedCollection = typeof userCollection.value === 'string'
       ? JSON.parse(userCollection.value)
@@ -172,21 +166,12 @@ const useModels = () => {
         const card = allCards.find(c => c.id === stored.id)
         return { ...card, count: stored.count }
       })
-      /* then sort low cards with most count to the front */
-      .sort((a, b) => {
+      .sort((a: InventoryCard, b: InventoryCard) => {
         const aPoints = Object.values(a.values).reduce((sum, val) => sum + val, 0)
         const bPoints = Object.values(b.values).reduce((sum, val) => sum + val, 0)
-        if (a.count > 0 && aPoints < bPoints) return -1
-        if (a.count === 0 && aPoints < bPoints) return -1
-        if (a.count === 0 && aPoints > bPoints) return 1
-        if (a.count === 0) return 1
-        return 0
-      })
-      /* then sort cards with most count to the front */
-      .sort((a, b) => {
-        if (a.count < b.count) return 1
-        if (a.count > b.count) return -1
-        return 0
+        if (a.count > 0 && b.count === 0) return -1
+        if (a.count === 0 && b.count > 0) return 1
+        return aPoints - bPoints
       })
   }
 
@@ -195,21 +180,18 @@ const useModels = () => {
     isDbInitialized.value && userCollection.value === '[]' && saveCollection(cardCollection)
   }, 200)
 
-  const removeCardFromCollection = (card: Card) => {
-    // const storedCollection: StoredCollectionCard[] = JSON.parse(userCollection.value) ?? []
-    // const foundCard = storedCollection.find((c: StoredCollectionCard) => c.id === card.id)
-    //
-    // if (!foundCard) return
-    // foundCard.count -= 1
-    // saveCollection(storedCollection)
-  }
-
   const addCardToCollection = (card: Card) => {
-    const storedCollection: StoredCollectionCard[] = JSON.parse(userCollection.value) ?? []
+    const storedCollection: StoredCollectionCard[] = typeof userCollection.value === 'string'
+      ? JSON.parse(userCollection.value)
+      : []
+
     const foundCard = storedCollection.find((c: StoredCollectionCard) => c.id === card.id)
 
-    if (!foundCard) return
-    foundCard.count += 1
+    if (foundCard) {
+      foundCard.count += 1
+    } else {
+      storedCollection.push({ id: card.id, count: 1 })
+    }
     saveCollection(storedCollection)
   }
 
@@ -218,8 +200,8 @@ const useModels = () => {
     cardCollection,
     saveCollection,
     getSortedCollection,
-    removeCardFromCollection,
     addCardToCollection,
+    startCollectionIdsList,
     modelImgPath
   }
 }

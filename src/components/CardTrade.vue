@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import FReward from '@/components/atoms/FReward.vue'
-import TradeHand from '@/components/molecules/TradeHand.vue'
-import CardDisplay from '@/components/CardDisplay.vue'
-import useUser, { orientation } from '@/use/useUser.ts'
-import type { GameCard } from '@/types/game.ts'
-import { mobileCheck } from '@/utils/function.ts'
-import useModels from '@/use/useModels.ts'
-import { playerSelection } from '@/use/useMatch.ts'
+import FReward from '@/components/atoms/FReward'
+import TradeHand from '@/components/molecules/TradeHand'
+import CardDisplay from '@/components/CardDisplay'
+import useUser, { orientation } from '@/use/useUser'
+import type { GameCard } from '@/types/game'
+import { mobileCheck } from '@/utils/function'
+import useModels from '@/use/useModels'
+import { playerSelection } from '@/use/useMatch'
+import useSound from '@/use/useSound'
 
 interface Props {
   isOpen: boolean
@@ -25,7 +26,8 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const { setSettingValue } = useUser()
-const { removeCardFromCollection, addCardToCollection } = useModels()
+const { addCardToCollection } = useModels()
+const { playSound } = useSound()
 
 const isMobileLandscape = computed(() => mobileCheck() && window.innerWidth > 500 && orientation.value === 'landscape')
 
@@ -61,6 +63,7 @@ watch(() => props.isOpen, (newVal) => {
 
     if (isDraw.value) {
       tradeComplete.value = true
+      playSound('reward-continue')
     } else if (isLose.value) {
       // NPC takes a moment to "think" before picking a player card
       setTimeout(() => executeNpcPick(), 1000)
@@ -96,18 +99,9 @@ const executeNpcPick = () => {
     playerDeck.value = props.playerHand.filter((c: any) => c.instanceId !== (bestCard?.instanceId))
     playerSelection.value = playerSelection.value.filter((c: any) => c.instanceId !== (bestCard?.instanceId))
     npcDeck.value = [...props.npcHand, { ...bestCard, owner: 'npc' }]
-    // removeCardFromCollection(JSON.parse(JSON.stringify(bestCard)))
-    // console.log('playerDeck.value: ',
-    //   playerDeck.value.map(c => ({
-    //     name: c.name, owner: c.owner
-    //   })),
-    //   npcDeck.value.map(c => ({
-    //     name: c.name, owner: c.owner
-    //   }))
-    // )
+
     setSettingValue('hand', JSON.parse(JSON.stringify(playerDeck.value)))
-    // update collection here
-    // setSettingValue('collection', [...userCollection.value, bestCard]) // remove bestCard from collection
+    playSound('reward-continue')
   }, 800)
 }
 
@@ -123,15 +117,13 @@ const handleEnemyCardSelect = (id: string) => {
 
 const processPlayerPick = (card: any) => {
   animateCardTransfer(card, 'down')
+
   // Update global state: add to player hand
   npcDeck.value = npcDeck.value.filter((c: any) => c.instanceId !== (card.instanceId))
   playerDeck.value = [...playerDeck.value, { ...card, owner: 'player' }]
 
   addCardToCollection(JSON.parse(JSON.stringify(card)))
-  // console.log('playerDeck.value: ', playerDeck.value.map(c => c.name), npcDeck.value.map(c => c.name))
-
-  // update collection here
-  // setSettingValue('collection', [...userCollection.value, card])
+  playSound('reward-continue')
 }
 
 const animateCardTransfer = (card: any, direction: 'up' | 'down') => {

@@ -81,7 +81,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] save progress after campaign battle
   - [x] save knownCards of enemy
   - [x] random player starts
-  - [ ] able to create new low cards if player has none left
+  - [x] able to create new low cards if player has none left
+  - [x] EmergencyAid component with 2 new cards from the starters
 
 - [x] OptionsModal
   - [x] music
@@ -96,6 +97,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [ ] sound effect for card placement
     - [ ] sound effect for card turn
     - [ ] sound effect for plus, same, combo
+  - [ ] sound effect Reward continue
 
 - [x] Card selection Page
     - [x] animate card selection
@@ -138,3 +140,5 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 ## NPC Algo:
 
 - [ ] 
+
+Sounds generated with [elevenLabs](https://elevenlabs.io/app/sound-effects/generate)
