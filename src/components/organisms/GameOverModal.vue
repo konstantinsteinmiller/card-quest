@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
-import { activeNode, useCampaign } from '@/use/useCampaign'
-import { isPracticeMatch } from '@/use/useMatch.ts'
+import { activeNode, type CampaignNode, useCampaign } from '@/use/useCampaign'
+import { isPracticeMatch, originalNpcHand } from '@/use/useMatch.ts'
 
 const props = defineProps<{
   isOpen: boolean
@@ -18,7 +18,9 @@ const emit = defineEmits<{
 
 const router = useRouter()
 const { t } = useI18n()
-const { completeNode } = useCampaign()
+const { completeNode, saveCampaign } = useCampaign()
+
+const areKnownCardsSaved = ref<boolean>(false)
 
 const result = computed((): 'win' | 'lose' | 'draw' => {
   if (props.scores.player > props.scores.npc) return 'win'
@@ -26,20 +28,45 @@ const result = computed((): 'win' | 'lose' | 'draw' => {
   return 'draw'
 })
 
+watch(result, () => {
+  if (!activeNode?.value) return
+
+  if (result.value === 'win') {
+    //set known cards for active node from the dealt npc deck
+    activeNode.value.knownCards = [...new Set([
+      ...(JSON.parse(JSON.stringify(activeNode.value.knownCards)) ?? []),
+      ...originalNpcHand.value.map(c => c.id)
+    ])]
+    completeNode(JSON.parse(JSON.stringify(activeNode.value)))
+  }
+
+  if (areKnownCardsSaved.value) return
+  //set known cards for active node from the dealt npc deck
+  activeNode.value.knownCards = [...new Set([
+    ...(JSON.parse(JSON.stringify(activeNode.value.knownCards)) ?? []),
+    ...originalNpcHand.value.map(c => c.id)
+  ])]
+  saveCampaign(JSON.parse(JSON.stringify(activeNode.value)))
+
+  areKnownCardsSaved.value = true
+})
+
 const onContinue = () => {
   if (isPracticeMatch.value || !activeNode?.value) {
     emit('reset')
     return
   }
-  if (result.value === 'win') {
-    completeNode(activeNode?.value?.id || '')
-  }
   emit('reset')
   router.push({ name: 'campaign' })
 }
 
-onMounted(() => {
+const onBackToMenu = () => {
+  emit('reset')
+  router.push({ name: 'main-menu' })
+}
 
+onMounted(() => {
+  areKnownCardsSaved.value = false
 })
 </script>
 
@@ -65,7 +92,7 @@ onMounted(() => {
         FButton(@click="onContinue") {{ t('continue') }}
         FButton(
           type="secondary"
-          @click="router.push({ name: 'main-menu' })"
+          @click="onBackToMenu"
         ) {{ t('backToMainMenu') }}
 </template>
 

@@ -54,9 +54,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] not-selected card frame
 
 - [x] GameOverModal
-    - [x] show winner / loser / draw
-    - [x] restart game button
-    - [x] frame
+  - [x] show winner / loser / draw
+  - [x] restart game button
+  - [x] frame
   - [x] continue Campaign
 
 - [x] Main Menu
@@ -70,15 +70,16 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] mute music and sound
 
 - [ ] Campaign
-    - [x] Campaign map and jump of to battle
-    - [x] connection lines between nodes
+  - [x] Campaign map and jump of to battle
+  - [x] connection lines between nodes
   - [x] set npc cards from the campaign node
-    - [ ] Storyline
-    - [ ] different levels with different NPCs
-    - [ ] enemy shows known cards face up
-    - [x] make node popup pop with animation
+  - [x] pick random cards for npc from the campaign node
+  - [ ] Storyline
+  - [ ] different levels with different NPCs
+  - [x] enemy shows known cards face up
+  - [x] make node popup pop with animation
   - [x] save progress after campaign battle
-  - [ ] save knownCards of enemy
+  - [x] save knownCards of enemy
   - [ ] random player starts
 
 - [x] OptionsModal

@@ -1,4 +1,4 @@
-import { ref, computed, type ComputedRef } from 'vue'
+import { ref, computed, type ComputedRef, watch } from 'vue'
 import useUser from '@/use/useUser'
 import { useI18n } from 'vue-i18n'
 import type { BattleRuleName } from '@/use/useBattleRules'
@@ -33,7 +33,7 @@ export const useCampaign = () => {
       id: 'node1-1',
       name: t('node1-1.name'),
       description: t('node1-1.desc'),
-      npcDeck: ['mermaid-young', 'moss', 'dragon-young', 'dragon-middle', 'piranha-young'],
+      npcDeck: ['mermaid-young', 'moss', 'dragon-young', 'dragon-middle', 'piranha-young', 'mushroom-young', 'nature-butterfly-middle', 'scorpion-young', 'warrior-young', 'water-shark-young', 'yeti-young'],
       position: { x: 18, y: 64 },
       unlocked: true,
       completed: true,
@@ -115,15 +115,8 @@ export const useCampaign = () => {
     }
   ]
 
-  // Sync with User Storage on initialization
-  const syncProgress = () => {
-    if (!userCampaign.value || !userCampaign.value.length || userCampaign.value === '[]') {
-      setSettingValue('campaign', campaignNodes.value.map(node => ({
-        id: node.id,
-        completed: node.completed,
-        knownCards: node.knownCards
-      })))
-    } else if (typeof userCampaign.value === 'string') {
+  watch(userCampaign, () => {
+    if (typeof userCampaign.value === 'string') {
       const campaignList = JSON.parse(userCampaign.value)
       campaignList?.forEach((saved: any) => {
         const node = campaignNodes.value.find(n => n.id === saved.id)
@@ -140,29 +133,47 @@ export const useCampaign = () => {
         }
       })
     }
+  }, { immediate: true })
+
+  const completeNode = (currentNode: CampaignNode) => {
+    if (!currentNode) return
+
+    const oldNode = campaignNodes.value.find(n => n.id === currentNode.id)
+    if (!oldNode) return
+
+    oldNode.completed = true
+    oldNode.knownCards = currentNode.knownCards
+    oldNode.unlocks.forEach(nextId => {
+      const nextNode = campaignNodes.value.find(n => n.id === nextId)
+      if (nextNode) nextNode.unlocked = true
+    })
+
+    const storedNodes = campaignNodes.value.map(n => ({
+      id: n.id,
+      completed: n.completed,
+      knownCards: n.id === currentNode.id ? currentNode?.knownCards : n.knownCards
+    }))
+    setSettingValue('campaign', storedNodes)
   }
 
-  const completeNode = (id: string) => {
-    syncProgress()
-    const node = campaignNodes.value.find(n => n.id === id)
-    if (node) {
-      node.completed = true
-      node.unlocks.forEach(nextId => {
-        const nextNode = campaignNodes.value.find(n => n.id === nextId)
-        if (nextNode) nextNode.unlocked = true
-      })
-      console.log('node: ', node)
-      setSettingValue('campaign', campaignNodes.value.map(n => ({
-        id: n.id, completed: n.completed,
-        knownCards: node.knownCards
-      })))
-    }
+  const saveCampaign = (currentNode: CampaignNode) => {
+    if (!currentNode) return
+
+    const oldNode = campaignNodes.value.find(n => n.id === currentNode.id)
+    if (!oldNode) return
+
+    const storedNodes = campaignNodes.value.map(n => ({
+      id: n.id,
+      completed: n.completed,
+      knownCards: n.id === oldNode.id ? currentNode?.knownCards : n.knownCards
+    }))
+    setSettingValue('campaign', storedNodes)
   }
 
   return {
     campaignNodes,
     selectedNodeId,
-    syncProgress,
+    saveCampaign,
     activeNode,
     completeNode
   }

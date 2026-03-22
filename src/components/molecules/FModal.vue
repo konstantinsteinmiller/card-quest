@@ -39,7 +39,7 @@ const handleTabChange = (val: string | number) => {
       div(class="absolute inset-0 bg-black/70 backdrop-blur-sm" @click="close")
 
       //- Modal Container
-      div(class="relative w-full max-w-lg")
+      div(class="model-container relative w-full max-w-lg")
 
         //- Header Area (Tabs or Ribbon)
         div(class="absolute -top-10 left-0 translate-y-2 right-0 z-10")

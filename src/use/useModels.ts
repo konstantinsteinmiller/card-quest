@@ -7,7 +7,7 @@ export const modelImgPath = (imageName: string) => prependBaseUrl(`/models/${ima
 /**
  * models
  */
-interface Card {
+export interface Card {
   id: string
   name: string
   element: Element
@@ -31,8 +31,8 @@ const useModels = () => {
       name: 'Thunlady', element: ELEMENTS.ENERGY,
       values: { top: 8, right: 5, bottom: 10, left: 6 }
     },
-    { id: 'fire-harpy', name: 'Harpire', element: ELEMENTS.FIRE, values: { top: 7, right: 7, bottom: 4, left: 4 } },
-    { id: 'gargoyle-old', name: 'Goygorix', element: ELEMENTS.EARTH, values: { top: 6, right: 9, bottom: 9, left: 5 } },
+    { id: 'fire-harpy', name: 'Harpire', element: ELEMENTS.FIRE, values: { top: 7, right: 5, bottom: 3, left: 2 } },
+    { id: 'gargoyle-old', name: 'Goygorix', element: ELEMENTS.EARTH, values: { top: 4, right: 9, bottom: 9, left: 5 } },
     {
       id: 'gargoyle-middle',
       name: 'Goygorin',
@@ -64,7 +64,7 @@ const useModels = () => {
     {
       id: 'nature-butterfly-middle',
       name: 'Dandalina', element: ELEMENTS.NATURE,
-      values: { top: 8, right: 2, bottom: 3, left: 8 }
+      values: { top: 5, right: 1, bottom: 3, left: 6 }
     },
     { id: 'piranha-old', name: 'Piradon', element: ELEMENTS.WATER, values: { top: 7, right: 7, bottom: 7, left: 8 } },
     { id: 'piranha-middle', name: 'Pirin', element: ELEMENTS.WATER, values: { top: 5, right: 5, bottom: 5, left: 6 } },

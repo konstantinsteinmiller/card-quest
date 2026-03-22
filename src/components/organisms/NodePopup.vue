@@ -8,7 +8,7 @@
     leave-to-class="opacity-0 scale-0 translate-y-8"
   )
     //- Container covers full screen to handle the click-away logic
-    div(class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none")
+    div(class="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none" :class="{ '!p-0': isMobilePortrait}")
 
       //- Transparent Backdrop (No blur, just intercepts clicks)
       div(
@@ -18,7 +18,8 @@
 
       //- The Popup Card
       div(
-        class="relative border-4 rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden pointer-events-auto border-slate-600/80 bg-black/90"
+        class="popup-card relative border-4 rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden pointer-events-auto border-slate-600/80 bg-black/90"
+        :class="{ '!scale-90 !max-w-xl': isMobileLandscape && node.npcDeck.length > 10, '!scale-80 !max-w-xl ': isMobileLandscape && node.npcDeck.length > 15, '!max-w-full ': isMobilePortrait }"
       )
         //- Close Button
         FCloseButton(
@@ -35,18 +36,23 @@
           p(class="text-sm text-white mb-4 italic text-shadow" :class="{ '!mb-2': isMobileLandscape }") "{{ node.description }}"
 
           //- Tiny Deck Preview
-          div(class="flex justify-center gap-1 mb-5" :class="{ '!mb-2': isMobileLandscape }")
+          div(class="flex justify-center flex-wrap gap-1 mb-5" :class="{ '!mb-2': isMobileLandscape }")
             div(
-              v-for="i in 5"
+              v-for="i in node.npcDeck.length"
               :key="i"
-              class="w-8 h-8"
+              class="w-16 h-16"
             )
+              CardDisplay(
+                v-if="node.knownCards.includes(node.npcDeck[i-1])"
+                :card="npcDeck[i-1]"
+                :is-npc="false"
+              )
               img(
+                v-else
                 class="w-full h-full object-fill shadow-md rounded-sm"
                 src="/images/backside/backside-1_256x256.webp"
                 alt="Card Back"
               )
-
           //- Rules
           div(class="flex justify-center gap-4 text-white text-shadow items-center")
             div(class="text-amber-300 text-sm") {{ t('rules') }}:
@@ -66,16 +72,18 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import type { CampaignNode } from '@/use/useCampaign'
 import FCloseButton from '@/components/atoms/FCloseButton'
 import FButton from '@/components/atoms/FButton'
 import RuleIcon from '@/components/atoms/RuleIcon'
 import { useI18n } from 'vue-i18n'
-import { isMobileLandscape, orientation } from '@/use/useUser'
-import { computed, ref } from 'vue'
-import { mobileCheck } from '@/utils/function.ts'
+import { isMobileLandscape, isMobilePortrait, orientation } from '@/use/useUser'
+import { mobileCheck } from '@/utils/function'
+import useModels, { type Card, modelImgPath } from '@/use/useModels'
+import CardDisplay from '@/components/CardDisplay.vue'
 
-defineProps<{
+const props = defineProps<{
   node: CampaignNode
 }>()
 
@@ -85,6 +93,15 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const { allCards } = useModels()
+
+const npcDeck = ref(allCards.filter((c: Card) => props.node.npcDeck.includes(c.id)))
+npcDeck.value = npcDeck.value.map((c: Card) => {
+  return {
+    ...c,
+    image: modelImgPath(c.id)
+  }
+})
 
 const windowWidth = ref(window.innerWidth)
 const isMobileLandscape = computed(() => mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape')

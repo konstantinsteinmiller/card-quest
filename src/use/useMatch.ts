@@ -4,7 +4,7 @@ import useModels, { modelImgPath } from '@/use/useModels'
 import { useBattleRules, type BattleRuleName } from '@/use/useBattleRules'
 import { useRouter } from 'vue-router'
 import { setupDebugBoard } from '../../tests/fixtures/debugBoard'
-import type { CampaignNode } from '@/use/useCampaign.ts'
+import type { CampaignNode } from '@/use/useCampaign'
 
 const debugSaved = localStorage.getItem('debug') || 'false'
 export const isDebug = ref(!!JSON.parse(debugSaved))
@@ -80,13 +80,15 @@ export const useMatch = () => {
           }
           func()
         } catch (e) {
-          console.log('e: ', e)
+          console.error('error fetching useUser: ', e)
         }
       }, 300)
     } else {
-      // setup correct npc deck based on active node, if no active node (like in free play), generate random npc deck
+      // setup correct npc deck based on active node and pick 5 random cards from the npc deck
+      // if no active node (like in free play), generate random npc deck
       if (activeNode.value) {
-        const npcDeck = activeNode.value.npcDeck.map(cardId => {
+        const npcDeckCopy = JSON.parse(JSON.stringify(activeNode.value.npcDeck))?.reverse().sort(() => 0.5 - Math.random())
+        const npcDeck = npcDeckCopy.map((cardId: string) => {
           const cardData = allCards.find(c => c.id === cardId)
           return {
             ...cardData,
@@ -95,7 +97,8 @@ export const useMatch = () => {
             image: modelImgPath(cardData?.id || 'missing_id'),
             lastRuleTrigger: null
           }
-        })
+        }).slice(0, 5)
+
         setupGame(npcDeck)
       } else {
         const npcDeck = Array.from({ length: 5 }, () => generateRandomCard('npc'))

@@ -12,9 +12,7 @@ import type { BattleRuleName } from '@/use/useBattleRules.ts'
 
 const { t } = useI18n()
 const router = useRouter()
-const { campaignNodes, selectedNodeId, activeNode, syncProgress } = useCampaign()
-
-syncProgress()
+const { campaignNodes, selectedNodeId, activeNode } = useCampaign()
 
 isPracticeMatch.value = false
 
@@ -48,7 +46,6 @@ const getPathClass = (startNode: CampaignNode, targetId: string) => {
 
 onMounted(() => {
   selectedNodeId.value = null
-  syncProgress()
   window.addEventListener('resize', updateOrientation)
   updateOrientation()
 })
