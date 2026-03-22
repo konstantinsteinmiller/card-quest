@@ -1,9 +1,10 @@
-import { ref, computed } from 'vue'
+import { ref, computed, type ComputedRef } from 'vue'
 import type { GameCard, BoardSlot } from '@/types/game'
-import { useModels, modelImgPath } from '@/use/useModels'
+import useModels, { modelImgPath } from '@/use/useModels'
 import { useBattleRules, type BattleRuleName } from '@/use/useBattleRules'
 import { useRouter } from 'vue-router'
 import { setupDebugBoard } from '../../tests/fixtures/debugBoard'
+import type { CampaignNode } from '@/use/useCampaign.ts'
 
 const debugSaved = localStorage.getItem('debug') || 'false'
 export const isDebug = ref(!!JSON.parse(debugSaved))
@@ -50,7 +51,7 @@ export const useMatch = () => {
     }
   }
 
-  const setupGame = () => {
+  const setupGame = (npcDeck: any) => {
     board.value.forEach(row => row.forEach(slot => {
       slot.card = null
     }))
@@ -60,11 +61,11 @@ export const useMatch = () => {
       return router.replace({ name: 'deck', query: isPracticeMatch.value ? { practice: 'true' } : undefined })
     }
 
-    originalNpcHand.value = Array.from({ length: 5 }, () => generateRandomCard('npc'))
+    originalNpcHand.value = npcDeck
     npcHand.value = JSON.parse(JSON.stringify(originalNpcHand.value))
   }
 
-  const resetGame = () => {
+  const resetGame = (activeNode: ComputedRef<CampaignNode | null>) => {
     if (isDebug?.value) {
       board.value.forEach(row => row.forEach(slot => {
         slot.card = null
@@ -83,7 +84,23 @@ export const useMatch = () => {
         }
       }, 300)
     } else {
-      setupGame()
+      // setup correct npc deck based on active node, if no active node (like in free play), generate random npc deck
+      if (activeNode.value) {
+        const npcDeck = activeNode.value.npcDeck.map(cardId => {
+          const cardData = allCards.find(c => c.id === cardId)
+          return {
+            ...cardData,
+            instanceId: Math.random().toString(36).substring(2, 11),
+            owner: 'npc',
+            image: modelImgPath(cardData?.id || 'missing_id'),
+            lastRuleTrigger: null
+          }
+        })
+        setupGame(npcDeck)
+      } else {
+        const npcDeck = Array.from({ length: 5 }, () => generateRandomCard('npc'))
+        setupGame(npcDeck)
+      }
     }
 
     turn.value = 'player'

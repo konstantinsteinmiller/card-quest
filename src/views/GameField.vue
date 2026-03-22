@@ -91,6 +91,7 @@ import GameOverModal from '@/components/organisms/GameOverModal'
 import MatchRulesModal from '@/components/organisms/MatchRulesModal'
 import CardTradeModal from '@/components/organisms/CardTradeModal'
 import useUser from '@/use/useUser'
+import useCampaign from '@/use/useCampaign'
 
 const {
   turn,
@@ -113,6 +114,7 @@ const {
   handleTapSelect,
   handleSlotTap
 } = useInteraction(playerHand, placeCard)
+const { activeNode } = useCampaign()
 
 useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules)
 
@@ -120,7 +122,7 @@ const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'standard'))
 
 onMounted(() => {
-  resetGame()
+  resetGame(activeNode)
 })
 
 const isGameOver = ref<boolean>(false)
@@ -148,7 +150,7 @@ const onContinue = () => {
   showRules.value = !userSkipRulesModal.value
   isGameOver.value = false
   showTradeModal.value = false
-  resetGame()
+  resetGame(activeNode)
 }
 
 const scores = computed(() => {

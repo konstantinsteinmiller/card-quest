@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter, useRoute } from 'vue-router'
 import type { GameCard } from '@/types/game'
@@ -105,7 +105,7 @@ import FButton from '@/components/atoms/FButton'
 import CardDisplay from '@/components/CardDisplay'
 import PlayerHandCard from '@/components/PlayerHandCard'
 import { playerSelection, isPracticeMatch } from '@/use/useMatch'
-import { modelImgPath, useModels } from '@/use/useModels'
+import useModels, { modelImgPath } from '@/use/useModels'
 import useUser, { orientation } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 
@@ -131,14 +131,6 @@ const updateDimensions = () => {
 }
 
 onMounted(() => {
-  const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
-  selectedDeck.value = Array.isArray(hand) ? [...hand] : []
-
-  selectedDeck.value.forEach(card => {
-    const inv = inventory.value.find(i => i.id === card.id)
-    if (inv && inv.count > 0) inv.count--
-  })
-
   window.addEventListener('resize', updateDimensions)
   window.scrollTo(0, 0)
   const isPractice: boolean = route?.query?.practice === true
@@ -146,6 +138,16 @@ onMounted(() => {
 })
 
 onUnmounted(() => window.removeEventListener('resize', updateDimensions))
+
+watch(userHand, () => {
+  const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
+  selectedDeck.value = Array.isArray(hand) ? [...hand] : []
+
+  selectedDeck.value.forEach(card => {
+    const inv = inventory.value.find(i => i.id === card.id)
+    if (inv && inv.count > 0) inv.count--
+  })
+}, { immediate: true })
 
 const isMobileLandscape = computed(() => mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape')
 const isStackedSize = ref('50px')

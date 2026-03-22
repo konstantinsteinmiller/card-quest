@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
-import { activeNode, useCampaign } from '@/use/useCampaign.ts'
+import { activeNode, useCampaign } from '@/use/useCampaign'
 import { isPracticeMatch } from '@/use/useMatch.ts'
 
 const props = defineProps<{
@@ -18,6 +18,7 @@ const emit = defineEmits<{
 
 const router = useRouter()
 const { t } = useI18n()
+const { completeNode } = useCampaign()
 
 const result = computed((): 'win' | 'lose' | 'draw' => {
   if (props.scores.player > props.scores.npc) return 'win'
@@ -37,8 +38,8 @@ const onContinue = () => {
   router.push({ name: 'campaign' })
 }
 
-const { activeNode, completeNode } = useCampaign()
 onMounted(() => {
+
 })
 </script>
 

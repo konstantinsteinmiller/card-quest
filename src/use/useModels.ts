@@ -19,7 +19,7 @@ interface Card {
   }
 }
 
-export const useModels = () => {
+const useModels = () => {
   const allCards: Card[] = [
     { id: 'asha', name: 'Asha', element: ELEMENTS.NEUTRAL, values: { top: 9, right: 3, bottom: 9, left: 3 } },
     { id: 'dragon-old', name: 'Dragoire', element: ELEMENTS.FIRE, values: { top: 10, right: 8, bottom: 4, left: 7 } }, // 10 = 'A'

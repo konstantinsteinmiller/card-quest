@@ -72,13 +72,14 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [ ] Campaign
     - [x] Campaign map and jump of to battle
     - [x] connection lines between nodes
-  - [ ] set npc cards from the campaign node
+  - [x] set npc cards from the campaign node
     - [ ] Storyline
     - [ ] different levels with different NPCs
     - [ ] enemy shows known cards face up
     - [x] make node popup pop with animation
   - [x] save progress after campaign battle
   - [ ] save knownCards of enemy
+  - [ ] random player starts
 
 - [x] OptionsModal
   - [x] music
@@ -94,7 +95,6 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [ ] sound effect for card turn
     - [ ] sound effect for plus, same, combo
 
-- [x] mute button on main menu
 - [x] Card selection Page
     - [x] animate card selection
     - [x] Name
