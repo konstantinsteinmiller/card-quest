@@ -243,6 +243,7 @@ const prevPage = () => {
   if (currentPage.value > 0) currentPage.value--
 }
 const onNext = () => {
+  if (selectedDeck.value.length < 5) return
   playerSelection.value = [...selectedDeck.value]
   setSettingValue('hand', [...selectedDeck.value])
 

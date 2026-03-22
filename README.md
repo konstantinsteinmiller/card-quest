@@ -121,6 +121,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] double selection if card is multiple times in player hand
 - [x] mobile layout changes on landscape
 - [x] tap outside Popup doesnt work
+- [x] ready button working without 5 cards selected
+- [x] contextmenu on mobile
 
 ## Nice-to-have
 
