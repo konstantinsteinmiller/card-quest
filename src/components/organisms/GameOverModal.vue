@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
 import { activeNode, useCampaign } from '@/use/useCampaign.ts'
+import { isPracticeMatch } from '@/use/useMatch.ts'
 
 const props = defineProps<{
   isOpen: boolean
@@ -25,8 +26,12 @@ const result = computed((): 'win' | 'lose' | 'draw' => {
 })
 
 const onContinue = () => {
+  if (isPracticeMatch.value || !activeNode?.value) {
+    emit('reset')
+    return
+  }
   if (result.value === 'win') {
-    completeNode(activeNode.value.id)
+    completeNode(activeNode?.value?.id || '')
   }
   emit('reset')
   router.push({ name: 'campaign' })

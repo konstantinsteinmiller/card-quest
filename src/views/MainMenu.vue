@@ -21,7 +21,7 @@
       // Menu
       div.flex.flex-col.gap-4.relative.z-10
         FButton(@click="onCampaign") {{ t('campaign') }}
-        FButton(@click="router.push({ name: 'deck' })") {{ t('play') }}
+        FButton(@click="onPracticeClick") {{ t('play') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
 
     FModal(v-if="false" v-model="showOptions" title="New Card!")
@@ -44,7 +44,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import OptionsModal from '@/components/organisms/OptionsModal'
 import FButton from '@/components/atoms/FButton'
-import { activeRules, isCampaignMatch } from '@/use/useMatch'
+import { activeRules, isPracticeMatch } from '@/use/useMatch'
 import useUser, { version } from '@/use/useUser'
 import FModal from '@/components/molecules/FModal'
 
@@ -62,7 +62,7 @@ const prevMusicVol = ref(userMusicVolume.value || 0.5)
 const prevSoundVol = ref(userSoundVolume.value || 0.7)
 
 onMounted(() => {
-  isCampaignMatch.value = false
+  isPracticeMatch.value = false
   activeRules.value = ['standard']
 })
 
@@ -82,8 +82,12 @@ const toggleMute = () => {
 }
 
 const onCampaign = () => {
-  isCampaignMatch.value = true
   router.push({ name: 'deck' })
+}
+
+const onPracticeClick = () => {
+  isPracticeMatch.value = true
+  router.push({ name: 'deck', query: isPracticeMatch.value ? { practice: 'true' } : undefined })
 }
 </script>
 

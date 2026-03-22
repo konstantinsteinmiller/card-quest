@@ -93,7 +93,7 @@
             :class="{ 'opacity-50 grayscale': selectedDeck.length < 5 }"
             @click="onNext"
           )
-            span.whitespace-nowrap {{ t(isCampaignMatch ? 'ready' : 'battle') }} ({{ selectedDeck.length }}/5)
+            span.whitespace-nowrap {{ t(isPracticeMatch ? 'battle': 'ready' ) }} ({{ selectedDeck.length }}/5)
 </template>
 
 <script setup lang="ts">
@@ -104,7 +104,7 @@ import type { GameCard } from '@/types/game'
 import FButton from '@/components/atoms/FButton'
 import CardDisplay from '@/components/CardDisplay'
 import PlayerHandCard from '@/components/PlayerHandCard'
-import { playerSelection, isCampaignMatch } from '@/use/useMatch'
+import { playerSelection, isPracticeMatch } from '@/use/useMatch'
 import { modelImgPath, useModels } from '@/use/useModels'
 import useUser, { orientation } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
@@ -141,8 +141,8 @@ onMounted(() => {
 
   window.addEventListener('resize', updateDimensions)
   window.scrollTo(0, 0)
-  const isCampaign: boolean = route?.query?.campaign === true
-  isCampaignMatch.value = isCampaign || isCampaignMatch.value
+  const isPractice: boolean = route?.query?.practice === true
+  isPracticeMatch.value = isPractice || isPracticeMatch.value
 })
 
 onUnmounted(() => window.removeEventListener('resize', updateDimensions))
@@ -244,10 +244,10 @@ const onNext = () => {
   playerSelection.value = [...selectedDeck.value]
   setSettingValue('hand', [...selectedDeck.value])
 
-  if (isCampaignMatch.value) {
-    router.push({ name: 'campaign' })
-  } else {
+  if (isPracticeMatch.value) {
     router.push({ name: 'match' })
+  } else {
+    router.push({ name: 'campaign' })
   }
 }
 </script>

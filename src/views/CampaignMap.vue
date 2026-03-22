@@ -7,7 +7,7 @@ import NodePopup from '@/components/organisms/NodePopup'
 import FButton from '@/components/atoms/FButton'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { isCampaignMatch, activeRules } from '@/use/useMatch'
+import { isPracticeMatch, activeRules } from '@/use/useMatch'
 import type { BattleRuleName } from '@/use/useBattleRules.ts'
 
 const { t } = useI18n()
@@ -16,7 +16,7 @@ const { campaignNodes, selectedNodeId, activeNode, syncProgress } = useCampaign(
 
 syncProgress()
 
-isCampaignMatch.value = true
+isPracticeMatch.value = false
 
 const isLandscape = ref(window.innerWidth > window.innerHeight)
 const updateOrientation = () => {
@@ -47,6 +47,7 @@ const getPathClass = (startNode: CampaignNode, targetId: string) => {
 }
 
 onMounted(() => {
+  selectedNodeId.value = null
   syncProgress()
   window.addEventListener('resize', updateOrientation)
   updateOrientation()
