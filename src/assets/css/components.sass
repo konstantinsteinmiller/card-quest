@@ -12,3 +12,18 @@
   60%
     transform: translateY(-4px) scale(1.02)
 
+// New Hint Animation: 3s bounce, 3s pause (Total 6s cycle)
+@keyframes hint-bounce-cycle
+  // Bouncing phase (0% to 50% of 6 seconds = 3 seconds)
+  0%, 7.5%, 18.75%, 30%, 37.5%
+    transform: translateY(0) scale(1)
+  22%
+    transform: translateY(-15px) scale(1.06)
+  34.5%
+    transform: translateY(-7px) scale(1.03)
+  // Pausing phase (50% to 100% = 3 seconds)
+  50%, 100%
+    transform: translateY(0) scale(1)
+
+.hint-bounce
+  animation: hint-bounce-cycle 6s infinite ease-in-out

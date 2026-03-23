@@ -20,7 +20,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] indicator for what rule turned the card
   - [x] rules modal
   - [x] reset dont ask again on rulesModal
-  - [ ] bounce card if player is not selecting anything
+  - [x] bounce first card if player is not selecting anything
+  - [x] bounce first collection card if playerSelection < 5 and min 1 card with min 1 count in collection if player is
+    not selecting anything
 
 - [x] static selected cards
   - [x] drag and drop for a card
@@ -31,7 +33,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] same rule
   - [x] combo rule
   - [x] low card rule
-  - [ ] Opt: open rule
+  - [ ] open rule
   - [ ] Opt: elements rule
 
 - [x] Trade rules

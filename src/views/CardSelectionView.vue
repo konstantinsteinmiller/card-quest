@@ -35,7 +35,10 @@
             :ref="el => cardRefs[card.id] = el"
             @click="addToDeck(card, $event)"
             class="card-container flex items-center justify-center cursor-pointer"
-            :class="{ 'out-of-stock': card.count === 0 }"
+            :class="[\
+              card.count === 0 ? 'out-of-stock' : '',\
+              (showHint && !isHintDisabled && selectedDeck.length < 5 && card.id === hintTargetId) ? 'hint-bounce' : ''\
+            ]"
           )
             div.w-full.h-full.transition-transform.duration-200(class="group-hover:scale-105 active:scale-95")
               CardDisplay(:card="card" :is-selection="true" :show-tint="false")
@@ -136,6 +139,33 @@ const cardRefs = ref<Record<string, any>>({})
 const flyingCard = ref<{ card: any; start: DOMRect; end: DOMRect } | null>(null)
 const flyingStyle = ref<Record<string, string>>({})
 
+// Hint state
+const showHint = ref<boolean>(false)
+const isHintDisabled = ref<boolean>(false)
+let hintTimeout: ReturnType<typeof setTimeout> | null = null
+
+const startHintTimer = () => {
+  clearHint()
+  if (!isHintDisabled.value && selectedDeck.value.length < 5) {
+    hintTimeout = setTimeout(() => {
+      showHint.value = true
+    }, 5000)
+  }
+}
+
+const clearHint = () => {
+  if (hintTimeout) {
+    clearTimeout(hintTimeout)
+    hintTimeout = null
+  }
+  showHint.value = false
+}
+
+// Find the first card on the current page that has at least 1 count
+const hintTargetId = computed(() => {
+  return paginatedCollection.value.find(c => c.count > 0)?.id || null
+})
+
 const updateDimensions = () => {
   windowWidth.value = window.innerWidth
   windowHeight.value = window.innerHeight
@@ -146,8 +176,15 @@ onMounted(() => {
   window.scrollTo(0, 0)
   const isPractice: boolean = route?.query?.practice === true
   isPracticeMatch.value = isPractice || isPracticeMatch.value
+
+  // Start the interaction hint timer
+  startHintTimer()
 })
-onUnmounted(() => window.removeEventListener('resize', updateDimensions))
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateDimensions)
+  clearHint()
+})
 
 watch(userCollection, () => {
   if (!userCollection.value) return
@@ -237,6 +274,11 @@ const animateFlight = (card: any, startRect: DOMRect, endRect: DOMRect) => {
 
 const addToDeck = (cardTemplate: any, event: MouseEvent) => {
   if (selectedDeck.value.length >= 5 || cardTemplate.count <= 0) return
+
+  // Disable hint on first interaction
+  isHintDisabled.value = true
+  clearHint()
+
   const targetEl = document.querySelector('.deck-target')
   if (targetEl) {
     animateFlight(cardTemplate, (event.currentTarget as HTMLElement).getBoundingClientRect(), targetEl.getBoundingClientRect())
@@ -278,6 +320,11 @@ const removeFromDeck = (payload: any) => {
     selectedDeck.value.splice(index, 1)
     setSettingValue('hand', [...selectedDeck.value])
     saveCollection(inventory.value)
+
+    // Resume hint timer if we just dropped below full capacity and haven't manually interacted with collection yet
+    if (selectedDeck.value.length < 5 && !isHintDisabled.value) {
+      startHintTimer()
+    }
   }
 }
 

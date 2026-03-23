@@ -8,12 +8,13 @@
     div.flex.p-1.relative(class="flex-row gap-1 landscape:flex-col lg:flex-col lg:gap-2")
       //- Loop for the actual cards
       div.card-wrapper.relative(
-        v-for="card in cards"
+        v-for="(card, index) in cards"
         :key="card.instanceId"
         class="transition-all duration-300"
         :class="[\
           selectedId === card.instanceId ? '-translate-y-3 z-20 scale-105' : 'hover:scale-105 hover:-translate-y-1 z-10',\
-          !isActive ? 'grayscale-[40%] cursor-not-allowed' : ''\
+          !isActive ? 'grayscale-[40%] cursor-not-allowed' : '',\
+          (showHint && index === 0 && !selectedId) ? 'hint-bounce' : ''\
         ]"
       )
         //- The pulsing magical aura glow
@@ -46,10 +47,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, onUnmounted, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import type { GameCard } from '@/types/game'
 import CardDisplay from '@/components/CardDisplay'
 
-defineProps<{
+const props = defineProps<{
   cards: GameCard[]
   isActive: boolean
   selectedId: string | null
@@ -59,6 +62,50 @@ const emit = defineEmits<{
   (e: 'dragstart', event: DragEvent, id: string): void
   (e: 'select', id: string): void
 }>()
+
+const route = useRoute()
+const showHint = ref<boolean>(false)
+const isHintDisabled = ref<boolean>(false)
+let hintTimeout: ReturnType<typeof setTimeout> | null = null
+
+onMounted(() => {
+  isHintDisabled.value = false
+})
+
+const startHintTimer = () => {
+  clearHint()
+  if (props.isActive && !props.selectedId && !isHintDisabled.value) {
+    hintTimeout = setTimeout(() => {
+      showHint.value = true
+    }, 5000)
+  }
+}
+
+const clearHint = () => {
+  if (hintTimeout) {
+    clearTimeout(hintTimeout)
+    hintTimeout = null
+  }
+  showHint.value = false
+}
+
+// Start timer when turn begins, stop when turn ends
+watch(() => props.isActive, (active) => {
+  if (active && route.name === 'match') startHintTimer()
+  else clearHint()
+}, { immediate: true })
+
+// Stop hint immediately if a card is selected
+watch(() => props.selectedId, (newId) => {
+  if (newId) {
+    isHintDisabled.value = true
+    clearHint()
+  }
+})
+
+onUnmounted(() => {
+  clearHint()
+})
 </script>
 
 <style lang="sass" scoped>
