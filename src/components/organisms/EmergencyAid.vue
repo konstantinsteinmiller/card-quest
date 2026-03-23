@@ -9,13 +9,13 @@
         class="sm:text-4xl animate-bounce"
       ) {{ t('suppliesArrived') }}
 
-      div.flex.justify-center.gap-4(class="sm:gap-8")
+      div.flex.justify-center.gap-4(class="sm:gap-8" :class="{ '!flex-col': isMobilePortrait }")
         div.reward-card-wrapper(
           v-for="(card, index) in rewardCards"
           :key="index"
           :style="{ animationDelay: `${index * 0.3}s` }"
         )
-          div.w-32.h-32(class="sm:w-48 sm:h-48")
+          div.w-32.h-32(class="sm:w-48 sm:h-48" :class="{ '!w-24 !h-24': isMobileLandscape }")
             CardDisplay(:card="card" :show-tint="false")
 </template>
 
@@ -26,11 +26,13 @@ import FReward from '@/components/atoms/FReward'
 import CardDisplay from '@/components/CardDisplay'
 import useModels, { type Card, modelImgPath } from '@/use/useModels'
 import { prependBaseUrl } from '@/utils/function'
-import useUser from '@/use/useUser'
-import useSound from '@/use/useSound.ts'
+import useUser, { isMobileLandscape, isMobilePortrait } from '@/use/useUser'
+import useSound from '@/use/useSound'
+import { isDebug } from '@/use/useMatch.ts'
 
 const props = defineProps<{
-  isVisible: boolean
+  isVisible: boolean,
+  amount?: number
 }>()
 
 const emit = defineEmits<{
@@ -46,8 +48,10 @@ const canContinue = ref(false)
 
 onMounted(() => {
   // Pick 2 random IDs from the starter list
-  const shuffled = [...startCollectionIdsList].sort(() => 0.5 - Math.random())
-  const selectedIds = shuffled.slice(0, 2)
+  const shuffledStartCollectionIdsList = isDebug.value/* || true*/
+    ? ['asha', 'starlight', 'water-shark-middle', 'energy-female-old', 'piranha-old', 'psi-nightmare', 'dragon-old', 'eclipse', 'snowman-old']
+    : [...startCollectionIdsList].sort(() => 0.5 - Math.random())
+  const selectedIds = shuffledStartCollectionIdsList.slice(0, props.amount || 2)
 
   rewardCards.value = selectedIds.map(id => {
     const card = allCards.find(c => c.id === id)

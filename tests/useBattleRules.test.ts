@@ -1,4 +1,3 @@
-//useBattleRules.test.ts
 import { describe, it, expect } from 'vitest'
 import { useBattleRules } from '@/use/useBattleRules'
 import type { BoardSlot, GameCard } from '@/types/game'

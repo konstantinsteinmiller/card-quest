@@ -34,13 +34,13 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [ ] Opt: open rule
   - [ ] Opt: elements rule
 
-- [ ] Trade rules
+- [x] Trade rules
   - [x] one rules
+  - [x] all rules
+  - [x] conquered rules
+  - [x] random rules
     - [x] save collection update
     - [x] add one rule to campaign nodes
-  - [ ] all rules
-  - [ ] conquered rules
-  - [ ] random rules
 
 - [x] Npc logic
   - [x] random choice
