@@ -12,15 +12,25 @@
         :key="card.instanceId"
         class="transition-transform duration-300"
       )
-        //- Card Backside image
-        img.absolute.inset-0.w-full.h-full.object-fill.rounded-lg.shadow-md(
-          src="/images/backside/backside-1_256x256.webp"
-          alt="Card Back"
-        )
+        template(v-if="activeRules.includes('open')")
+          //- Face up display for the Open rule
+          CardDisplay(
+            :card="card"
+            :show-tint="true"
+          )
+        template(v-else)
+          //- Card Backside image (Standard hidden hand)
+          img.absolute.inset-0.w-full.h-full.object-fill.rounded-lg.shadow-md(
+            src="/images/backside/backside-1_256x256.webp"
+            alt="Card Back"
+          )
 </template>
 
 <script setup lang="ts">
 import type { GameCard } from '@/types/game'
+import type { RuleName } from '@/use/useBattleRules'
+import { activeRules } from '@/use/useMatch'
+import CardDisplay from '@/components/CardDisplay'
 
 defineProps<{
   cards: GameCard[]

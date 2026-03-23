@@ -35,10 +35,12 @@
       div.hand-container.flex-shrink-0.flex.items-center.justify-center.w-full(
         class="h-auto landscape:w-auto landscape:h-full"
       )
-        EnemyHandCard(
-          :cards="npcHand"
-          :is-active="turn === 'npc'"
-        )
+        div.flex.flex-col.items-center.gap-0
+          NpcBadge.-mt-2(v-if="activeRules.includes('open') && userDifficulty === 'hard'" :is-grandmaster="isGrandmasterMatch")
+          EnemyHandCard(
+            :cards="npcHand"
+            :is-active="turn === 'npc'"
+          )
 
       //- 3x3 Board
       div.flex.items-center.justify-center.p-1(
@@ -92,6 +94,7 @@ import MatchRulesModal from '@/components/organisms/MatchRulesModal'
 import CardTrade from '@/components/CardTrade'
 import useUser from '@/use/useUser'
 import useCampaign from '@/use/useCampaign'
+import NpcBadge from '@/components/atoms/NpcBadge.vue'
 
 const {
   turn,
@@ -116,7 +119,9 @@ const {
 } = useInteraction(playerHand, placeCard)
 const { activeNode } = useCampaign()
 
-useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules)
+const { playerHand: playerHandRef } = useMatch()
+
+const { isGrandmasterMatch } = useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules, playerHandRef)
 
 const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'high'))

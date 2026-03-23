@@ -33,7 +33,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] same rule
   - [x] combo rule
   - [x] low card rule
-  - [ ] open rule
+  - [x] open rule
   - [ ] Opt: elements rule
 
 - [x] Trade rules
@@ -95,6 +95,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] do not ask rules again
   - [x] language options
   - [x] Volume slider for music and sound effects
+  - [ ] Opt: Feature request button
 
 - [ ] Sound and bg music
     - [ ] bg music
@@ -106,7 +107,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] Card selection Page
     - [x] animate card selection
     - [x] Name
-    - [ ] element
+  - [ ] Opt: element
 
 - [ ] (native) dark mode adjustment
 
@@ -114,6 +115,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [ ] make game launchable
   - [ ] ads
   - [ ] performance tracking
+
+- [ ] complete Translations
 
 ## Refactorings
 
