@@ -5,6 +5,7 @@ import { useBattleRules, type RuleName } from '@/use/useBattleRules'
 import { useRouter } from 'vue-router'
 import { setupDebugBoard } from '../../tests/fixtures/debugBoard'
 import type { CampaignNode } from '@/use/useCampaign'
+import useSound from '@/use/useSound.ts'
 
 const debugSaved = localStorage.getItem('debug') || 'false'
 export const isDebug = ref(!!JSON.parse(debugSaved))
@@ -33,6 +34,7 @@ export const useMatch = () => {
   const { allCards } = useModels()
   const { evaluateMatchRules } = useBattleRules()
   const router = useRouter()
+  const { playSound } = useSound()
 
   const isBoardFull = computed(() => board.value.every(row => row.every(slot => slot.card !== null)))
 
@@ -71,6 +73,7 @@ export const useMatch = () => {
         slot.card = null
       }))
       setupDebugBoard()
+      turn.value = 'player'
       setTimeout(() => {
         try {
           const func = async () => {
@@ -100,14 +103,17 @@ export const useMatch = () => {
         }).slice(0, 5)
 
         setupGame(npcDeck)
+
+        turn.value = Math.random() > 0.5 ? 'player' : 'npc'
       } else {
         const npcDeck = Array.from({ length: 5 }, () => generateRandomCard('npc'))
         setupGame(npcDeck)
+
+        turn.value = Math.random() > 0.5 ? 'player' : 'npc'
       }
     }
 
     // turn.value = 'player'
-    turn.value = Math.random() > 0.5 ? 'player' : 'npc'
     isThinking.value = false
   }
 
@@ -130,6 +136,7 @@ export const useMatch = () => {
     }
 
     board.value[y][x].card = card
+    playSound('place-card', 0.1)
 
     // Check if a special rule was triggered
     const hasSpecialTrigger = evaluateCapture(x, y)

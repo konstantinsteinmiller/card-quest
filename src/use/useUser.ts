@@ -13,7 +13,7 @@ export const version: string = import.meta.env.VITE_APP_VERSION
 
 const userDifficulty: Ref<Difficulties> = ref(DIFFICULTY.HARD)
 const userSoundVolume: Ref<number> = ref(0.7)
-const userMusicVolume: Ref<number> = ref(0.05)
+const userMusicVolume: Ref<number> = ref(0.15)
 const userLanguage: Ref<string> = ref(navigator?.language?.split('-')[0] || 'en')
 
 const userTutorialsDoneMap: Ref<any> = ref('{}')

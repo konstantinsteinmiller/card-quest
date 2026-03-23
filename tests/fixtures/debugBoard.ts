@@ -5,9 +5,9 @@ import type { GameCard } from '@/types/game.ts'
 
 export const setupDebugBoard = () => {
   // createComboSameTestScenario()
-  // createComboPlusTestScenario()
+  createComboPlusTestScenario()
   // createLooseTradeTestScenario()
-  createWinTradeTestScenario()
+  // createWinTradeTestScenario()
 }
 
 const createWinTradeTestScenario = () => {

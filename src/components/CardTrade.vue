@@ -69,8 +69,10 @@ watch(() => props.isOpen, (newVal) => {
     selectedCardId.value = null
 
     if (isDraw.value) {
+      playSound('draw', 0.1)
       executeTrade()
     } else if (isLose.value) {
+      playSound('lose', 0.1)
       if (tradeRule.value === 'one') {
         // NPC takes a moment to "think" before picking a player card
         setTimeout(() => executeNpcOnePick(), 1000)
@@ -79,6 +81,7 @@ watch(() => props.isOpen, (newVal) => {
         setTimeout(() => executeTrade(), 1000)
       }
     } else if (isWin.value) {
+      playSound('win', 0.1)
       if (tradeRule.value !== 'one') {
         // Auto-execute player win if the rule doesn't require clicking a card
         setTimeout(() => executeTrade(), 1000)

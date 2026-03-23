@@ -28,7 +28,8 @@
           :card="card"
           :draggable="isActive"
           @dragstart="emit('dragstart', $event, card.instanceId)"
-          @click.stop="isActive && emit('select', card.instanceId)"
+          @click.stop="onSelectCard(isActive, card)"
+          @mouseenter="isHoverRoute && onHoverCard()"
           class="cursor-grab relative z-10"
         )
 
@@ -47,10 +48,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onUnmounted, onMounted } from 'vue'
+import { ref, watch, onUnmounted, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import type { GameCard } from '@/types/game'
 import CardDisplay from '@/components/CardDisplay'
+import useSound from '@/use/useSound.ts'
 
 const props = defineProps<{
   cards: GameCard[]
@@ -64,9 +66,21 @@ const emit = defineEmits<{
 }>()
 
 const route = useRoute()
+const { playSound } = useSound()
 const showHint = ref<boolean>(false)
 const isHintDisabled = ref<boolean>(false)
 let hintTimeout: ReturnType<typeof setTimeout> | null = null
+
+const isHoverRoute = computed(() => route.name === 'deck' || route.name === 'match')
+const isMatchRoute = computed(() => route.name === 'match')
+
+const onHoverCard = () => {
+  playSound('hover-card', 0.25)
+}
+const onSelectCard = (isActive: boolean, card: any) => {
+  isActive && emit('select', card.instanceId)
+  playSound('hover-card', 0.3)
+}
 
 onMounted(() => {
   isHintDisabled.value = false

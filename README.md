@@ -6,7 +6,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 ![Card Quest menu](https://github.com/konstantinsteinmiller/card-quest/blob/main/src/assets/documentation/main-menu.webp)
 
-![NPC Card Selection](https://github.com/konstantinsteinmiller/card-quest/blob/main/src/assets/documentation/deck-selection.webp)
+![Card Selection](https://github.com/konstantinsteinmiller/card-quest/blob/main/src/assets/documentation/deck-selection.webp)
+
+![Campaign Map](https://github.com/konstantinsteinmiller/card-quest/blob/main/src/assets/documentation/campaing-map.webp)
 
 ![NPC Game](https://github.com/konstantinsteinmiller/card-quest/blob/main/src/assets/documentation/gameplay.webp)
 
@@ -28,7 +30,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] drag and drop for a card
   - [x] tap to select a card and place
 
-- [ ] Battle rules
+- [x] Battle rules
   - [x] plus rule
   - [x] same rule
   - [x] combo rule
@@ -78,8 +80,6 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] connection lines between nodes
   - [x] set npc cards from the campaign node
   - [x] pick random cards for npc from the campaign node
-  - [ ] Storyline
-  - [ ] different levels with different NPCs
   - [x] enemy shows known cards face up
   - [x] make node popup pop with animation
   - [x] save progress after campaign battle
@@ -87,6 +87,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] random player starts
   - [x] able to create new low cards if player has none left
   - [x] EmergencyAid component with 2 new cards from the starters
+  - [ ] Storyline
+  - [ ] different levels with different NPCs
+  - [ ] edit town names on map
 
 - [x] OptionsModal
   - [x] music
@@ -97,12 +100,13 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] Volume slider for music and sound effects
   - [ ] Opt: Feature request button
 
-- [ ] Sound and bg music
-    - [ ] bg music
-    - [ ] sound effect for card placement
-    - [ ] sound effect for card turn
-    - [ ] sound effect for plus, same, combo
-  - [ ] sound effect Reward continue
+- [x] Sound and bg music
+  - [x] bg music
+  - [x] win, lose, draw sounds
+  - [x] sound effect for card placement
+  - [x] sound effect for card turn
+  - [x] sound effect for plus, same, combo
+  - [x] sound effect Reward continue
 
 - [x] Card selection Page
     - [x] animate card selection

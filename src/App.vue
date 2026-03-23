@@ -4,6 +4,12 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { orientation } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 import RuleExplainModal from '@/components/organisms/RuleExplainModal'
+import { useMusic } from '@/use/useSound'
+
+const { initMusic } = useMusic()
+
+// Point to your 2MB file in the public folder
+initMusic('shadows-in-silence_slow-tired-powerless_main-menu.ogg')
 
 const portraitQuery = window.matchMedia('(orientation: portrait)')
 const onTouchStart = (event: any) => {
@@ -11,6 +17,7 @@ const onTouchStart = (event: any) => {
     event.preventDefault() // Block multitouch (pinch)
   }
 }
+
 const onGestureStart = (event: any) => {
   event.preventDefault() // Block specific Safari zoom gestures
 }

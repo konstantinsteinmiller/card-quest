@@ -1,5 +1,6 @@
 //useBattleRules.ts
 import type { GameCard, BoardSlot } from '@/types/game'
+import useSound from '@/use/useSound'
 
 export const TRADE_RULES_LIST = ['one', 'all', 'random', 'conquered']
 export type RuleName = 'high' | 'plus' | 'same' | 'combo' | 'open' | 'low' | 'one' | 'all' | 'random' | 'conquered'
@@ -19,6 +20,8 @@ const ADJACENTS = [
 ] as const
 
 export const useBattleRules = () => {
+  const { playSound } = useSound()
+
   const getAdj = (board: BoardSlot[][], currX: number, currY: number, dy: number, dx: number) => {
     const ny = currY + dy
     const nx = currX + dx
@@ -129,7 +132,13 @@ export const useBattleRules = () => {
         if (activeRules.includes('combo')) {
           // Initialize the recursion guard Set here
           const comboResult = runCombo(ctx.board, f.x, f.y, ctx.attacker.owner, activeRules, new Set<string>())
-          if (comboResult) specialTriggered = true
+          if (comboResult) {
+            playSound('combo', 0.125)
+            specialTriggered = true
+          } else {
+            if (f.rule === 'Plus') playSound('plus', 0.1)
+            if (f.rule === 'Same') playSound('same', 0.1)
+          }
         }
       }
     })
@@ -151,6 +160,7 @@ export const useBattleRules = () => {
 
           if (captured) {
             target.card.owner = ctx.attacker.owner
+            playSound('turn-card', 0.125)
           }
         }
       })
