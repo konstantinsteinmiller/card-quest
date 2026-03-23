@@ -20,6 +20,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] indicator for what rule turned the card
   - [x] rules modal
   - [x] reset dont ask again on rulesModal
+  - [ ] bounce card if player is not selecting anything
 
 - [x] static selected cards
   - [x] drag and drop for a card
@@ -36,8 +37,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [ ] Trade rules
   - [x] one rules
     - [x] save collection update
-    - [ ] add one rule to campaign nodes
+    - [x] add one rule to campaign nodes
   - [ ] all rules
+  - [ ] conquered rules
   - [ ] random rules
 
 - [x] Npc logic
@@ -129,6 +131,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 ## Nice-to-have
 
+- [ ] Create card models from existing cards using gen AI
 - [ ] Cards can also attack diagonally
 - [ ] Card Designer from Fairy Dust
 - [ ] 100 card designs

@@ -8,7 +8,8 @@ import useUser, { orientation } from '@/use/useUser'
 import type { GameCard } from '@/types/game'
 import { mobileCheck } from '@/utils/function'
 import useModels from '@/use/useModels'
-import { playerSelection } from '@/use/useMatch'
+import { activeRules, playerSelection } from '@/use/useMatch'
+import { TRADE_RULES_LIST } from '@/use/useBattleRules'
 import useSound from '@/use/useSound'
 
 interface Props {
@@ -37,6 +38,10 @@ const npcDeck = ref<GameCard[]>([...props.npcHand])
 watch(() => props.playerHand, (newVal) => {
   playerDeck.value = [...props.playerHand]
   npcDeck.value = [...props.npcHand]
+})
+
+const tradeRule = computed(() => {
+  return activeRules.value.find(rule => TRADE_RULES_LIST.includes(rule)) ?? 'one'
 })
 
 const tradeComplete = ref<boolean>(false)
@@ -176,7 +181,7 @@ const animateCardTransfer = (card: any, direction: 'up' | 'down') => {
       div.relative.z-10
         div.absolute.inset-0.rounded-full(class="bg-slate-900 translate-y-0.5")
       div.relative.py-1.px-8.rounded-full.border-2.border-slate-700(class="bg-black/60")
-        span.text-white.font-bold.uppercase.tracking-widest.text-xs.brawl-text(class="md:text-sm") {{ t('ruleOne') }}
+        span.text-white.font-bold.uppercase.tracking-widest.text-xs.brawl-text(class="md:text-sm") {{ t('tradeRule', { rule: t('rule.'   + tradeRule) }) }}
 
       //- Player Hand
       div.flex.flex-col.items-center.w-full
@@ -241,12 +246,12 @@ en:
   draw: "Draw"
   enemyCards: "Enemy Cards"
   yourCards: "Your Cards"
-  ruleOne: "Trade Rule: One"
+  tradeRule: "Trade Rule: {rule}"
 de:
   win: "Sieg"
   lose: "Niederlage"
   draw: "Unentschieden"
   enemyCards: "Gegnerische Karten"
   yourCards: "Deine Karten"
-  ruleOne: "Tauschregel: Eine"
+  tradeRule: "Tauschregel: {rule}"
 </i18n>

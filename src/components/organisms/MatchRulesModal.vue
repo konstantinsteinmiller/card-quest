@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BattleRuleName } from '@/use/useBattleRules'
+import type { RuleName } from '@/use/useBattleRules'
 import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
 import FSwitch from '@/components/atoms/FSwitch'
@@ -38,7 +38,7 @@ import useUser from '@/use/useUser'
 
 defineProps<{
   isOpen: boolean
-  rules: BattleRuleName[]
+  rules: RuleName[]
 }>()
 
 const emit = defineEmits(['close'])

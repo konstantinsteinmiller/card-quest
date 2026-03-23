@@ -119,7 +119,7 @@ const { activeNode } = useCampaign()
 useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules)
 
 const showRules = ref(true)
-const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'standard'))
+const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'high'))
 
 onMounted(() => {
   resetGame(activeNode)

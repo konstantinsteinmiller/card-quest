@@ -18,7 +18,7 @@
 
       //- The Popup Card
       div(
-        class="popup-card relative border-4 rounded-2xl w-full max-w-xs shadow-2xl overflow-hidden pointer-events-auto border-slate-600/80 bg-black/90"
+        class="popup-card relative border-4 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden pointer-events-auto border-slate-600/80 bg-black/90"
         :class="{ '!scale-90 !max-w-xl': isMobileLandscape && node.npcDeck.length >= 5, '!scale-80 !max-w-xl ': isMobileLandscape && node.npcDeck.length > 15, '!max-w-full ': isMobilePortrait }"
       )
         //- Close Button

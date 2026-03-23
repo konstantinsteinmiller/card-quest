@@ -1,8 +1,8 @@
 //useBattleRules.ts
 import type { GameCard, BoardSlot } from '@/types/game'
 
-export type BattleRuleName = 'standard' | 'plus' | 'same' | 'combo' | 'low'
-export type TradeRuleName = 'one' | 'all' | 'random' | 'conquered'
+export const TRADE_RULES_LIST = ['one', 'all', 'random', 'conquered']
+export type RuleName = 'high' | 'plus' | 'same' | 'combo' | 'low' | 'one' | 'all' | 'random' | 'conquered'
 
 export interface RuleContext {
   x: number
@@ -34,7 +34,7 @@ export const useBattleRules = () => {
     x: number,
     y: number,
     owner: string,
-    activeRules: BattleRuleName[],
+    activeRules: RuleName[],
     visited = new Set<string>()
   ): boolean => {
     const sourceCard = board[y][x].card
@@ -47,7 +47,7 @@ export const useBattleRules = () => {
 
     let triggered = false
 
-    // Combo always falls back to a base capture rule. If 'low' isn't active, it defaults to 'standard' logic
+    // Combo always falls back to a base capture rule. If 'low' isn't active, it defaults to 'high' logic
     const useLow = activeRules.includes('low')
     const useStandard = !useLow
 
@@ -74,7 +74,7 @@ export const useBattleRules = () => {
     return triggered
   }
 
-  const evaluateMatchRules = (activeRules: BattleRuleName[], ctx: RuleContext): boolean => {
+  const evaluateMatchRules = (activeRules: RuleName[], ctx: RuleContext): boolean => {
     let specialTriggered = false
     const specialFlips: { x: number; y: number; card: GameCard; rule: 'Plus' | 'Same' }[] = []
 
@@ -135,8 +135,8 @@ export const useBattleRules = () => {
     })
 
     const useLow = activeRules.includes('low')
-    // Standard applies if explicitly included, OR if neither low nor any special rules are active
-    const useStandard = activeRules.includes('standard') || (!useLow && activeRules.length === 0)
+    // high applies if explicitly included, OR if neither low nor any special rules are active
+    const useStandard = activeRules.includes('high') || (!useLow && activeRules.length === 0)
 
     if (useStandard || useLow) {
       ADJACENTS.forEach(({ dy, dx, atk, def }) => {

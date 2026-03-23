@@ -11,23 +11,23 @@ describe('Battle Rules Engine', () => {
       Array.from({ length: 3 }, (_, y) => ({ x, y, card: null }))
     )
 
-  // --- STANDARD RULE TESTS ---
-  it('Standard Rule: Happy Case - Captures when attacker value is HIGHER than defender', () => {
+  // --- HIGH RULE TESTS ---
+  it('High Rule: Happy Case - Captures when attacker value is HIGHER than defender', () => {
     const board = createBoard()
     board[0][1].card = { owner: 'npc', values: { top: 1, right: 1, bottom: 4, left: 1 } } as GameCard
     const attacker = { owner: 'player', values: { top: 6, right: 1, bottom: 1, left: 1 } } as GameCard
 
-    evaluateMatchRules(['standard'], { x: 1, y: 1, board, attacker })
+    evaluateMatchRules(['high'], { x: 1, y: 1, board, attacker })
 
     expect(board[0][1].card?.owner).toBe('player') // 6 > 4, captured
   })
 
-  it('Standard Rule: Unhappy Case - Does NOT capture when attacker value is lower or equal', () => {
+  it('High Rule: Unhappy Case - Does NOT capture when attacker value is lower or equal', () => {
     const board = createBoard()
     board[0][1].card = { owner: 'npc', values: { top: 1, right: 1, bottom: 6, left: 1 } } as GameCard
     const attacker = { owner: 'player', values: { top: 4, right: 1, bottom: 1, left: 1 } } as GameCard
 
-    evaluateMatchRules(['standard'], { x: 1, y: 1, board, attacker })
+    evaluateMatchRules(['high'], { x: 1, y: 1, board, attacker })
 
     expect(board[0][1].card?.owner).toBe('npc') // 4 < 6, not captured
   })

@@ -1,7 +1,7 @@
 import { ref, computed, type ComputedRef, watch } from 'vue'
 import useUser from '@/use/useUser'
 import { useI18n } from 'vue-i18n'
-import type { BattleRuleName } from '@/use/useBattleRules'
+import type { RuleName } from '@/use/useBattleRules'
 
 export interface CampaignNode {
   id: string
@@ -13,7 +13,7 @@ export interface CampaignNode {
   completed: boolean
   unlocks: string[]
   knownCards: string[]
-  rules: BattleRuleName[]
+  rules: RuleName[]
 }
 
 export const selectedNodeId = ref<string | null>(null)
@@ -39,79 +39,79 @@ export const useCampaign = () => {
       completed: true,
       unlocks: ['node1-2'],
       knownCards: [],
-      rules: ['standard']
+      rules: ['high', 'one']
     },
     {
       id: 'node1-2',
       name: t('node1-2.name'),
       description: t('node1-2.desc'),
-      npcDeck: ['asha', 'moss', 'eclipse', 'energy-female-old', 'piranha-young'],
+      npcDeck: ['asha', 'moss', 'yeti-young', 'energy-female-old', 'piranha-young'],
       position: { x: 23, y: 83 },
       unlocked: true,
       completed: false,
       unlocks: ['node1-3'],
       knownCards: [],
-      rules: ['low']
+      rules: ['low', 'one']
     },
     {
       id: 'node1-3',
       name: t('node1-3.name'),
       description: t('node1-3.desc'),
-      npcDeck: ['asha', 'moss', 'eclipse', 'energy-female-old', 'piranha-young'],
+      npcDeck: ['nature-butterfly-middle', 'dragon-middle', 'water-shark-middle', 'mushroom-middle', 'energy-female-old', 'piranha-young', 'mermaid-middle', 'mermaid-old', 'piranha-old'],
       position: { x: 39, y: 91 },
       unlocked: true,
       completed: false,
       unlocks: ['node2-1'],
       knownCards: [],
-      rules: ['low', 'plus', 'same', 'combo']
+      rules: ['low', 'plus', 'same', 'combo', 'one']
     },
     {
       id: 'node2-1',
       name: t('node2-1.name'),
       description: t('node2-1.desc'),
-      npcDeck: ['asha', 'moss', 'eclipse', 'energy-female-old', 'piranha-young'],
+      npcDeck: ['moss', 'psi-nightmare', 'yeti-young', 'dragon-middle', 'fire-harpy', 'energy-female-old', 'piranha-young', 'piranha-middle', 'gargoyle-young', 'snowman-young', 'gargoyle-middle'],
       position: { x: 70, y: 55 },
       unlocked: true,
       completed: false,
       unlocks: ['node2-2'],
       knownCards: [],
-      rules: ['standard', 'plus'/*, 'same'*/]
+      rules: ['high', 'plus'/*, 'same'*/, 'all']
     },
     {
       id: 'node2-2',
       name: t('node2-2.name'),
       description: t('node2-2.desc'),
-      npcDeck: ['asha', 'moss', 'eclipse', 'energy-female-old', 'piranha-young'],
+      npcDeck: ['gargoyle-young', 'gargoyle-middle', 'gargoyle-old', 'dragon-middle', 'yeti-young', 'yeti-middle', 'fire-harpy', 'energy-female-old', 'piranha-young', 'snowman-middle'],
       position: { x: 82, y: 40 },
       unlocked: true,
       completed: false,
       unlocks: ['node2-3'],
       knownCards: [],
-      rules: ['standard', 'same']
+      rules: ['high', 'same', 'conquered']
     },
     {
       id: 'node2-3',
       name: t('node2-3.name'),
       description: t('node2-3.desc'),
-      npcDeck: ['asha', 'moss', 'eclipse', 'energy-female-old', 'piranha-young'],
+      npcDeck: ['asha', 'starlight', 'mushroom-middle', 'gargoyle-middle', 'gargoyle-old', 'energy-female-old', 'piranha-old', 'snowman-middle', 'yeti-middle', 'snowman-old'],
       position: { x: 90, y: 30 },
       unlocked: true,
       completed: false,
       unlocks: ['node3'],
       knownCards: [],
-      rules: ['standard', 'same', 'plus', 'combo']
+      rules: ['high', 'same', 'plus', 'combo', 'random']
     },
     {
       id: 'node3',
       name: t('node3.name'),
       description: t('node3.desc'),
-      npcDeck: ['asha', 'moss', 'eclipse', 'energy-female-old', 'piranha-young'],
+      npcDeck: ['asha', 'starlight', 'water-shark-middle', 'energy-female-old', 'piranha-old', 'psi-nightmare', 'dragon-old', 'eclipse', 'snowman-old'],
       position: { x: 80, y: 20 },
       unlocked: false,
       completed: false,
       unlocks: [],
       knownCards: [],
-      rules: ['standard', 'plus']
+      rules: ['high', 'plus', 'all']
     }
   ]
 

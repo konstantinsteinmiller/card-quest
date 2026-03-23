@@ -8,7 +8,7 @@ import { playerHand, board, npcHand } from '@/use/useMatch'
  * 2. Opponent Card B at (2,1) [Bottom Middle] with top value 1.
  * 2. Opponent Card C at (0,0) [Top Left] with bottom value 1.
  * 3. Placed Card at (1,1) [Center] with Left value 1 and Bottom value 1
- *    which triggers the Same rule and captures Card C with the Standard Rule
+ *    which triggers the Same rule and captures Card C with the high Rule
  * * Result: Bottom Sum (1==1) && Left Sum (1==1). SAME triggers.
  */
 export const createComboSameTestScenario = () => {

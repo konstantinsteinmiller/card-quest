@@ -63,7 +63,7 @@ const prevSoundVol = ref(userSoundVolume.value || 0.7)
 
 onMounted(() => {
   isPracticeMatch.value = false
-  activeRules.value = ['standard']
+  activeRules.value = ['high']
 })
 
 const toggleMute = () => {

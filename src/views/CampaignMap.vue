@@ -6,7 +6,7 @@ import FButton from '@/components/atoms/FButton'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { isPracticeMatch, activeRules, playerSelection } from '@/use/useMatch'
-import type { BattleRuleName } from '@/use/useBattleRules.ts'
+import type { RuleName } from '@/use/useBattleRules.ts'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -55,8 +55,8 @@ onMounted(() => {
 
 onUnmounted(() => window.removeEventListener('resize', updateOrientation))
 
-const startBattle = (rules: BattleRuleName[]) => {
-  activeRules.value = !rules.length ? ['standard'] : rules
+const startBattle = (rules: RuleName[]) => {
+  activeRules.value = !rules.length ? ['high'] : rules
   router.push({ name: 'match' })
 }
 </script>

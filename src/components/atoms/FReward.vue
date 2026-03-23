@@ -1,6 +1,6 @@
 <template lang="pug">
   Transition(name="fade")
-    div.fixed.inset-0.flex.flex-col.items-center.justify-center.backdrop-blur-md.p-4.touch-none(
+    div.fixed.inset-0.flex.flex-col.items-center.justify-center.backdrop-blur-md.p-4.touch-none.cursor-pointer(
       v-if="modelValue"
       class="z-[100] bg-black/60"
       @click="handleOverlayClick"

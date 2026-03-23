@@ -1,7 +1,7 @@
 import { watch, type Ref } from 'vue'
 import type { GameCard, BoardSlot, GameTurn } from '@/types/game'
 import { type Difficulties, DIFFICULTY } from '@/utils/enums'
-import type { BattleRuleName } from '@/use/useBattleRules'
+import type { RuleName } from '@/use/useBattleRules'
 
 export const useNPC = (
   turn: Ref<GameTurn>,
@@ -9,7 +9,7 @@ export const useNPC = (
   board: Ref<BoardSlot[][]>,
   placeCard: (card: GameCard, x: number, y: number) => void,
   difficulty: Ref<Difficulties>,
-  activeRules: Ref<BattleRuleName[]>
+  activeRules: Ref<RuleName[]>
 ) => {
   const ADJ = [
     { dx: 0, dy: -1, side: 'top' as const, opp: 'bottom' as const },
@@ -63,11 +63,11 @@ export const useNPC = (
               if (valAtk === valDef) sameMatches.push({ x: nx, y: ny, card: target })
             }
 
-            // Standard or Low Capture Logic
+            // High or Low Capture Logic
             if (target.owner === 'player') {
               if (isLowRule) {
                 if (valAtk < valDef) score += 1
-              } else if (activeRules.value.includes('standard')) {
+              } else if (activeRules.value.includes('high')) {
                 if (valAtk > valDef) score += 1
               }
             }

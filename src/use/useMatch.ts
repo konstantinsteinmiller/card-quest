@@ -1,7 +1,7 @@
 import { ref, computed, type ComputedRef } from 'vue'
 import type { GameCard, BoardSlot } from '@/types/game'
 import useModels, { modelImgPath } from '@/use/useModels'
-import { useBattleRules, type BattleRuleName } from '@/use/useBattleRules'
+import { useBattleRules, type RuleName } from '@/use/useBattleRules'
 import { useRouter } from 'vue-router'
 import { setupDebugBoard } from '../../tests/fixtures/debugBoard'
 import type { CampaignNode } from '@/use/useCampaign'
@@ -25,7 +25,7 @@ export const board = ref<BoardSlot[][]>(Array.from({ length: 3 }, (_, y) =>
   Array.from({ length: 3 }, (_, x) => ({ x, y, card: null }))
 ))
 
-export const activeRules = ref<BattleRuleName[]>(['standard'])
+export const activeRules = ref<RuleName[]>(['high'])
 
 export const useMatch = () => {
   const turn = ref<'player' | 'npc'>('player')
