@@ -61,9 +61,21 @@ export const useCampaign = () => {
       position: { x: 39, y: 91 },
       unlocked: true,
       completed: false,
-      unlocks: ['node2-1'],
+      unlocks: ['node2-1', 'node1-4'],
       knownCards: [],
       rules: ['low', 'plus', 'same', 'combo', 'one']
+    },
+    {
+      id: 'node1-4',
+      name: t('node1-4.name'),
+      description: t('node1-4.desc'),
+      npcDeck: ['nature-butterfly-middle', 'dragon-young', 'dragon-middle', 'water-shark-middle', 'mushroom-middle', 'energy-female-old', 'piranha-young', 'piranha-middle', 'mermaid-middle', 'mermaid-old', 'piranha-old'],
+      position: { x: 60, y: 83 },
+      unlocked: true,
+      completed: false,
+      unlocks: ['node2-1'],
+      knownCards: [],
+      rules: ['low', 'plus', 'same', 'combo', 'open', 'one']
     },
     {
       id: 'node2-1',

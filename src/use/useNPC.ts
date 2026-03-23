@@ -133,6 +133,9 @@ export const useNPC = (
     return moves[0]
   }
 
+  const calculateOptimalMove = () => {
+  }
+
   const makeMove = () => {
     if (turn.value !== 'npc' || npcHand.value.length === 0) return
     setTimeout(() => {

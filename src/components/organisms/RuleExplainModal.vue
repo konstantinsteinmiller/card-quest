@@ -30,6 +30,8 @@ const isPortrait = computed(() => mobileCheck() && innerWidth <= 500)
             src="/images/icons/rules/same-rule_256x256.webp")
           img.w-full.h-full(v-else-if="ruleModal === 'combo'" class="bg-white rounded-sm border-3 border-blue-500"
             src="/images/icons/rules/combo-rule_256x256.webp")
+          img.w-full.h-full(v-else-if="ruleModal === 'open'" class="bg-white border-dotted rounded-full border-3 border-slate-500"
+            src="/images/icons/rules/open-rule_256x256.webp")
           img.w-full.h-full(v-else-if="ruleModal === 'elements'" class="bg-white rounded-sm border-3 border-blue-500"
             src="/images/icons/rules/elements-rule_128x128.webp")
           img.w-full.h-full(v-else-if="ruleModal === 'one'" class="bg-white border-dashed border-3 border-green-700"

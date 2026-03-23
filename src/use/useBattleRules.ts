@@ -2,7 +2,7 @@
 import type { GameCard, BoardSlot } from '@/types/game'
 
 export const TRADE_RULES_LIST = ['one', 'all', 'random', 'conquered']
-export type RuleName = 'high' | 'plus' | 'same' | 'combo' | 'low' | 'one' | 'all' | 'random' | 'conquered'
+export type RuleName = 'high' | 'plus' | 'same' | 'combo' | 'open' | 'low' | 'one' | 'all' | 'random' | 'conquered'
 
 export interface RuleContext {
   x: number
