@@ -27,3 +27,15 @@
 
 .hint-bounce
   animation: hint-bounce-cycle 6s infinite ease-in-out
+
+.hint-bounce-2
+  animation: hint-bounce-cycle-2 5s infinite ease-in-out
+
+@keyframes hint-bounce-cycle-2
+  // Bouncing phase (50% to 100% of 5 seconds = 3 seconds)
+  0%, 40.5%, 56.5%, 68.75%, 80%, 87.5%, 100%
+    transform: translateY(0) scale(1)
+  48.5%, 72%
+    transform: translateY(-15px) scale(1.06)
+  63.5%, 84.5%
+    transform: translateY(-7px) scale(1.03)

@@ -12,6 +12,7 @@ import { activeRules, originalNpcHand, originalPlayerHand, playerSelection, useM
 import { TRADE_RULES_LIST } from '@/use/useBattleRules'
 import useSound from '@/use/useSound'
 import { useTrade, type TradeRule } from '@/use/useTrade'
+import { useHint } from '@/use/useHint'
 
 interface Props {
   isOpen: boolean
@@ -28,10 +29,15 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const { setSettingValue } = useUser()
-const { addCardToCollection, removeCardFromCollection } = useModels()
+const { addCardToCollection } = useModels()
 const { playSound } = useSound()
 const { board } = useMatch()
 const { getTradeResult } = useTrade()
+const {
+  showHint,
+  startHintTimer,
+  disableHintPermanently
+} = useHint(4000)
 
 const isMobileLandscape = computed(() => mobileCheck() && window.innerWidth > 500 && orientation.value === 'landscape')
 
@@ -85,6 +91,9 @@ watch(() => props.isOpen, (newVal) => {
       if (tradeRule.value !== 'one') {
         // Auto-execute player win if the rule doesn't require clicking a card
         setTimeout(() => executeTrade(), 1000)
+      } else {
+        // Start counting if the player needs to make a choice
+        startHintTimer()
       }
     }
   }
@@ -118,6 +127,10 @@ const executeNpcOnePick = () => {
 
 const handleEnemyCardSelect = (id: string) => {
   if (!isWin.value || tradeComplete.value || animatingCards.value.length > 0 || tradeRule.value !== 'one') return
+
+  // User interacted, kill the hint forever for this session
+  disableHintPermanently()
+
   const card = npcDeck.value.find(c => (c.instanceId) === id)
   if (card) {
     selectedCardId.value = id
@@ -166,8 +179,17 @@ const executeTrade = (selectedCard?: any) => {
   const originalPlayerCardIds: string[] = (originalPlayerHand.value.map(c => c.instanceId) as string[])
   let onlyOriginalPlayerCardsDeck: GameCard[] = []
   originalPlayerCardIds.forEach((iId: string) => {
-    onlyOriginalPlayerCardsDeck = playerDeck.value.filter((c: any) => c.instanceId === iId && c.owner === 'player')
+    const originalPlayerCard = playerDeck.value.find((c: any) => c.instanceId === iId && c.owner === 'player')
+    originalPlayerCard && onlyOriginalPlayerCardsDeck.push(originalPlayerCard)
   })
+
+  /* should be same logic as above onlyOriginalPlayerCardsDeck */
+  const finalLegalHand = playerDeck.value.filter(card =>
+    originalPlayerHand.value.some(orig => orig.instanceId === card.instanceId) &&
+    card.owner === 'player'
+  )
+  // console.log('onlyOriginalPlayerCardsDeck: ', onlyOriginalPlayerCardsDeck.map((c) => c.id))
+  // console.log('finalLegalHand: ', finalLegalHand.map((c) => c.id))
 
   if (npcGains.length > 0) {
     setSettingValue('hand', JSON.parse(JSON.stringify(onlyOriginalPlayerCardsDeck)))
@@ -214,16 +236,20 @@ const executeTrade = (selectedCard?: any) => {
     //- Trade Area
     div.flex.flex-col.items-center.justify-center.w-full.flex-1.gap-4.relative(
       class="max-h-[80vh] md:gap-10"
-      :class="{ '!flex-row': isMobileLandscape }"
+      :class="{ '!flex-row gap-2': isMobileLandscape }"
     )
       //- NPC Hand
       div.flex.flex-col.items-center.w-full
         span.text-red-400.font-bold.uppercase.tracking-wider.mb-2.text-xs.brawl-text(class="md:text-base") {{ t('enemyCards') }}
         TradeHand(
           :cards="npcDeck"
+          :show-hint="showHint"
+          user="npc"
           :is-active="isWin && !tradeComplete && tradeRule === 'one'"
           :selected-id="selectedCardId"
-          :class="{'opacity-50 grayscale': (!isWin && tradeRule === 'one') || tradeComplete}"
+          :class="{\
+            'opacity-60 grayscale': (!isWin && tradeRule === 'one') || tradeComplete,\
+          }"
           @select="handleEnemyCardSelect"
         )
 
@@ -231,14 +257,17 @@ const executeTrade = (selectedCard?: any) => {
       div.relative.z-10
         div.absolute.inset-0.rounded-full(class="bg-slate-900 translate-y-0.5")
       div.relative.py-1.px-8.rounded-full.border-2.border-slate-700(class="bg-black/60")
-        span.text-white.font-bold.uppercase.tracking-widest.text-xs.brawl-text(class="md:text-sm") {{ t('tradeRule', { rule: t('rule.' + tradeRule) }) }}
+        span.text-white.font-bold.uppercase.tracking-widest.text-xs.brawl-text(
+          class="md:text-xs"
+          :class="{ '!text-[10px]': isMobileLandscape }"
+        ) {{ t('tradeRule', { rule: t('rule.' + tradeRule) }) }}
 
       //- Player Hand
       div.flex.flex-col.items-center.w-full
         TradeHand(
           :cards="playerDeck"
           :is-active="false"
-          :class="{'opacity-50 grayscale': tradeComplete}"
+          :class="{ 'opacity-90 grayscale': (isWin && tradeRule === 'one'), 'opacity-60 grayscale': tradeComplete}"
         )
         span.text-blue-400.font-bold.uppercase.tracking-wider.mt-2.text-xs.brawl-text(
           class="md:text-base"

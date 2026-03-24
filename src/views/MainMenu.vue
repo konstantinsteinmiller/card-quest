@@ -6,6 +6,7 @@
     div.absolute.bottom-2.right-2.flex.flex-col.items-end.gap-1
       // Mute Toggle Button
       button.p-2.rounded-full.backdrop-blur-sm.transition-all.cursor-pointer(
+        v-if="!mobileCheck()"
         class="bg-black/20 hover:bg-black/40 active:scale-95 pointer-events-auto"
         @click="toggleMute"
       )
@@ -47,6 +48,7 @@ import FButton from '@/components/atoms/FButton'
 import { activeRules, isPracticeMatch } from '@/use/useMatch'
 import useUser, { version } from '@/use/useUser'
 import FModal from '@/components/molecules/FModal'
+import { mobileCheck } from '@/utils/function'
 
 const router = useRouter()
 const { t } = useI18n()

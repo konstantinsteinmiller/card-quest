@@ -39,6 +39,7 @@ export const useInteraction = (
   }
 
   const handleTapSelect = (cardInstanceId: string) => {
+    if (!cardInstanceId) return
     selectedCardId.value = selectedCardId.value === cardInstanceId ? null : cardInstanceId
   }
 

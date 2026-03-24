@@ -19,6 +19,9 @@
     GameOverModal(
       :is-open="isGameOver"
       :scores="scores"
+      :is-board-full="isBoardFull"
+      :complete-node="completeNode"
+      :save-campaign="saveCampaign"
       @reset="onContinue"
     )
 
@@ -36,7 +39,7 @@
         class="h-auto landscape:w-auto landscape:h-full"
       )
         div.flex.flex-col.items-center.gap-0
-          NpcBadge.-mt-2(v-if="activeRules.includes('open') && userDifficulty === 'hard'" :is-grandmaster="isGrandmasterMatch")
+          NpcBadge.-mt-2(v-if="activeRules.includes('open') && userDifficulty === 'hard'" :is-grandmaster="isGrandmasterMatch" :is-thinking="isThinking")
           EnemyHandCard(
             :cards="npcHand"
             :is-active="turn === 'npc'"
@@ -117,11 +120,14 @@ const {
   handleTapSelect,
   handleSlotTap
 } = useInteraction(playerHand, placeCard)
-const { activeNode } = useCampaign()
+const { activeNode, completeNode, saveCampaign } = useCampaign()
 
 const { playerHand: playerHandRef } = useMatch()
 
-const { isGrandmasterMatch } = useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules, playerHandRef)
+const {
+  isGrandmasterMatch,
+  isThinking
+} = useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules, playerHandRef)
 
 const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'high'))

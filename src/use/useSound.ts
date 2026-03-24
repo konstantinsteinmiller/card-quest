@@ -11,15 +11,19 @@ const isPlaying = ref(false)
 export const useMusic = () => {
   const { userMusicVolume } = useUser()
 
-  const initMusic = (filename: string) => {
-    if (bgMusic.value) return // Already initialized
+  watch(userMusicVolume, () => {
+    if (!bgMusic.value) return
+    bgMusic.value.volume = userMusicVolume.value * 0.05
+  })
 
+  const initMusic = (filename: string) => {
     onMounted(() => {
+      if (bgMusic.value) return // Already initialized
       // 1. Create the audio object
       const audio = new Audio()
       audio.src = prependBaseUrl('/audio/music/' + filename)
       audio.loop = true
-      audio.volume = 0
+      audio.volume = userMusicVolume.value * 0.05
       audio.preload = 'auto'
 
       // 2. Wait for the browser to have enough data to play through
@@ -47,7 +51,7 @@ export const useMusic = () => {
       isPlaying.value = true
       fadeIn()
     }).catch(() => {
-      console.log('Autoplay blocked: Waiting for user interaction to start music.')
+      // console.log('Autoplay blocked: Waiting for user interaction to start music.')
       // Attach a one-time listener to the window to play on first click
       window.addEventListener('click', () => {
         if (!isPlaying.value) playWithFade()
@@ -68,10 +72,6 @@ export const useMusic = () => {
     }, 50)
   }
 
-  watch(userMusicVolume, () => {
-    if (!bgMusic.value) return
-    bgMusic.value.volume = userMusicVolume.value * 0.05
-  })
 
   return { initMusic, isLoaded, isPlaying }
 }
@@ -81,19 +81,13 @@ const useSounds = () => {
 
   const playSound = (effect: string, ratio = 0.025) => {
     const audio = new Audio(prependBaseUrl(`/audio/sfx/${effect}.ogg`))
+    // iOS requires volume to be set BEFORE play()
     audio.volume = userSoundVolume.value * ratio
-    audio.play().catch(e => console.warn('Audio play blocked:', e))
-  }
-
-  const playMusic = (music: string, ratio = 0.025) => {
-    const audio = new Audio(prependBaseUrl(`/audio/music/${music}.ogg`))
-    audio.volume = userSoundVolume.value * ratio
-    audio.play().catch(e => console.warn('Music play blocked:', e))
+    audio.play().catch(e => console.warn('SFX play blocked:', e))
   }
 
   return {
-    playSound,
-    playMusic
+    playSound
   }
 }
 

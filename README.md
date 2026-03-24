@@ -23,6 +23,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] rules modal
   - [x] reset dont ask again on rulesModal
   - [x] bounce first card if player is not selecting anything
+  - [ ] screen shakes on plus same combo
   - [x] bounce first collection card if playerSelection < 5 and min 1 card with min 1 count in collection if player is
     not selecting anything
 
@@ -45,6 +46,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] random rules
     - [x] save collection update
     - [x] add one rule to campaign nodes
+  - [x] attention hint for one rule pick
 
 - [x] Npc logic
   - [x] random choice
@@ -137,6 +139,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] tap outside Popup doesnt work
 - [x] ready button working without 5 cards selected
 - [x] contextmenu on mobile
+- [x] fix too complex npc logic causing long wait times on mobile
+- [x] trade leaving you with one card on hand even when only 1 card lost
 
 ## Nice-to-have
 

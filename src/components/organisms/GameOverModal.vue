@@ -9,7 +9,10 @@ import { isPracticeMatch, originalNpcHand } from '@/use/useMatch.ts'
 
 const props = defineProps<{
   isOpen: boolean
-  scores: { player: number; npc: number }
+  isBoardFull: boolean
+  scores: { player: number; npc: number },
+  completeNode: (activeNode: any) => void,
+  saveCampaign: (activeNode: any) => void
 }>()
 
 const emit = defineEmits<{
@@ -18,7 +21,6 @@ const emit = defineEmits<{
 
 const router = useRouter()
 const { t } = useI18n()
-const { completeNode, saveCampaign } = useCampaign()
 
 const areKnownCardsSaved = ref<boolean>(false)
 
@@ -28,8 +30,8 @@ const result = computed((): 'win' | 'lose' | 'draw' => {
   return 'draw'
 })
 
-watch(result, () => {
-  if (!activeNode?.value) return
+watch(() => props.isBoardFull, () => {
+  if (!activeNode?.value || !props.isBoardFull) return
 
   if (result.value === 'win') {
     //set known cards for active node from the dealt npc deck
@@ -37,7 +39,7 @@ watch(result, () => {
       ...(JSON.parse(JSON.stringify(activeNode.value.knownCards)) ?? []),
       ...originalNpcHand.value.map(c => c.id)
     ])]
-    completeNode(JSON.parse(JSON.stringify(activeNode.value)))
+    props.completeNode(JSON.parse(JSON.stringify(activeNode.value)))
   }
 
   if (areKnownCardsSaved.value) return
@@ -46,7 +48,7 @@ watch(result, () => {
     ...(JSON.parse(JSON.stringify(activeNode.value.knownCards)) ?? []),
     ...originalNpcHand.value.map(c => c.id)
   ])]
-  saveCampaign(JSON.parse(JSON.stringify(activeNode.value)))
+  props.saveCampaign(JSON.parse(JSON.stringify(activeNode.value)))
 
   areKnownCardsSaved.value = true
 })

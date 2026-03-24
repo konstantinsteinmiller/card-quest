@@ -54,7 +54,7 @@
                 alt="Card Back"
               )
           //- Rules
-          div(class="flex justify-center gap-4 text-white text-shadow items-center")
+          div(class="flex flex-wrap justify-center gap-4 text-white text-shadow items-center")
             div(class="text-amber-300 text-sm") {{ t('rules') }}:
             RuleIcon(
               v-for="rule in node.rules"
