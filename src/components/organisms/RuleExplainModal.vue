@@ -9,6 +9,10 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const isPortrait = computed(() => mobileCheck() && innerWidth <= 500)
+
+const trans = computed(() => t('rule-desc.' + ruleModal.value))
+const ruleTitle = computed(() => trans.value.includes('!') ? trans.value.split('!')[0] : '')
+const ruleText = computed(() => trans.value.includes('!') ? trans.value.split('!')[1] : trans)
 </script>
 
 <template lang="pug">
@@ -17,7 +21,9 @@ const isPortrait = computed(() => mobileCheck() && innerWidth <= 500)
       class="text-[14px]"
       :class="{ 'flex-row !pr-7': isMobileLandscape }"
     )
-      div.mb-4.text-left.pr-2.flex-grow(class="text-[13px]" :class="{ '!mb-0': isMobileLandscape }") {{ t('rule-desc.' + ruleModal) }}
+      div.mb-4.text-left.pr-2.flex-grow(class="text-[13px]" :class="{ '!mb-0': isMobileLandscape }")
+        span.font-black.text-amber-500(v-if="ruleTitle") {{ ruleTitle }}!
+        | {{ ruleText }}
       div.icon.flex.justify-center.items-center.mb-2
         div.icon.flex.justify-center(class="landscape:w-24 landscape:h-24 landscape:sm:w-24 landscape:sm:h-24")
           img.w-full.h-full(v-if="ruleModal === 'high'" class="w-max-[80%] bg-white rounded-sm border-3 border-black"

@@ -41,16 +41,16 @@ export default {
       random: 'Random'
     },
     'rule-desc': {
-      high: 'Higher number card turns the lower number card.',
-      low: 'Lower number card turns the higher number card.',
-      same: 'If your cards attack value = defense value on at least two sides, you will capture those cards.',
-      plus: 'With Plus, you add adjacent numbers (each side is separate). If they have the same sum, you capture each card.',
-      combo: 'This rule is only applicable when \'Same\' or \'Plus\' are active. Once you activate either rule, any cards adjacent to the flips are compared as if you had actively placed that card down yourself. Combo captures normally (greater number captures lower number), and does not apply \'Plus\' or \'Same\' again.',
-      open: 'Both players play with open cards.',
-      one: 'The winner picks one card from the opponent.',
-      all: 'The winner receives all cards from the opponent.',
-      conquered: 'Each player receives all cards that are turned on his color on the game board.',
-      random: 'The winner receives one card at random from the opponent.'
+      high: 'Big numbers win! A higher number flips a lower number.',
+      low: 'Small numbers win! A lower number flips a higher number.',
+      same: 'Equal! If your numbers match two or more sides of the cards next to you, you flip them both. 3=3 and 1=1',
+      plus: 'Math Power! Add your number to the neighbor\'s number. If the totals match on two sides, you flip those cards. 2+5 = 7 and 3+4 = 7',
+      combo: 'Chain Reaction! When you flip a card with Same or Plus, those cards can flip their neighbors too!',
+      open: 'No Secrets! You can see all of your opponent\'s cards, and they can see yours.',
+      one: 'Winner\'s Choice! The winner picks any one card from the loser\'s hand.',
+      all: 'Mega Win! The winner takes every single card from the loser\'s hand.',
+      conquered: 'Color Capture! You keep every card that is your color on the board when the game ends.',
+      random: 'Lucky Dip! The winner gets one surprise card from the loser\'s hand.'
     }
   },
   de: {
@@ -88,7 +88,7 @@ export default {
       low: 'Niedrig',
       same: 'Gleich',
       plus: 'Plus',
-      combo: 'Combo',
+      combo: 'Kombo',
       open: 'Offen',
       one: 'Eine',
       all: 'Alle',
@@ -96,16 +96,16 @@ export default {
       random: 'Zufällig'
     },
     'rule-desc': {
-      high: 'Die Karte mit der höheren Zahl dreht die Karte mit der niedrigeren Zahl um.',
-      low: 'Die Karte mit der kleineren Zahl dreht die Karte mit der höheren Zahl um.',
-      same: 'Gleich ist eine einfache Regel. Wenn Angreiferwert = Verteidigungswert auf mindestens zwei Seiten deiner Karte, eroberst du diese Karten.',
-      plus: 'Mit Plus addierst du benachbarte Zahlen (jede Seite ist separat). Wenn sie die gleiche Summe haben, eroberst du jede Karte.',
-      combo: 'Diese Regel gilt nur, wenn \'Gleich\' oder \'Plus\' aktiv sind. Sobald du eine der beiden Regeln aktivierst, werden alle Karten, die an die Flips angrenzen, so verglichen, als hättest du diese Karte selbst aktiv platziert. Combo erobert Normal (höhere Zahl erobert niedrigere Zahl) und wendet \'Plus\' oder \'Gleich\' nicht erneut an.',
-      open: 'Beide Spieler spielen mit offenen Karten.',
-      one: 'Der Gewinner wählt eine Karte vom Gegner.',
-      all: 'Der Gewinner erhält alle Karten vom Gegner.',
-      conquered: 'Jeder Spieler erhält alle Karten, die auf dem Spielbrett auf seine Farbe gedreht wurden.',
-      random: 'Der Gewinner erhält eine zufällige Karte vom Gegner.'
+      high: 'Große Zahlen gewinnen! Eine höhere Zahl dreht eine niedrigere Zahl um.',
+      low: 'Kleine Zahlen gewinnen! Eine niedrigere Zahl dreht eine höhere Zahl um.',
+      same: 'Genau! Wenn deine Zahlen mit zwei oder mehr Seiten der Karten neben dir übereinstimmen, drehst du sie beide um. 3=3 und 1=1',
+      plus: 'Mathe Power! Addiere deine Zahl zur Zahl des Nachbarn. Wenn die Gesamtsummen auf zwei Seiten übereinstimmen, drehst du diese Karten um. 2+5 = 7 und 3+4 = 7',
+      combo: 'Kettenreaktion! Wenn du eine Karte mit Gleich oder Plus umdrehst, können diese Karten auch ihre Nachbarn umdrehen!',
+      open: 'Keine Geheimnisse! Du kannst alle Karten deines Gegners sehen, und er kann deine sehen.',
+      one: 'Gewinner wählt! Der Gewinner wählt eine Karte aus der Hand des Verlierers.',
+      all: 'Mega Sieg! Der Gewinner nimmt alle Karten aus der Hand des Verlierers.',
+      conquered: 'Farb Eroberung! Du behältst alle Karten, die deine Farbe auf dem Spielfeld haben, wenn das Spiel endet.',
+      random: 'Glücksfall! Der Gewinner erhält eine Überraschungskarte aus der Hand des Verlierers.'
     }
   }
 }
