@@ -129,7 +129,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] replace remaining Modals with FModal
 - [x] rule icons redo
 - [ ] layout cards book
-- [ ] redo book pager arrows
+- [ ] redo book pager arrows, add closeButton similar button with arrows on each book side
 - [ ] oak texture redo
 
 ## Bugs

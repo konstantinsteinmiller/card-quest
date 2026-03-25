@@ -235,13 +235,13 @@ const itemsPerPage = computed(() => {
     isStackedMargin.value = '0px'
   }
   if ((windowHeight.value < 620 && windowWidth.value <= 500) || (windowWidth.value <= 500 && !isMobileLandscape.value)) return 6
-  if (windowHeight.value > 600 && windowWidth.value > 980) return 12
   if (windowHeight.value > 600 && windowWidth.value > 600) return 16
+  if (windowHeight.value > 600 && windowWidth.value > 980) return 12
   return windowWidth.value < 801 ? 8 : 16
 })
 
 const collection = computed(() => inventory.value.map(card => ({
-  ...card, owner: 'player' as const, image: modelImgPath(card.id)
+  ...card, owner: 'player' as const, image: modelImgPath(card.id, card.element)
 })))
 
 const totalPages = computed(() => Math.ceil(collection.value.length / itemsPerPage.value))
@@ -289,7 +289,7 @@ const addToDeck = (cardTemplate: any, event: MouseEvent) => {
     selectedDeck.value.push({ ...cardTemplate, instanceId: Math.random().toString(36).substring(2, 9) })
     setSettingValue('hand', [...selectedDeck.value])
     if (/*true || */isDebug.value && false) {
-      const failDeck = JSON.parse(JSON.parse('"[{\\"id\\":\\"energy-female-old\\",\\"count\\":0},{\\"id\\":\\"snowman-young\\",\\"count\\":0},{\\"id\\":\\"gargoyle-young\\",\\"count\\":0},{\\"id\\":\\"mushroom-young\\",\\"count\\":0},{\\"id\\":\\"piranha-young\\",\\"count\\":0},{\\"id\\":\\"dragon-young\\",\\"count\\":0},{\\"id\\":\\"mermaid-young\\",\\"count\\":0},{\\"id\\":\\"scorpion-young\\",\\"count\\":0},{\\"id\\":\\"yeti-young\\",\\"count\\":0},{\\"id\\":\\"water-shark-young\\",\\"count\\":0},{\\"id\\":\\"warrior-young\\",\\"count\\":0},{\\"id\\":\\"nature-butterfly-middle\\",\\"count\\":0},{\\"id\\":\\"fire-harpy\\",\\"count\\":0},{\\"id\\":\\"moss\\",\\"count\\":0},{\\"id\\":\\"household\\",\\"count\\":0},{\\"id\\":\\"snowman-middle\\",\\"count\\":0},{\\"id\\":\\"mermaid-middle\\",\\"count\\":0},{\\"id\\":\\"mushroom-middle\\",\\"count\\":0},{\\"id\\":\\"dragon-middle\\",\\"count\\":0},{\\"id\\":\\"gargoyle-middle\\",\\"count\\":0},{\\"id\\":\\"piranha-middle\\",\\"count\\":0},{\\"id\\":\\"scorpion-middle\\",\\"count\\":0},{\\"id\\":\\"yeti-middle\\",\\"count\\":0},{\\"id\\":\\"warrior-middle\\",\\"count\\":0},{\\"id\\":\\"water-shark-middle\\",\\"count\\":0},{\\"id\\":\\"asha\\",\\"count\\":0},{\\"id\\":\\"starlight\\",\\"count\\":0},{\\"id\\":\\"psi-nightmare\\",\\"count\\":0},{\\"id\\":\\"snowman-old\\",\\"count\\":0},{\\"id\\":\\"gargoyle-old\\",\\"count\\":0},{\\"id\\":\\"dragon-old\\",\\"count\\":0},{\\"id\\":\\"eclipse\\",\\"count\\":0},{\\"id\\":\\"mermaid-old\\",\\"count\\":0},{\\"id\\":\\"piranha-old\\",\\"count\\":0},{\\"id\\":\\"scorpion-old\\",\\"count\\":0}]"'))
+      const failDeck = JSON.parse(JSON.parse('""'))
       console.log('failDeck: ', failDeck)
       saveCollection(failDeck)
     } else {

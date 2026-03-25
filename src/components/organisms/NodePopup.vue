@@ -99,7 +99,7 @@ const npcDeck = ref(allCards.filter((c: Card) => props.node.npcDeck.includes(c.i
 npcDeck.value = npcDeck.value.map((c: Card) => {
   return {
     ...c,
-    image: modelImgPath(c.id)
+    image: modelImgPath(c.id, c.element)
   }
 })
 

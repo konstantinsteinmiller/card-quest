@@ -48,7 +48,7 @@ export const useMatch = () => {
       name: card.name,
       values: { ...card.values },
       owner,
-      image: modelImgPath(card?.id || 'missing_id'),
+      image: modelImgPath(card?.id || 'missing_id', card.element),
       lastRuleTrigger: null
     }
   }
@@ -97,7 +97,7 @@ export const useMatch = () => {
             ...cardData,
             instanceId: Math.random().toString(36).substring(2, 11),
             owner: 'npc',
-            image: modelImgPath(cardData?.id || 'missing_id'),
+            image: modelImgPath(cardData?.id || 'missing_id', cardData.element),
             lastRuleTrigger: null
           }
         }).slice(0, 5)

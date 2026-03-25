@@ -1,5 +1,6 @@
 import type { GameCard } from '@/types/game'
 import { modelImgPath } from '@/use/useModels'
+import { ELEMENTS } from '../../src/utils/enums'
 
 /**
  * Creates a specific scenario for the Plus Rule:
@@ -17,7 +18,7 @@ export const createPlusTestScenario = () => {
       name: 'Dragir',
       owner: 'npc',
       values: { top: 4, right: 4, bottom: 4, left: 3 }, // bottom 4
-      image: modelImgPath('dragon-young')
+      image: modelImgPath('dragon-young', ELEMENTS.FIRE)
     },
     {
       id: 'gargoyle-middle',
@@ -26,18 +27,18 @@ export const createPlusTestScenario = () => {
       name: 'Goygorin',
       owner: 'npc',
       values: { top: 5, right: 6, bottom: 6, left: 4 }, // right 6
-      image: modelImgPath('gargoyle-middle')
+      image: modelImgPath('gargoyle-middle', ELEMENTS.EARTH)
     }
   ]
 
   const playerCard: GameCard = {
-    id: 'starlight',
+    id: 'starlight-old',
     // @ts-ignore
     instanceId: 'player-1',
     name: 'Starlight Plus',
     owner: 'player',
     values: { top: 6, right: 2, bottom: 2, left: 4 }, // top 6, left 4
-    image: modelImgPath('starlight')
+    image: modelImgPath('starlight-old', ELEMENTS.LIGHT)
   }
 
   return { npcCards, playerCard }

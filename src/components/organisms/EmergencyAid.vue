@@ -49,7 +49,7 @@ const canContinue = ref(false)
 onMounted(() => {
   // Pick 2 random IDs from the starter list
   const shuffledStartCollectionIdsList = isDebug.value/* || true*/
-    ? ['asha', 'starlight', 'water-shark-middle', 'energy-female-old', 'piranha-old', 'psi-nightmare', 'dragon-old', 'eclipse', 'snowman-old']
+    ? ['asha-old', 'starlight-old', 'shark-middle', 'female-old', 'piranha-old', 'nightmare-middle', 'dragon-old', 'eclipse-old', 'snowman-old']
     : [...startCollectionIdsList].sort(() => 0.5 - Math.random())
   const selectedIds = shuffledStartCollectionIdsList.slice(0, props.amount || 2)
 
@@ -57,7 +57,7 @@ onMounted(() => {
     const card = allCards.find(c => c.id === id)
     return {
       ...card!,
-      image: modelImgPath(id),
+      image: modelImgPath(id, card?.element),
       owner: 'player'
     } as any
   })

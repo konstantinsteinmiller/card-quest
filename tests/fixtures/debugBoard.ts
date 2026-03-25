@@ -34,13 +34,13 @@ const createWinTradeTestScenario = () => {
       'x': 1,
       'y': 0,
       'card': {
-        'id': 'energy-female-old',
+        'id': 'female-old',
         'name': 'Thunlady',
         'element': 'energy',
         'values': { 'top': 8, 'right': 5, 'bottom': 10, 'left': 6 },
         'count': 2,
         'owner': 'player',
-        'image': '/models/energy-female-old/preview_400x400.webp',
+        'image': '/models/female-old/preview_400x400.webp',
         'instanceId': 'cmnero3',
         'lastRuleTrigger': null
       }
@@ -48,12 +48,12 @@ const createWinTradeTestScenario = () => {
       'x': 2,
       'y': 0,
       'card': {
-        'id': 'starlight',
+        'id': 'starlight-old',
         'instanceId': 'owz74a483',
         'name': 'Starlight',
         'values': { 'top': 6, 'right': 6, 'bottom': 6, 'left': 6 },
         'owner': 'player',
-        'image': '/models/starlight/preview_400x400.webp',
+        'image': '/models/starlight-old/preview_400x400.webp',
         'lastRuleTrigger': null
       }
     }], [{
@@ -110,13 +110,13 @@ const createWinTradeTestScenario = () => {
       'x': 1,
       'y': 2,
       'card': {
-        'id': 'asha',
+        'id': 'asha-old',
         'name': 'Asha',
         'element': 'neutral',
         'values': { 'top': 9, 'right': 3, 'bottom': 9, 'left': 3 },
         'count': 2,
         'owner': 'player',
-        'image': '/models/asha/preview_400x400.webp',
+        'image': '/models/asha-old/preview_400x400.webp',
         'instanceId': 'tpb8ofx',
         'lastRuleTrigger': null
       }
@@ -124,13 +124,13 @@ const createWinTradeTestScenario = () => {
       'x': 2,
       'y': 2,
       'card': {
-        'id': 'eclipse',
+        'id': 'eclipse-old',
         'name': 'Eclipse',
         'element': 'dark',
         'values': { 'top': 5, 'right': 10, 'bottom': 5, 'left': 9 },
         'count': 2,
         'owner': 'npc',
-        'image': '/models/eclipse/preview_400x400.webp',
+        'image': '/models/eclipse-old/preview_400x400.webp',
         'instanceId': 'co6iio4',
         'lastRuleTrigger': null
       }
@@ -138,24 +138,24 @@ const createWinTradeTestScenario = () => {
 
   playerHand.value = []
   npcHand.value = [{
-    'id': 'psi-nightmare',
+    'id': 'nightmare-middle',
     'instanceId': 'ox2h05kfb',
     'name': 'Nightsong',
     'values': { 'top': 10, 'right': 2, 'bottom': 4, 'left': 10 },
     'owner': 'npc',
-    'image': '/models/psi-nightmare/preview_400x400.webp',
+    'image': '/models/nightmare-middle/preview_400x400.webp',
     'lastRuleTrigger': null
   }]
 
   originalPlayerHand.value = [
     {
-      'id': 'energy-female-old',
+      'id': 'female-old',
       'name': 'Thunlady',
       'element': 'energy',
       'values': { 'top': 8, 'right': 5, 'bottom': 10, 'left': 6 },
       'count': 2,
       'owner': 'player',
-      'image': '/models/energy-female-old/preview_400x400.webp',
+      'image': '/models/female-old/preview_400x400.webp',
       'instanceId': 'cmnero3'
     }, {
       'id': 'dragon-young',
@@ -176,13 +176,13 @@ const createWinTradeTestScenario = () => {
       'image': '/models/dragon-old/preview_400x400.webp',
       'instanceId': 'n8cbhhg'
     }, {
-      'id': 'asha',
+      'id': 'asha-old',
       'name': 'Asha',
       'element': 'neutral',
       'values': { 'top': 9, 'right': 3, 'bottom': 9, 'left': 3 },
       'count': 2,
       'owner': 'player',
-      'image': '/models/asha/preview_400x400.webp',
+      'image': '/models/asha-old/preview_400x400.webp',
       'instanceId': 'tpb8ofx'
     }, {
       'id': 'dragon-middle',
@@ -198,13 +198,13 @@ const createWinTradeTestScenario = () => {
 
   originalNpcHand.value = [
     {
-      'id': 'energy-female-old',
+      'id': 'female-old',
       'name': 'Thunlady',
       'element': 'energy',
       'values': { 'top': 8, 'right': 5, 'bottom': 10, 'left': 6 },
       'count': 2,
       'owner': 'npc',
-      'image': '/models/energy-female-old/preview_400x400.webp',
+      'image': '/models/female-old/preview_400x400.webp',
       'instanceId': 'cmne2o3'
     }, {
       'id': 'dragon-old',
@@ -225,13 +225,13 @@ const createWinTradeTestScenario = () => {
       'image': '/models/dragon-young/preview_400x400.webp',
       'instanceId': 'n8c1hhg'
     }, {
-      'id': 'asha',
+      'id': 'asha-old',
       'name': 'Asha',
       'element': 'neutral',
       'values': { 'top': 9, 'right': 3, 'bottom': 9, 'left': 3 },
       'count': 2,
       'owner': 'npc',
-      'image': '/models/asha/preview_400x400.webp',
+      'image': '/models/asha-old/preview_400x400.webp',
       'instanceId': 'tpb5ofx'
     }, {
       'id': 'dragon-middle',
@@ -270,13 +270,13 @@ const createLooseTradeTestScenario = () => {
       'x': 1,
       'y': 0,
       'card': {
-        'id': 'energy-female-old',
+        'id': 'female-old',
         'name': 'Thunlady',
         'element': 'energy',
         'values': { 'top': 8, 'right': 5, 'bottom': 10, 'left': 6 },
         'count': 2,
         'owner': 'npc',
-        'image': '/models/energy-female-old/preview_400x400.webp',
+        'image': '/models/female-old/preview_400x400.webp',
         'instanceId': 'cmnero3',
         'lastRuleTrigger': null
       }
@@ -284,12 +284,12 @@ const createLooseTradeTestScenario = () => {
       'x': 2,
       'y': 0,
       'card': {
-        'id': 'starlight',
+        'id': 'starlight-old',
         'instanceId': 'owz74a483',
         'name': 'Starlight',
         'values': { 'top': 6, 'right': 6, 'bottom': 6, 'left': 6 },
         'owner': 'npc',
-        'image': '/models/starlight/preview_400x400.webp',
+        'image': '/models/starlight-old/preview_400x400.webp',
         'lastRuleTrigger': null
       }
     }], [{
@@ -346,13 +346,13 @@ const createLooseTradeTestScenario = () => {
       'x': 1,
       'y': 2,
       'card': {
-        'id': 'asha',
+        'id': 'asha-old',
         'name': 'Asha',
         'element': 'neutral',
         'values': { 'top': 9, 'right': 3, 'bottom': 9, 'left': 3 },
         'count': 2,
         'owner': 'player',
-        'image': '/models/asha/preview_400x400.webp',
+        'image': '/models/asha-old/preview_400x400.webp',
         'instanceId': 'tpb8ofx',
         'lastRuleTrigger': null
       }
@@ -360,13 +360,13 @@ const createLooseTradeTestScenario = () => {
       'x': 2,
       'y': 2,
       'card': {
-        'id': 'eclipse',
+        'id': 'eclipse-old',
         'name': 'Eclipse',
         'element': 'dark',
         'values': { 'top': 5, 'right': 10, 'bottom': 5, 'left': 9 },
         'count': 2,
         'owner': 'npc',
-        'image': '/models/eclipse/preview_400x400.webp',
+        'image': '/models/eclipse-old/preview_400x400.webp',
         'instanceId': 'co6iio4',
         'lastRuleTrigger': null
       }
@@ -374,24 +374,24 @@ const createLooseTradeTestScenario = () => {
 
   playerHand.value = []
   npcHand.value = [{
-    'id': 'psi-nightmare',
+    'id': 'nightmare-middle',
     'instanceId': 'ox2h05kfb',
     'name': 'Nightsong',
     'values': { 'top': 10, 'right': 2, 'bottom': 4, 'left': 10 },
     'owner': 'npc',
-    'image': '/models/psi-nightmare/preview_400x400.webp',
+    'image': '/models/nightmare-middle/preview_400x400.webp',
     'lastRuleTrigger': null
   }]
 
   originalPlayerHand.value = [
     {
-      'id': 'energy-female-old',
+      'id': 'female-old',
       'name': 'Thunlady',
       'element': 'energy',
       'values': { 'top': 8, 'right': 5, 'bottom': 10, 'left': 6 },
       'count': 2,
       'owner': 'player',
-      'image': '/models/energy-female-old/preview_400x400.webp',
+      'image': '/models/female-old/preview_400x400.webp',
       'instanceId': 'cmnero3'
     }, {
       'id': 'dragon-young',
@@ -412,13 +412,13 @@ const createLooseTradeTestScenario = () => {
       'image': '/models/dragon-old/preview_400x400.webp',
       'instanceId': 'n8cbhhg'
     }, {
-      'id': 'asha',
+      'id': 'asha-old',
       'name': 'Asha',
       'element': 'neutral',
       'values': { 'top': 9, 'right': 3, 'bottom': 9, 'left': 3 },
       'count': 2,
       'owner': 'player',
-      'image': '/models/asha/preview_400x400.webp',
+      'image': '/models/asha-old/preview_400x400.webp',
       'instanceId': 'tpb8ofx'
     }, {
       'id': 'dragon-middle',
@@ -434,13 +434,13 @@ const createLooseTradeTestScenario = () => {
 
   originalNpcHand.value = [
     {
-      'id': 'energy-female-old',
+      'id': 'female-old',
       'name': 'Thunlady',
       'element': 'energy',
       'values': { 'top': 8, 'right': 5, 'bottom': 10, 'left': 6 },
       'count': 2,
       'owner': 'npc',
-      'image': '/models/energy-female-old/preview_400x400.webp',
+      'image': '/models/female-old/preview_400x400.webp',
       'instanceId': 'cmne2o3'
     }, {
       'id': 'dragon-old',
@@ -461,13 +461,13 @@ const createLooseTradeTestScenario = () => {
       'image': '/models/dragon-young/preview_400x400.webp',
       'instanceId': 'n8c1hhg'
     }, {
-      'id': 'asha',
+      'id': 'asha-old',
       'name': 'Asha',
       'element': 'neutral',
       'values': { 'top': 9, 'right': 3, 'bottom': 9, 'left': 3 },
       'count': 2,
       'owner': 'npc',
-      'image': '/models/asha/preview_400x400.webp',
+      'image': '/models/asha-old/preview_400x400.webp',
       'instanceId': 'tpb5ofx'
     }, {
       'id': 'dragon-middle',
