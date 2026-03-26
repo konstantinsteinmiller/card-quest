@@ -147,6 +147,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [ ] Create card models from existing cards using gen AI
 - [ ] Cards can also attack diagonally
 - [ ] Card Designer from Fairy Dust
+- [x] 80 card designs
 - [ ] 100 card designs
 - [ ] more campaign tracks
 - [ ] move placeholder showing what effect the placed card would have with eventual +1 or -1 calculation

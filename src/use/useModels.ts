@@ -135,7 +135,7 @@ const useModels = () => {
     },
     {
       id: 'turtoise-old',
-      name: 'Quadroire',
+      name: 'Quadoire',
       element: ELEMENTS.WATER,
       values: { top: 7, right: 6, bottom: 9, left: 8 }
     },
@@ -265,7 +265,7 @@ const useModels = () => {
     { id: 'gorilla-middle', name: 'Gondix', element: ELEMENTS.AIR, values: { top: 7, right: 5, bottom: 8, left: 1 } },
     { id: 'gorilla-old', name: 'Gondoron', element: ELEMENTS.AIR, values: { top: 10, right: 7, bottom: 6, left: 7 } },
     { id: 'griffin-middle', name: 'Frindol', element: ELEMENTS.AIR, values: { top: 4, right: 5, bottom: 10, left: 3 } },
-    { id: 'angel-old', name: 'Anduriel', element: ELEMENTS.AIR, values: { top: 8, right: 4, bottom: 9, left: 8 } } /* 46 */
+    { id: 'angel-old', name: 'Anduriel', element: ELEMENTS.AIR, values: { top: 8, right: 4, bottom: 9, left: 8 } } /* 80 */
   ]
 
   const { setSettingValue, userCollection } = useUser()
@@ -311,18 +311,40 @@ const useModels = () => {
       ? JSON.parse(userCollection.value)
       : userCollection.value
 
-    return storedCollection
-      .map((stored: StoredCollectionCard) => {
-        const card = allCards.find(c => c.id === stored.id)
-        return { ...card, count: stored.count }
-      })
-      .sort((a: InventoryCard, b: InventoryCard) => {
-        const aPoints = Object.values(a.values).reduce((sum, val) => sum + val, 0)
-        const bPoints = Object.values(b.values).reduce((sum, val) => sum + val, 0)
-        if (a.count > 0 && b.count === 0) return -1
-        if (a.count === 0 && b.count > 0) return 1
-        return aPoints - bPoints
-      })
+    // 1. Map existing stored cards to full Card objects
+    // Filter out any cards that might have been removed from allCards (the code)
+    let updatedCollection = allCards.map(baseCard => {
+      const stored = storedCollection.find((storedCard: any) => storedCard.id === baseCard.id)
+      return {
+        ...baseCard,
+        count: stored ? stored.count : 0 // If not in storage, it's a new card: set to 0
+      }
+    })
+
+    // 2. Check for mismatches to trigger a silent save back to DB
+    const hasMismatch =
+      storedCollection.length !== allCards.length ||
+      storedCollection.some((storedCard: any) => !allCards.find(a => a.id === storedCard.id))
+
+    if (hasMismatch) {
+      // We wrap this in nextTick or setTimeout to avoid side-effects during a computed/render phase
+      setTimeout(() => {
+        saveCollection(updatedCollection)
+      }, 0)
+    }
+
+    // 3. Sorting logic
+    return updatedCollection.sort((a, b) => {
+      const aPoints = Object.values(a.values).reduce((sum, val) => sum + val, 0)
+      const bPoints = Object.values(b.values).reduce((sum, val) => sum + val, 0)
+
+      // Priority 1: Cards you actually own (count > 0) come first
+      if (a.count > 0 && b.count === 0) return -1
+      if (a.count === 0 && b.count > 0) return 1
+
+      // Priority 2: Sort by power (total points)
+      return aPoints - bPoints
+    })
   }
 
   /* save a default card collection if there is none yet */
