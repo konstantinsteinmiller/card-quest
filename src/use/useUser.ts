@@ -4,10 +4,17 @@ import useUserDb from '@/use/useUserDb'
 import { type Difficulties, DIFFICULTY } from '@/utils/enums'
 import { mobileCheck } from '@/utils/function'
 
-const windowWidth = ref(window.innerWidth)
-export const orientation = ref(mobileCheck() && windowWidth.value > 500 ? 'landscape' : 'portrait')
-export const isMobileLandscape = computed(() => mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape')
-export const isMobilePortrait = computed(() => mobileCheck() && windowWidth.value <= 500)
+export const windowWidth = ref(window.innerWidth)
+export const windowHeight = ref(window.innerHeight)
+
+export const orientation = ref(mobileCheck() && windowWidth.value > windowHeight.value ? 'landscape' : 'portrait')
+
+export const isMobileLandscape = computed(() =>
+  mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape'
+)
+export const isMobilePortrait = computed(() =>
+  mobileCheck() && windowWidth.value <= 500
+)
 
 export const version: string = import.meta.env.VITE_APP_VERSION
 

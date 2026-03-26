@@ -16,8 +16,8 @@
       div.text-xs.text-slate-200.opacity-70.text-shadow  v.{{ version }}
 
     // Menu box
-    div.relative.p-10.flex.flex-col.gap-4.text-center.shadow-2xl.border-4.self-end(
-      class=" min-w-[320px] max-w-lg border-slate-600/50 bg-slate-800/70 mb-15 sm:mb-8 sm:rounded-2xl"
+    div.relative.p-10.flex.flex-col.gap-4.text-center.self-end(
+      class="min-w-[320px] max-w-lg mb-15 sm:mb-8"
     )
       // Menu
       div.flex.flex-col.gap-4.relative.z-10

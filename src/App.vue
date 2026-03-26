@@ -6,6 +6,7 @@ import { mobileCheck } from '@/utils/function'
 import RuleExplainModal from '@/components/organisms/RuleExplainModal'
 import { useMusic } from '@/use/useSound'
 import { useExtensionGuard } from '@/use/useExtensionGuard'
+import { windowWidth, windowHeight } from '@/use/useUser'
 
 const { initMusic } = useMusic()
 useExtensionGuard()
@@ -34,6 +35,35 @@ const onOrientationChange = (event: any) => {
 const onContextMenu = (event: any) => {
   event.preventDefault() // Block right-click context menu
 }
+
+
+// Update these whenever the window actually resizes
+const updateGlobalDimensions = () => {
+  windowWidth.value = window.innerWidth
+  windowHeight.value = window.innerHeight
+  orientation.value = mobileCheck() && windowWidth.value > windowHeight.value ? 'landscape' : 'portrait'
+}
+
+const dimensionsInterval = ref<any | null>(null)
+// Ensure listeners are active
+const delayedUpdateGlobalDimensions = () => setTimeout(updateGlobalDimensions, 300)
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', updateGlobalDimensions)
+
+    dimensionsInterval.value = setInterval(() => {
+      windowWidth.value = window.innerWidth
+      windowHeight.value = window.innerHeight
+      console.log('updated dimensions in interval', (mobileCheck() && windowWidth.value > windowHeight.value) ? 'landscape' : 'portrait', orientation.value)
+    }, 400)
+    window.addEventListener('orientationchange', delayedUpdateGlobalDimensions)
+  }
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', updateGlobalDimensions)
+  window.removeEventListener('orientationchange', delayedUpdateGlobalDimensions)
+  clearInterval(dimensionsInterval.value)
+})
 
 onMounted(() => {
   document.addEventListener('contextmenu', onContextMenu)

@@ -22,7 +22,7 @@
         :class="{ '!scale-90 !max-w-xl': isMobileLandscape && node.npcDeck.length >= 5, '!scale-80 !max-w-xl ': isMobileLandscape && node.npcDeck.length > 15, '!max-w-full ': isMobilePortrait }"
       )
         //- Close Button
-        FCloseButton(
+        FIconButton(
           class="absolute !top-2 !right-2 z-10 hover:scale-[103%] w-8 h-8 flex"
           @close="emit('close')"
         )
@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { CampaignNode } from '@/use/useCampaign'
-import FCloseButton from '@/components/atoms/FCloseButton'
+import FIconButton from '@/components/atoms/FIconButton.vue'
 import FButton from '@/components/atoms/FButton'
 import RuleIcon from '@/components/atoms/RuleIcon'
 import { useI18n } from 'vue-i18n'

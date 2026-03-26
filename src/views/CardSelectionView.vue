@@ -2,7 +2,7 @@
   div.flex.flex-col.items-center.p-1.overflow-hidden.bg-repeat.select-none(
     data-darkmode-ignore="true"
     class="h-[100dvh] landscape:p-1 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')]"
-    style="padding-bottom: env(safe-area-inset-bottom); padding-top: env(safe-area-inset-top);"
+    style="padding-top: env(safe-area-inset-top);"
     :class="{ 'p-0': isMobilePortrait }"
   )
     //- Emergency Aid Overlay
@@ -28,7 +28,7 @@
         //- Inner scrollable area for cards
         div.flex-1.relative.z-10.ml-1.px-5.pt-12.flex.flex-wrap.justify-center.content-start.overflow-y-auto(
           class="gap-x-4 gap-y-4 sm:gap-x-10 sm:pt-12 md:px-12 md:pt-16 pb-12"
-          :class="{ 'gap-y-6': isMobileLandscape, 'sm:pt-14': !isMobileLandscape && windowHeight > 600 && windowWidth > 700 }"
+          :class="{ 'gap-y-6': isMobileLandscape, ' !pt-13 !gap-x-2': isMobilePortrait, 'sm:pt-14 md:pt-[5rem] !gap-x-4': !isMobileLandscape && windowHeight > 600 && windowWidth > 700 }"
         )
           div.relative.group(
             v-for="card in paginatedCollection"
@@ -51,24 +51,29 @@
               span {{ card.count }}
 
         //- Pagination Controls (Absolute positioned within the book container)
+        FIconButton(
+          icon="left"
+          class="absolute !right-auto !top-1/2 -translate-y-[100%] text-orange-900 hover:scale-125 transition-transform disabled:opacity-20"
+          :class="{ '!left-[1%] !scale-70 !-translate-y-[70%]': isMobileLandscape, '!left-[0%] !-translate-y-[80%]': isMobilePortrait, '!left-[2.5%]': !isMobileLandscape && !isMobilePortrait }"
+          @click="prevPage"
+          :disabled="currentPage === 0"
+        )
+
         div(
-          class="bottom-8 landscape:bottom-3"
-          :class="{ '!bottom-11': !isMobileLandscape && windowWidth > 800  }"
+          class="bottom-[8%]"
+          :class="{ '!bottom-[9%]': !isMobileLandscape && windowWidth > 800 }"
         ).absolute.left-0.right-0.flex.justify-center.items-center.gap-6.z-30
-          button.p-1.cursor-pointer(
-            class="text-orange-900 hover:scale-125 transition-transform disabled:opacity-20"
-            @click="prevPage"
-            :disabled="currentPage === 0"
-          )
-            span.text-xl(class="sm:text-2xl") ◀
-          div.text-center.font-bold(class="text-orange-900/50 text-[10px] sm:text-xs")
+
+          div.text-center.font-bold.text-shadow(class="text-amber-500 text-[10px] sm:text-xs")
             | {{ currentPage + 1 }} / {{ totalPages }}
-          button.p-1.cursor-pointer(
-            class="text-orange-900 hover:scale-125 transition-transform disabled:opacity-20"
-            @click="nextPage"
-            :disabled="currentPage >= totalPages - 1"
-          )
-            span.text-xl(class="sm:text-2xl") ▶
+
+        FIconButton(
+          icon="right"
+          class="absolute !right-[3%] !top-1/2 -translate-y-[100%] text-orange-900 hover:scale-125 transition-transform disabled:opacity-20"
+          :class="{ '!right-[0%] -mr-[2%] !scale-70 !-translate-y-[70%]': isMobileLandscape, '!right-[0%] -mr-[4%] !-translate-y-[80%]': isMobilePortrait, '!right-[2%] -mr-[.5%]': !isMobileLandscape && !isMobilePortrait }"
+          @click="nextPage"
+          :disabled="currentPage >= totalPages - 1"
+        )
 
       //- Sidebar / Deck Dock (Shrink-0 prevents this being squeezed on small screens)
       div.flex.flex-col.gap-0.shrink-0.items-center.justify-between(
@@ -121,7 +126,9 @@ import EmergencyAid from '@/components/organisms/EmergencyAid'
 import { playerSelection, isPracticeMatch, isDbInitialized, isDebug, isCampaignTest } from '@/use/useMatch'
 import useModels, { modelImgPath, type StoredCollectionCard } from '@/use/useModels'
 import useUser, { orientation, isMobilePortrait, isMobileLandscape } from '@/use/useUser'
+import { windowWidth, windowHeight } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
+import FIconButton from '@/components/atoms/FIconButton.vue'
 
 const { setSettingValue, userHand, userCollection } = useUser()
 const { t } = useI18n()
@@ -132,8 +139,6 @@ const { getSortedCollection, cardCollection, saveCollection } = useModels()
 const inventory = ref(cardCollection)
 const selectedDeck = ref<GameCard[]>([])
 const currentPage = ref(0)
-const windowWidth = ref(window.innerWidth)
-const windowHeight = ref(window.innerHeight)
 const showEmergencyAid = ref(false)
 
 const cardRefs = ref<Record<string, any>>({})
@@ -184,6 +189,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateDimensions)
+  // window.removeEventListener('orientationchange', delayedResize)
   clearHint()
 })
 
@@ -228,16 +234,19 @@ const isStackedSize = ref('50px')
 const isStackedMargin = ref('-22px')
 
 const itemsPerPage = computed(() => {
-  if (mobileCheck() && windowWidth.value > 500 && orientation.value === 'landscape') {
+  const isLandScape = mobileCheck() && windowWidth.value > windowHeight.value ? 'landscape' : 'portrait'
+  console.log('orientation.value: ', isLandScape, windowWidth.value)
+  if (isLandScape) {
     isStackedSize.value = '50px'
     isStackedMargin.value = '-22px'
   } else {
     isStackedSize.value = '70px'
     isStackedMargin.value = '0px'
   }
-  if ((windowHeight.value < 620 && windowWidth.value <= 500) || (windowWidth.value <= 500 && !isMobileLandscape.value)) return 6
+  if (windowHeight.value > 600 && windowWidth.value > 1100) return 24
+  if (windowHeight.value > 600 && windowWidth.value > 980) return 20
   if (windowHeight.value > 600 && windowWidth.value > 600) return 16
-  if (windowHeight.value > 600 && windowWidth.value > 980) return 12
+  if (isMobilePortrait || isMobileLandscape) return 12
   return windowWidth.value < 801 ? 8 : 16
 })
 
@@ -361,16 +370,18 @@ const onNext = () => {
   pointer-events: none
 
 .card-container
-  width: calc(33% - 8px)
+  width: calc(30% - 8px)
   aspect-ratio: 1 / 1
   @media (min-width: 450px)
     width: calc(27% - 8px)
   @media (max-width: 800px) and (orientation: landscape)
     width: calc(15% - 8px)
   @media (min-width: 801px)
-    width: calc(20% - 12px)
+    width: calc(24% - 18px)
   @media (min-width: 980px)
-    width: calc(18% - 12px)
+    width: calc(18% - 18px)
+  @media (min-width: 1100px)
+    width: calc(15% - 18px)
 
 .hand-interact-zone
   pointer-events: auto !important

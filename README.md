@@ -89,9 +89,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] random player starts
   - [x] able to create new low cards if player has none left
   - [x] EmergencyAid component with 2 new cards from the starters
-  - [ ] Storyline
-  - [ ] different levels with different NPCs
   - [x] edit town names on map
+  - [ ] different levels with different NPCs
+  - [ ] Opt: Storyline
 
 - [x] OptionsModal
   - [x] music
@@ -129,9 +129,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 - [x] replace remaining Modals with FModal
 - [x] rule icons redo
-- [ ] layout cards book
-- [ ] redo book pager arrows, add closeButton similar button with arrows on each book side
-- [ ] oak texture redo
+- [x] layout cards book
+- [x] redo book pager arrows, add closeButton similar button with arrows on each book side
+- [x] oak texture redo
 
 ## Bugs
 
