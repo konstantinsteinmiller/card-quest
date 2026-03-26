@@ -1,5 +1,6 @@
 <template lang="pug">
   div.flex.flex-col.items-center.p-1.overflow-hidden.bg-repeat.select-none(
+    data-darkmode-ignore="true"
     class="h-[100dvh] landscape:p-1 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')]"
     style="padding-bottom: env(safe-area-inset-bottom); padding-top: env(safe-area-inset-top);"
     :class="{ 'p-0': isMobilePortrait }"

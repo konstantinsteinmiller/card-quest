@@ -116,7 +116,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] Name
   - [ ] Opt: element
 
-- [ ] (native) dark mode adjustment
+- [x] (native) dark mode adjustment
 
 - [ ] Crazy Web games SDK
   - [ ] make game launchable
@@ -151,8 +151,6 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] 80 card designs
 - [ ] 100 card designs
 - [ ] more campaign tracks
-- [ ] move placeholder showing what effect the placed card would have with eventual +1 or -1 calculation
-- [ ] placeholder shows element effects.
 - [ ] show values involved in battle by highlighting them
 
 ## NPC Algo:

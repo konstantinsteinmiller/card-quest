@@ -5,8 +5,10 @@ import { orientation } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 import RuleExplainModal from '@/components/organisms/RuleExplainModal'
 import { useMusic } from '@/use/useSound'
+import { useExtensionGuard } from '@/use/useExtensionGuard'
 
 const { initMusic } = useMusic()
+useExtensionGuard()
 
 // Point to your 2MB file in the public folder
 initMusic('shadows-in-silence_slow-tired-powerless_main-menu.ogg')
@@ -48,7 +50,7 @@ onUnmounted(() => {
 </script>
 
 <template lang="pug">
-  div.h-screen.w-screen.app-container
+  div(id="app-root").h-screen.w-screen.app-container.root-protection.game-ui-immune
     RouterView
 
     RuleExplainModal

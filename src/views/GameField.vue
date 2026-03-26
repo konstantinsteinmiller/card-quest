@@ -1,6 +1,7 @@
 <template lang="pug">
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
     class="inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] bg-repeat select-none landscape:p-0.5 md:p-4"
+    data-darkmode-ignore="true"
     :style="shakeStyle"
   )
     MatchRulesModal(
