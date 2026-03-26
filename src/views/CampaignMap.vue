@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useCampaign, type CampaignNode } from '@/use/useCampaign'
 import NodePopup from '@/components/organisms/NodePopup'
 import FButton from '@/components/atoms/FButton'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { isPracticeMatch, activeRules, playerSelection } from '@/use/useMatch'
-import type { RuleName } from '@/use/useBattleRules.ts'
+import type { RuleName } from '@/use/useBattleRules'
+import { mobileCheck } from '@/utils/function.ts'
+import { orientation } from '@/use/useUser.ts'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -14,6 +16,8 @@ const { campaignNodes, selectedNodeId, activeNode } = useCampaign()
 
 isPracticeMatch.value = false
 
+const isMobileLandscape = computed(() => mobileCheck() && window.innerWidth > 500 && orientation.value === 'landscape')
+const isMobilePortrait = computed(() => mobileCheck() && orientation.value === 'portrait')
 const isLandscape = ref(window.innerWidth > window.innerHeight)
 const updateOrientation = () => {
   isLandscape.value = window.innerWidth > window.innerHeight
@@ -64,12 +68,24 @@ const startBattle = (rules: RuleName[]) => {
 <template lang="pug">
   div.relative.w-screen.h-screen.bg-slate-900.overflow-hidden.flex.items-center.justify-center
     //- 1. Backgrounds
-    img.absolute.inset-0.w-full.h-full.object-cover.select-none(
+    img.absolute.inset-0.w-full.h-full.object-fit.select-none(
       src="/images/bg/oak_600x588.webp"
       alt="table-image"
     )
+
+    img.absolute.inset-0.w-full.h-full.object-fit.select-none(
+      v-if="isMobilePortrait"
+      src="/images/bg/campaign-map_800x1600.webp"
+      alt="campaign-map"
+    )
+    img.absolute.inset-0.w-full.h-full.object-cover.select-none(
+      v-else-if="isMobileLandscape"
+      src="/images/bg/campaign-map_1600x800.webp"
+      alt="campaign-map"
+    )
     img.absolute.inset-0.w-full.h-full.object-contain.select-none(
-      src="/images/bg/campaign_map_800x710.webp"
+      v-else
+      src="/images/bg/campaign-map_800x710.webp"
       alt="campaign-map"
     )
 

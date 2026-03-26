@@ -91,7 +91,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] EmergencyAid component with 2 new cards from the starters
   - [ ] Storyline
   - [ ] different levels with different NPCs
-  - [ ] edit town names on map
+  - [x] edit town names on map
 
 - [x] OptionsModal
   - [x] music
