@@ -100,6 +100,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] do not ask rules again
   - [x] language options
   - [x] Volume slider for music and sound effects
+  - [x] remove sound options on mobile
   - [ ] Opt: Feature request button
 
 - [x] Sound and bg music

@@ -36,6 +36,29 @@ watch(userLanguage, (newValue: string) => {
   locale.value = newValue
 })
 
+const isMobile = computed(() => {
+  return typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+})
+
+const tabs = computed(() => {
+    const list = [
+      {
+        value: 'general', label: t('general'),
+        icon: prependBaseUrl('/images/icons/settings-icon_128x128.webp')
+      },
+      {
+        value: 'diff', label: t('difficulty'),
+        icon: prependBaseUrl('/images/icons/difficulty-icon_128x128.webp')
+      }
+    ]
+    return !isMobile.value ? list.concat({
+      label: t('audio'),
+      value: 'audio',
+      icon: prependBaseUrl('/images/icons/sound-icon_128x128.webp')
+    }) : list
+  }
+)
+
 // Map the string array to the Option interface for FSelect
 const languagesList = computed(() => {
   return LANGUAGES.map(locale => ({
@@ -44,6 +67,7 @@ const languagesList = computed(() => {
     locale: userLanguage.value
   }))
 })
+
 </script>
 
 <template lang="pug">
@@ -51,9 +75,7 @@ const languagesList = computed(() => {
     :model-value="isOpen"
     :is-closable="false"
     :title="t('options')"
-    :tabs="[{ label: t('general'), value: 'general', icon: prependBaseUrl('/images/icons/settings-icon_128x128.webp') },\
-            { label: t('difficulty'), value: 'diff', icon: prependBaseUrl('/images/icons/difficulty-icon_128x128.webp') },\
-            { label: t('audio'), value: 'sound', icon: prependBaseUrl('/images/icons/sound-icon_128x128.webp') }]"
+    :tabs="tabs"
     v-model:activeTab="currentTab"
     @update:model-value="emit('close')"
   )
@@ -91,7 +113,7 @@ const languagesList = computed(() => {
         hr(class="border-slate-600 my-1 md:my-2 pt-0")
 
     //- Audio Tab
-    div(v-else).flex.flex-col.justify-between.items-center
+    div(v-else-if="currentTab === 'audio'").flex.flex-col.justify-between.items-center
       FSlider.px-4(class="!py-1 !pb-3 !max-w-[300px]" :model-value="userSoundVolume" @update:modelValue="setSettingValue('sound', $event)" :label="t('soundEffects')" :min="0" :max="1" :step="0.01")
       FSlider.px-4(class="!py-1 !pb-2 !max-w-[300px]" :model-value="userMusicVolume" @update:modelValue="setSettingValue('music', $event)" :label="t('music')" :min="0" :max="1" :step="0.01")
       hr(class="border-slate-600 my-1 md:my-2 pt-0")
