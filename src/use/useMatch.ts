@@ -8,7 +8,9 @@ import type { CampaignNode } from '@/use/useCampaign'
 import useSound from '@/use/useSound.ts'
 
 const debugSaved = localStorage.getItem('debug') || 'false'
+const campaignTestSaved = localStorage.getItem('campaign-test') || 'false'
 export const isDebug = ref(!!JSON.parse(debugSaved))
+export const isCampaignTest = ref(!!JSON.parse(campaignTestSaved))
 
 export const isSplashScreenVisible = ref<boolean>(false)
 export const isDbInitialized = ref<boolean>(false)

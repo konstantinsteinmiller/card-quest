@@ -117,7 +117,7 @@ import FButton from '@/components/atoms/FButton'
 import CardDisplay from '@/components/CardDisplay'
 import PlayerHandCard from '@/components/PlayerHandCard'
 import EmergencyAid from '@/components/organisms/EmergencyAid'
-import { playerSelection, isPracticeMatch, isDbInitialized, isDebug } from '@/use/useMatch'
+import { playerSelection, isPracticeMatch, isDbInitialized, isDebug, isCampaignTest } from '@/use/useMatch'
 import useModels, { modelImgPath, type StoredCollectionCard } from '@/use/useModels'
 import useUser, { orientation, isMobilePortrait, isMobileLandscape } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
@@ -288,7 +288,7 @@ const addToDeck = (cardTemplate: any, event: MouseEvent) => {
     invItem.count--
     selectedDeck.value.push({ ...cardTemplate, instanceId: Math.random().toString(36).substring(2, 9) })
     setSettingValue('hand', [...selectedDeck.value])
-    if (/*true || */isDebug.value && false) {
+    if (/*true || */isCampaignTest.value && false) {
       const failDeck = JSON.parse(JSON.parse('""'))
       console.log('failDeck: ', failDeck)
       saveCollection(failDeck)

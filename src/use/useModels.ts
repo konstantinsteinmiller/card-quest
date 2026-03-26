@@ -1,6 +1,6 @@
 import { prependBaseUrl } from '@/utils/function'
 import { type Element, ELEMENTS } from '@/utils/enums'
-import { isDbInitialized, isDebug } from '@/use/useMatch'
+import { isCampaignTest, isDbInitialized, isDebug } from '@/use/useMatch'
 import useUser from '@/use/useUser'
 
 export const modelImgPath = (id: string, element: string) => {
@@ -57,6 +57,7 @@ const useModels = () => {
       values: { top: 7, right: 8, bottom: 5, left: 6 }
     },
     { id: 'cat-middle', name: 'Ceya', element: ELEMENTS.DARK, values: { top: 9, right: 4, bottom: 9, left: 3 } },
+    { id: 'asha-old', name: 'Asha', element: ELEMENTS.DARK, values: { top: 9, right: 3, bottom: 9, left: 3 } },
     /* EARTH */
     { id: 'gargoyle-old', name: 'Goygorix', element: ELEMENTS.EARTH, values: { top: 4, right: 9, bottom: 9, left: 5 } },
     {
@@ -212,7 +213,6 @@ const useModels = () => {
       element: ELEMENTS.NEUTRAL,
       values: { top: 2, right: 7, bottom: 3, left: 6 }
     },
-    { id: 'asha-old', name: 'Asha', element: ELEMENTS.NEUTRAL, values: { top: 9, right: 3, bottom: 9, left: 3 } },
     { id: 'mouse-young', name: 'Brusta', element: ELEMENTS.NEUTRAL, values: { top: 1, right: 2, bottom: 3, left: 5 } },
     { id: 'mouse-middle', name: 'Klopix', element: ELEMENTS.NEUTRAL, values: { top: 8, right: 6, bottom: 4, left: 2 } },
     {
@@ -278,7 +278,7 @@ const useModels = () => {
   const startCollectionIdsList = ['mermaid-young', 'moss-young', 'dragon-young', 'piranha-young', 'mushroom-young', 'warrior-young', 'shark-young']
 
   const debugCollection = allCards.map(card => ({ ...card, count: 2 }))
-  let cardCollection = isDebug.value
+  let cardCollection = isCampaignTest.value
     ? debugCollection
     : allCards
       .map(card => ({

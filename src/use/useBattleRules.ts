@@ -1,6 +1,7 @@
 //useBattleRules.ts
 import type { GameCard, BoardSlot } from '@/types/game'
 import useSound from '@/use/useSound'
+import { useScreenshake } from '@/use/useScreenshake'
 
 export const TRADE_RULES_LIST = ['one', 'all', 'random', 'conquered']
 export type RuleName = 'high' | 'plus' | 'same' | 'combo' | 'open' | 'low' | 'one' | 'all' | 'random' | 'conquered'
@@ -21,6 +22,7 @@ const ADJACENTS = [
 
 export const useBattleRules = () => {
   const { playSound } = useSound()
+  const { triggerShake } = useScreenshake()
 
   const getAdj = (board: BoardSlot[][], currX: number, currY: number, dy: number, dx: number) => {
     const ny = currY + dy
@@ -129,16 +131,25 @@ export const useBattleRules = () => {
       if (f.card.owner !== ctx.attacker.owner) {
         f.card.owner = ctx.attacker.owner
         f.card.lastRuleTrigger = f.rule
+
         if (activeRules.includes('combo')) {
           // Initialize the recursion guard Set here
           const comboResult = runCombo(ctx.board, f.x, f.y, ctx.attacker.owner, activeRules, new Set<string>())
           if (comboResult) {
             playSound('combo', 0.125)
+            triggerShake('strong') // Strong shake for Combo
             specialTriggered = true
           } else {
+            // Small shake for base special triggers (Plus/Same)
+            triggerShake('small')
             if (f.rule === 'Plus') playSound('plus', 0.1)
             if (f.rule === 'Same') playSound('same', 0.1)
           }
+        } else {
+          // Special rule triggered but no combo rule active
+          triggerShake('small')
+          if (f.rule === 'Plus') playSound('plus', 0.1)
+          if (f.rule === 'Same') playSound('same', 0.1)
         }
       }
     })

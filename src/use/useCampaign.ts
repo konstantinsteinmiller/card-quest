@@ -2,7 +2,7 @@ import { ref, computed, type ComputedRef, watch } from 'vue'
 import useUser from '@/use/useUser'
 import { useI18n } from 'vue-i18n'
 import type { RuleName } from '@/use/useBattleRules'
-import { isDebug } from '@/use/useMatch'
+import { isCampaignTest, isDebug } from '@/use/useMatch'
 
 export interface CampaignNode {
   id: string
@@ -48,7 +48,7 @@ export const useCampaign = () => {
       description: t('node1-2.desc'),
       npcDeck: ['asha-old', 'moss-young', 'yeti-young', 'female-old', 'piranha-young'],
       position: { x: 23, y: 83 },
-      unlocked: isDebug.value ? true : false,
+      unlocked: isCampaignTest.value ? true : false,
       completed: false,
       unlocks: ['node1-3'],
       knownCards: [],
@@ -60,7 +60,7 @@ export const useCampaign = () => {
       description: t('node1-3.desc'),
       npcDeck: ['butterfly-middle', 'dragon-middle', 'shark-middle', 'mushroom-middle', 'female-old', 'piranha-young', 'mermaid-middle', 'mermaid-old', 'piranha-old'],
       position: { x: 39, y: 91 },
-      unlocked: isDebug.value ? true : false,
+      unlocked: isCampaignTest.value ? true : false,
       completed: false,
       unlocks: ['node2-1', 'node1-4'],
       knownCards: [],
@@ -72,7 +72,7 @@ export const useCampaign = () => {
       description: t('node1-4.desc'),
       npcDeck: ['butterfly-middle', 'dragon-young', 'dragon-middle', 'shark-middle', 'mushroom-middle', 'female-old', 'piranha-young', 'piranha-middle', 'mermaid-middle', 'mermaid-old', 'piranha-old'],
       position: { x: 60, y: 83 },
-      unlocked: isDebug.value ? true : false,
+      unlocked: isCampaignTest.value ? true : false,
       completed: false,
       unlocks: ['node2-1'],
       knownCards: [],
@@ -84,7 +84,7 @@ export const useCampaign = () => {
       description: t('node2-1.desc'),
       npcDeck: ['moss-young', 'nightmare-middle', 'yeti-young', 'dragon-middle', 'harpy-middle', 'female-old', 'piranha-young', 'piranha-middle', 'gargoyle-young', 'snowman-young', 'gargoyle-middle'],
       position: { x: 70, y: 55 },
-      unlocked: isDebug.value ? true : false,
+      unlocked: isCampaignTest.value ? true : false,
       completed: false,
       unlocks: ['node2-2'],
       knownCards: [],
@@ -96,7 +96,7 @@ export const useCampaign = () => {
       description: t('node2-2.desc'),
       npcDeck: ['gargoyle-young', 'gargoyle-middle', 'gargoyle-old', 'dragon-middle', 'yeti-young', 'yeti-middle', 'harpy-middle', 'female-old', 'piranha-young', 'snowman-middle'],
       position: { x: 82, y: 40 },
-      unlocked: isDebug.value ? true : false,
+      unlocked: isCampaignTest.value ? true : false,
       completed: false,
       unlocks: ['node2-3'],
       knownCards: [],
@@ -108,7 +108,7 @@ export const useCampaign = () => {
       description: t('node2-3.desc'),
       npcDeck: ['asha-old', 'starlight-old', 'mushroom-middle', 'gargoyle-middle', 'gargoyle-old', 'female-old', 'piranha-old', 'snowman-middle', 'yeti-middle', 'snowman-old'],
       position: { x: 90, y: 30 },
-      unlocked: isDebug.value ? true : false,
+      unlocked: isCampaignTest.value ? true : false,
       completed: false,
       unlocks: ['node3'],
       knownCards: [],

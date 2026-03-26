@@ -23,7 +23,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] rules modal
   - [x] reset dont ask again on rulesModal
   - [x] bounce first card if player is not selecting anything
-  - [ ] screen shakes on plus same combo
+  - [x] screen shakes on plus same combo
   - [x] bounce first collection card if playerSelection < 5 and min 1 card with min 1 count in collection if player is
     not selecting anything
 

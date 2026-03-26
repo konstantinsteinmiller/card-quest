@@ -1,6 +1,7 @@
 <template lang="pug">
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
     class="inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] bg-repeat select-none landscape:p-0.5 md:p-4"
+    :style="shakeStyle"
   )
     MatchRulesModal(
       :is-open="showRules && nonStandardRules.length > 0"
@@ -97,7 +98,8 @@ import MatchRulesModal from '@/components/organisms/MatchRulesModal'
 import CardTrade from '@/components/CardTrade'
 import useUser from '@/use/useUser'
 import useCampaign from '@/use/useCampaign'
-import NpcBadge from '@/components/atoms/NpcBadge.vue'
+import NpcBadge from '@/components/atoms/NpcBadge'
+import { useScreenshake } from '@/use/useScreenshake'
 
 const {
   turn,
@@ -121,6 +123,7 @@ const {
   handleSlotTap
 } = useInteraction(playerHand, placeCard)
 const { activeNode, completeNode, saveCampaign } = useCampaign()
+const { shakeStyle } = useScreenshake()
 
 const { playerHand: playerHandRef } = useMatch()
 
