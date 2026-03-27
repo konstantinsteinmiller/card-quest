@@ -8,7 +8,7 @@ import { useMusic } from '@/use/useSound'
 import { useExtensionGuard } from '@/use/useExtensionGuard'
 import { windowWidth, windowHeight } from '@/use/useUser'
 
-const { initMusic } = useMusic()
+const { initMusic, pauseMusic, continueMusic } = useMusic()
 useExtensionGuard()
 
 // Point to your 2MB file in the public folder
@@ -36,8 +36,20 @@ const onContextMenu = (event: any) => {
   event.preventDefault() // Block right-click context menu
 }
 
+const handleVisibilityChange = async () => {
+  try {
+    if (document.hidden) {
+      pauseMusic()
+      // console.log('App moved to background - Pausing Music')
+    } else {
+      continueMusic()
+      // console.log('App back in focus - Resuming Music')
+    }
+  } catch (error) {
+    // console.log('error: ', error)
+  }
+}
 
-// Update these whenever the window actually resizes
 const updateGlobalDimensions = () => {
   windowWidth.value = window.innerWidth
   windowHeight.value = window.innerHeight
@@ -54,14 +66,15 @@ onMounted(() => {
     dimensionsInterval.value = setInterval(() => {
       windowWidth.value = window.innerWidth
       windowHeight.value = window.innerHeight
-      console.log('updated dimensions in interval', (mobileCheck() && windowWidth.value > windowHeight.value) ? 'landscape' : 'portrait', orientation.value)
     }, 400)
     window.addEventListener('orientationchange', delayedUpdateGlobalDimensions)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
   }
 })
 onUnmounted(() => {
   window.removeEventListener('resize', updateGlobalDimensions)
   window.removeEventListener('orientationchange', delayedUpdateGlobalDimensions)
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
   clearInterval(dimensionsInterval.value)
 })
 

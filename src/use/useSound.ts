@@ -16,6 +16,21 @@ export const useMusic = () => {
     bgMusic.value.volume = userMusicVolume.value * 0.05
   })
 
+  const pauseMusic = () => {
+    if (bgMusic.value) {
+      // bgMusic.value.volume = 0
+      bgMusic.value.pause()
+      isPlaying.value = false
+    }
+  }
+
+  const continueMusic = () => {
+    if (bgMusic.value) {
+      // bgMusic.value.volume = userMusicVolume.value
+      playWithFade()
+    }
+  }
+
   const initMusic = (filename: string) => {
     onMounted(() => {
       if (bgMusic.value) return // Already initialized
@@ -73,7 +88,7 @@ export const useMusic = () => {
   }
 
 
-  return { initMusic, isLoaded, isPlaying }
+  return { initMusic, isLoaded, isPlaying, pauseMusic, continueMusic }
 }
 
 const useSounds = () => {

@@ -235,7 +235,7 @@ const isStackedMargin = ref('-22px')
 
 const itemsPerPage = computed(() => {
   const isLandScape = mobileCheck() && windowWidth.value > windowHeight.value ? 'landscape' : 'portrait'
-  console.log('orientation.value: ', isLandScape, windowWidth.value)
+
   if (isLandScape) {
     isStackedSize.value = '50px'
     isStackedMargin.value = '-22px'

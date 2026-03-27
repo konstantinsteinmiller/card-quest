@@ -142,6 +142,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] contextmenu on mobile
 - [x] fix too complex npc logic causing long wait times on mobile
 - [x] trade leaving you with one card on hand even when only 1 card lost
+- [x] pause music when page not visible
 
 ## Nice-to-have
 
