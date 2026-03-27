@@ -24,6 +24,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] reset dont ask again on rulesModal
   - [x] bounce first card if player is not selecting anything
   - [x] screen shakes on plus same combo
+  - [x] show campaign finish and all cards collected Reward
   - [x] bounce first collection card if playerSelection < 5 and min 1 card with min 1 count in collection if player is
     not selecting anything
 
@@ -90,7 +91,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] able to create new low cards if player has none left
   - [x] EmergencyAid component with 2 new cards from the starters
   - [x] edit town names on map
-  - [ ] different levels with different NPCs
+  - [x] different levels with different NPCs
   - [ ] Opt: Storyline
 
 - [x] OptionsModal
@@ -143,6 +144,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] fix too complex npc logic causing long wait times on mobile
 - [x] trade leaving you with one card on hand even when only 1 card lost
 - [x] pause music when page not visible
+- [ ] fix premature game over
 
 ## Nice-to-have
 

@@ -7,9 +7,11 @@ import RuleExplainModal from '@/components/organisms/RuleExplainModal'
 import { useMusic } from '@/use/useSound'
 import { useExtensionGuard } from '@/use/useExtensionGuard'
 import { windowWidth, windowHeight } from '@/use/useUser'
+import useCheats from '@/use/useCheats'
 
 const { initMusic, pauseMusic, continueMusic } = useMusic()
 useExtensionGuard()
+useCheats()
 
 // Point to your 2MB file in the public folder
 initMusic('shadows-in-silence_slow-tired-powerless_main-menu.ogg')

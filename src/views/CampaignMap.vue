@@ -1,30 +1,51 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { useCampaign, type CampaignNode } from '@/use/useCampaign'
+import { useCampaign, type CampaignNode, type MobileNode } from '@/use/useCampaign'
 import NodePopup from '@/components/organisms/NodePopup'
 import FButton from '@/components/atoms/FButton'
+import QuestReward from '@/components/QuestReward.vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { isPracticeMatch, activeRules, playerSelection } from '@/use/useMatch'
 import type { RuleName } from '@/use/useBattleRules'
-import { mobileCheck } from '@/utils/function.ts'
-import { orientation } from '@/use/useUser.ts'
+import useUser, { isMobileLandscape, isMobilePortrait, windowWidth, windowHeight } from '@/use/useUser'
+import useModels from '@/use/useModels'
+import type { GameCard } from '@/types/game'
 
 const { t } = useI18n()
 const router = useRouter()
-const { campaignNodes, selectedNodeId, activeNode } = useCampaign()
+const { campaignNodes, mobileNodes, selectedNodeId, activeNode } = useCampaign()
+const { userQuestCampaign, userQuestCards, userCollection, setSettingValue } = useUser()
+const { allCards } = useModels()
 
 isPracticeMatch.value = false
 
-const isMobileLandscape = computed(() => mobileCheck() && window.innerWidth > 500 && orientation.value === 'landscape')
-const isMobilePortrait = computed(() => mobileCheck() && orientation.value === 'portrait')
-const isLandscape = ref(window.innerWidth > window.innerHeight)
+const showQuestReward = ref(false)
+const questType = ref<'campaign' | 'cards'>('campaign')
+
+const isLandscape = ref(windowWidth.value > windowHeight.value)
 const updateOrientation = () => {
-  isLandscape.value = window.innerWidth > window.innerHeight
+  isLandscape.value = windowWidth.value > windowHeight.value
 }
 
+const nodesList = computed(() => {
+  if (isMobilePortrait.value) {
+    return campaignNodes.value.map((node, index) => {
+      return {
+        ...node, position: mobileNodes[index]?.positionPortrait || { x: 0, y: 0 }
+      }
+    })
+  }
+  if (isMobileLandscape.value) {
+    return campaignNodes.value.map((node, index) => ({
+      ...node, position: mobileNodes[index]?.positionLandscape || { x: 0, y: 0 }
+    }))
+  }
+  return campaignNodes.value
+})
+
 const getCurvePath = (startNode: CampaignNode, targetId: string) => {
-  const endNode = campaignNodes.value.find(n => n.id === targetId)
+  const endNode = nodesList.value.find(n => n.id === targetId)
   if (!endNode) return ''
 
   const x1 = startNode.position.x
@@ -39,15 +60,45 @@ const getCurvePath = (startNode: CampaignNode, targetId: string) => {
 }
 
 const getPathClass = (startNode: CampaignNode, targetId: string) => {
-  const endNode = campaignNodes.value.find(n => n.id === targetId)
+  const endNode = nodesList.value.find(n => n.id === targetId)
   if (!endNode) return 'opacity-0'
 
   if (endNode.unlocked) return 'opacity-100 stroke-yellow-400'
   return 'opacity-50 stroke-grey-500'
 }
 
+const checkQuests = () => {
+  // 1. Check Campaign Completion
+  const allNodesCompleted = campaignNodes.value.every(node => node.completed)
+  if (allNodesCompleted && !userQuestCampaign.value) {
+    questType.value = 'campaign'
+    showQuestReward.value = true
+    return // Show one at a time
+  }
+
+  // 2. Check Card Collection Completion
+  const parsedCollection = JSON.parse(userCollection.value || '[]')
+  const collectedIds = new Set(parsedCollection.filter((c: any) => c.count >= 1).map((c: any) => c.id))
+  const hasEveryCard = allCards.every((card: GameCard) => collectedIds.has(card.id))
+
+  if (hasEveryCard && !userQuestCards.value) {
+    questType.value = 'cards'
+    showQuestReward.value = true
+  }
+}
+
+const handleQuestClose = () => {
+  showQuestReward.value = false
+  if (questType.value === 'campaign') {
+    setSettingValue('quest-campaign', true)
+  } else {
+    setSettingValue('quest-cards', true)
+  }
+  // Check again in case both were triggered simultaneously
+  setTimeout(checkQuests, 500)
+}
+
 onMounted(() => {
-  /* if enemy picked cards from your hand, go back to deck building */
   if (playerSelection.value.length < 5) {
     return router.replace({ name: 'deck', query: isPracticeMatch.value ? { practice: 'true' } : undefined })
   }
@@ -55,6 +106,9 @@ onMounted(() => {
   selectedNodeId.value = null
   window.addEventListener('resize', updateOrientation)
   updateOrientation()
+
+  // Check for rewards after a short delay for visual polish
+  setTimeout(checkQuests, 1000)
 })
 
 onUnmounted(() => window.removeEventListener('resize', updateOrientation))
@@ -91,9 +145,9 @@ const startBattle = (rules: RuleName[]) => {
 
     //- 2. The Interactive Node Layer
     div.relative.node-layer-container(
-      :style="{ aspectRatio: '800 / 710' }"
+      :style="{ aspectRatio: isMobilePortrait ? '800 / 1600' : isMobileLandscape ? '1600 / 800': '800 / 710' }"
       class="max-w-full max-h-full"
-      :class="isLandscape ? 'h-full w-auto' : 'w-full h-auto'"
+      :class="isMobileLandscape || !isMobilePortrait ? 'h-full w-auto' : 'w-full h-auto'"
     )
       //- SVG Path Layer
       svg.absolute.inset-0.w-full.h-full.pointer-events-none.overflow-visible(
@@ -107,7 +161,7 @@ const startBattle = (rules: RuleName[]) => {
               feMergeNode(in="coloredBlur")
               feMergeNode(in="SourceGraphic")
 
-        template(v-for="node in campaignNodes" :key="'paths-' + node.id")
+        template(v-for="node in nodesList" :key="'paths-' + node.id")
           path(
             v-for="targetId in node.unlocks"
             :key="node.id + '-' + targetId"
@@ -122,13 +176,13 @@ const startBattle = (rules: RuleName[]) => {
 
       //- The Stations (Nodes)
       button.absolute.transform.transition-all.duration-300(
-        v-for="node in campaignNodes"
+        v-for="node in nodesList"
         :key="node.id"
         :style="{ left: node.position.x + '%', top: node.position.y + '%' }"
         @click="node.unlocked && (selectedNodeId = node.id)"
         :class="[\
           '-translate-x-1/2 -translate-y-1/2',\
-          node.unlocked ? 'scale-80 hover:scale-100 cursor-pointer' : 'scale-65 opacity-50 cursor-not-allowed grayscale',\
+          node.unlocked ? 'scale-80 hover:scale-100 cursor-pointer' : 'scale-65 opacity-70 cursor-not-allowed grayscale',\
           selectedNodeId === node.id ? 'z-30' : 'z-10'\
         ]"
       )
@@ -155,9 +209,17 @@ const startBattle = (rules: RuleName[]) => {
     )
       FButton(
         type="secondary"
-        size="lg"
+        size="md"
         @click="router.push({ name: 'deck' })"
       ) {{ t('back') }}
+
+    //- Quest Reward Dialog
+    QuestReward(
+      v-if="showQuestReward"
+      :modelValue="showQuestReward"
+      :type="questType"
+      @close="handleQuestClose"
+    )
 </template>
 
 <style lang="sass" scoped>
@@ -177,4 +239,9 @@ path
 @keyframes flow
   to
     stroke-dashoffset: 0
+
+// In your style block
+.relative.w-screen
+  height: 100svh
+// Better for mobile Safari
 </style>

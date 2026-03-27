@@ -14,7 +14,9 @@ const useUserDb = ({
                      userTutorialsDoneMap,
                      userHand,
                      userCollection,
-                     userCampaign
+                     userCampaign,
+                     userQuestCampaign,
+                     userQuestCards
                    }: {
   userDifficulty: Ref<string>
   userSoundVolume: Ref<number>
@@ -25,6 +27,8 @@ const useUserDb = ({
   userHand: Ref<string>
   userCollection: Ref<string>
   userCampaign: Ref<string>
+  userQuestCampaign: Ref<boolean>
+  userQuestCards: Ref<boolean>
 }) => {
   // Open our database; it is created if it doesn't already exist
   const request = window.indexedDB.open('user_db', 1)
@@ -58,6 +62,8 @@ const useUserDb = ({
     objectStore.createIndex('userHand', 'userHand', { unique: false })
     objectStore.createIndex('userCollection', 'userCollection', { unique: false })
     objectStore.createIndex('userCampaign', 'userCampaign', { unique: false })
+    objectStore.createIndex('userQuestCampaign', 'userQuestCampaign', { unique: false })
+    objectStore.createIndex('userQuestCards', 'userQuestCards', { unique: false })
     // console.log('Database setup complete')
   })
 
@@ -76,6 +82,12 @@ const useUserDb = ({
 
         if (request.result.userSkipRulesModal) {
           userSkipRulesModal.value = JSON.parse(request.result.userSkipRulesModal)
+        }
+        if (request.result.userQuestCampaign) {
+          userQuestCampaign.value = JSON.parse(request.result.userQuestCampaign)
+        }
+        if (request.result.userQuestCards) {
+          userQuestCards.value = JSON.parse(request.result.userQuestCards)
         }
         if (request.result.userTutorialsDoneMap) {
           userTutorialsDoneMap.value = JSON.parse(request.result.userTutorialsDoneMap)
@@ -96,6 +108,8 @@ const useUserDb = ({
           userMusicVolume: userMusicVolume.value,
           userLanguage: userLanguage.value,
           userSkipRulesModal: userSkipRulesModal.value,
+          userQuestCampaign: userQuestCampaign.value,
+          userQuestCards: userQuestCards.value,
           userTutorialsDoneMap: userTutorialsDoneMap.value,
           userHand: userHand.value,
           userCollection: userCollection.value,
@@ -119,6 +133,12 @@ const useUserDb = ({
 
     if (Object.keys(params.userSkipRulesModal)?.length) {
       params.userSkipRulesModal = JSON.stringify(userSkipRulesModal)
+    }
+    if (Object.keys(params.userQuestCampaign)?.length) {
+      params.userQuestCampaign = JSON.stringify(userQuestCampaign)
+    }
+    if (Object.keys(params.userQuestCards)?.length) {
+      params.userQuestCards = JSON.stringify(userQuestCards)
     }
 
     if (Object.keys(params.userHand)?.length) {

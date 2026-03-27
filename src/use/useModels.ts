@@ -89,12 +89,11 @@ const useModels = () => {
       element: ELEMENTS.EARTH,
       values: { top: 5, right: 7, bottom: 7, left: 4 }
     },
-    { id: 'gargoyle-young', name: 'Goygor', element: ELEMENTS.EARTH, values: { top: 3, right: 3, bottom: 4, left: 2 } }, // Total: 12
+    { id: 'gargoyle-young', name: 'Goygor', element: ELEMENTS.EARTH, values: { top: 3, right: 4, bottom: 4, left: 2 } }, // Total: 12
     // Adjusted: Total 15 (Young). Nerfed from 17 to fit Young tier. Strong right attacker.
     { id: 'gruffalo-young', name: 'Graffo', element: ELEMENTS.EARTH, values: { top: 2, right: 6, bottom: 2, left: 5 } },
     // Adjusted: Total 24 (Middle). Perfectly symmetrical. Incredibly powerful for triggering the 'Same' rule.
     { id: 'bear-middle', name: 'Groz', element: ELEMENTS.EARTH, values: { top: 6, right: 6, bottom: 6, left: 6 } },
-
 
     /* ENERGY */
     { id: 'female-young', name: 'Thunbee', element: ELEMENTS.ENERGY, values: { top: 3, right: 2, bottom: 7, left: 3 } }, // Total: 15
@@ -279,7 +278,7 @@ const useModels = () => {
     // Adjusted: Total 22 (Middle). Adjusted to be a minor version of the Old card above.
     { id: 'piranha-middle', name: 'Pirin', element: ELEMENTS.WATER, values: { top: 6, right: 6, bottom: 3, left: 7 } },
     { id: 'piranha-young', name: 'Pira', element: ELEMENTS.WATER, values: { top: 3, right: 3, bottom: 3, left: 4 } }, // Total: 13
-    { id: 'sirene-young', name: 'Siri', element: ELEMENTS.WATER, values: { top: 4, right: 2, bottom: 3, left: 5 } }, // Total: 14
+    { id: 'sirene-young', name: 'Siri', element: ELEMENTS.WATER, values: { top: 4, right: 5, bottom: 3, left: 2 } }, // Total: 14
     // Adjusted: Total 15 (Young). Nerfed from 17 to fit Young tier. Strong right/left defense.
     { id: 'turtoise-young', name: 'Quada', element: ELEMENTS.WATER, values: { top: 1, right: 6, bottom: 4, left: 4 } },
     // Adjusted: Total 22 (Middle). Balanced as a horizontal defender.
@@ -303,7 +302,7 @@ const useModels = () => {
   const startCollectionIdsList = ['mermaid-young', 'moss-young', 'dragon-young', 'piranha-young', 'mushroom-young', 'warrior-young', 'shark-young']
 
   const debugCollection = allCards.map(card => ({ ...card, count: 2 }))
-  let cardCollection = isCampaignTest.value
+  let cardCollection = isDebug.value
     ? debugCollection
     : allCards
       .map(card => ({

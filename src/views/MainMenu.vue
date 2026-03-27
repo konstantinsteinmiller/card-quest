@@ -21,8 +21,8 @@
     )
       // Menu
       div.flex.flex-col.gap-4.relative.z-10
-        FButton(@click="onCampaign") {{ t('campaign') }}
-        FButton(@click="onPracticeClick") {{ t('play') }}
+        FButton(@click="onCampaign") {{ t('play') }}
+        FButton(@click="onPracticeClick") {{ t('practice') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
 
     FModal(v-if="false" v-model="showOptions" title="New Card!")
@@ -103,11 +103,11 @@ const onPracticeClick = () => {
 
 <i18n>
 en:
-  play: "Practice"
-  campaign: "Campaign"
+  play: "Spielen"
+  practice: "Practice"
   settings: "Settings"
 de:
-  play: "Trainieren"
-  campaign: "Kampagne"
+  play: "Spielen"
+  practice: "Trainieren"
   settings: "Einstellungen"
 </i18n>

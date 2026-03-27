@@ -31,6 +31,8 @@ const userHand: Ref<any> = ref('[]')
 const userCollection: Ref</*StoredCollectionCard[] | */string> = ref('[]')
 const userCampaign: Ref<any> = ref('[]')
 const userSkipRulesModal: Ref<boolean> = ref(false)
+const userQuestCampaign: Ref<boolean> = ref(false)
+const userQuestCards: Ref<boolean> = ref(false)
 
 /* just for after the indexDB has loaded */
 watch(
@@ -52,7 +54,9 @@ const { storeUser } = useUserDb({
   userHand,
   userCollection,
   userCampaign,
-  userSkipRulesModal
+  userSkipRulesModal,
+  userQuestCampaign,
+  userQuestCards
 })
 
 const useUser = () => {
@@ -72,6 +76,12 @@ const useUser = () => {
         break
       case 'skipRulesModal':
         userSkipRulesModal.value = value
+        break
+      case 'quest-campaign':
+        userQuestCampaign.value = value
+        break
+      case 'quest-cards':
+        userQuestCards.value = value
         break
       case 'tutorialsDoneMap':
         userTutorialsDoneMap.value = JSON.stringify(value)
@@ -96,7 +106,9 @@ const useUser = () => {
       userTutorialsDoneMap: userTutorialsDoneMap.value,
       userHand: userHand.value,
       userCollection: userCollection.value,
-      userCampaign: userCampaign.value
+      userCampaign: userCampaign.value,
+      userQuestCampaign: userQuestCampaign.value,
+      userQuestCards: userQuestCards.value
     })
   }
 
@@ -110,6 +122,8 @@ const useUser = () => {
     userCollection,
     userCampaign,
     userSkipRulesModal,
+    userQuestCampaign,
+    userQuestCards,
     tutorialPhase,
     allowTutorial,
     setSettingValue,
