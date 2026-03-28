@@ -43,7 +43,7 @@ export const useCampaign = () => {
       name: t('node-w1.name'),
       description: t('node-w1.desc'),
       // Node 1: 100% Young Nature/Water/Neutral
-      npcDeck: ['mermaid-young', 'moss-young', 'mushroom-young', 'piranha-young', 'sirene-young', 'turtoise-young', 'mouse-young', 'butterfly-young', 'dragon-young', 'snowman-young'],
+      npcDeck: ['mermaid-young', 'moss-young', 'mushroom-young', 'piranha-young', 'sirene-young', 'turtoise-young', 'cosmica-young', 'butterfly-young', 'dragon-young', 'snowman-young'],
       position: { x: 16, y: 81 },
       unlocked: true,
       completed: false,
@@ -56,7 +56,7 @@ export const useCampaign = () => {
       name: t('node-w1-b.name'),
       description: t('node-w1-b.desc'),
       // Node 2: 100% Young Metal/Earth/Neutral
-      npcDeck: ['scorpion-young', 'piranha-young', 'warrior-young', 'dragon-young', 'mouse-young', 'gruffalo-young', 'gargoyle-young', 'cosmic-young', 'tardigrade-young', 'eel-young'],
+      npcDeck: ['scorpion-young', 'piranha-young', 'warrior-young', 'dragon-young', 'gruffalo-young', 'gargoyle-young', 'cosmic-young', 'tardigrade-young', 'eel-young'],
       position: { x: 42, y: 82 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
@@ -123,7 +123,7 @@ export const useCampaign = () => {
       name: t('node-e1.name'),
       description: t('node-e1.desc'),
       // Node 1: 100% Young Fire/Metal
-      npcDeck: ['dragon-young', 'scorpion-young', 'warrior-young', 'household-young', 'mouse-young', 'gruffalo-young', 'snowman-young', 'piranha-young', 'demon-young', 'cosmica-young'],
+      npcDeck: ['dragon-young', 'scorpion-young', 'warrior-young', 'household-young', 'mouse-young', 'gruffalo-young', 'snowman-young', 'piranha-young', 'puppet-young', 'cosmica-young'],
       position: { x: 75, y: 84 },
       unlocked: true,
       completed: false,
@@ -136,7 +136,7 @@ export const useCampaign = () => {
       name: t('node-e1-b.name'),
       description: t('node-e1-b.desc'),
       // Node 2: 100% Young Neutral/Metal
-      npcDeck: ['warrior-young', 'household-young', 'mouse-young', 'scorpion-young', 'dragon-young', 'gruffalo-young', 'demon-young', 'cosmic-young', 'female-young', 'eel-young'],
+      npcDeck: ['warrior-young', 'household-young', 'shark-young', 'scorpion-young', 'dragon-young', 'gruffalo-young', 'puppet-young', 'cosmic-young', 'female-young', 'eel-young'],
       position: { x: 92, y: 80 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
@@ -162,7 +162,7 @@ export const useCampaign = () => {
       name: t('node-e2.name'),
       description: t('node-e2.desc'),
       // Node 3: 10% Middle cards
-      npcDeck: ['dragon-middle', 'fox-young', 'harpy-young', 'scorpion-young', 'armadillo-young', 'porcupine-young', 'mouse-young', 'gargoyle-young', 'bear-young', 'warrior-young'],
+      npcDeck: ['dragon-middle', 'porcupine-middle', 'dragon-young', 'armadillo-middle', 'tardigrade-young', 'mouse-young', 'gargoyle-young', 'household-young', 'warrior-young'],
       position: { x: 85, y: 72 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
@@ -175,7 +175,7 @@ export const useCampaign = () => {
       name: t('node-e2-b.name'),
       description: t('node-e2-b.desc'),
       // Node 4: 1/3rd Middle Tier
-      npcDeck: ['shaman-middle', 'dragon-middle', 'gargoyle-middle', 'mushroom-young', 'butterfly-young', 'imp-young', 'fox-middle', 'bear-middle', 'wulfberry-young', 'nightmare-young'],
+      npcDeck: ['demon-young', 'dragon-middle', 'gargoyle-middle', 'mushroom-young', 'butterfly-young', 'gargoyle-young', 'fox-middle', 'bear-middle', 'wulfberry-middle', 'tardigrade-young'],
       position: { x: 80, y: 60 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
@@ -203,7 +203,7 @@ export const useCampaign = () => {
       name: t('node-c0.name'),
       description: t('node-c0.desc'),
       // Convergence Start: 80% Middle, 20% Young
-      npcDeck: ['moss-young', 'mushroom-middle', 'butterfly-middle', 'gargoyle-middle', 'bear-middle', 'griffin-middle', 'warrior-middle', 'shark-middle', 'piranha-middle', 'sirene-young', 'porcupine-middle', 'demon-middle'],
+      npcDeck: ['moss-young', 'mushroom-middle', 'butterfly-middle', 'cosmic-middle', 'gargoyle-middle', 'bear-middle', 'griffin-middle', 'warrior-middle', 'shark-middle', 'piranha-middle', 'sirene-young', 'porcupine-middle', 'demon-middle'],
       position: { x: 55, y: 55 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
@@ -216,7 +216,7 @@ export const useCampaign = () => {
       name: t('node-c1.name'),
       description: t('node-c1.desc'),
       // 50/50 Middle and Old mix
-      npcDeck: ['tardigrade-middle', 'nightmare-middle', 'wulfberry-middle', 'gargoyle-old', 'armadillo-old', 'cosmic-old', 'gorilla-middle', 'griffin-middle', 'asha-old', 'cosmic-middle', 'hag-middle'],
+      npcDeck: ['tardigrade-middle', 'nightmare-middle', 'mushroom-middle', 'wulfberry-middle', 'gargoyle-old', 'armadillo-old', 'cosmic-old', 'gorilla-middle', 'griffin-middle', 'asha-old', 'cosmic-middle', 'hag-middle'],
       position: { x: 45, y: 48 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
@@ -242,7 +242,7 @@ export const useCampaign = () => {
       name: t('node-c2.name'),
       description: t('node-c2.desc'),
       // High-tier Convergence: 90% Old Tier
-      npcDeck: ['tardigrade-old', 'starlight-old', 'cosmic-old', 'gorilla-old', 'angel-old', 'female-old', 'snowman-old', 'dragon-old', 'mermaid-old', 'eclipse-old', 'imp-old'],
+      npcDeck: ['tardigrade-old', 'starlight-old', 'mouse-old', 'cosmic-old', 'gorilla-old', 'angel-old', 'female-old', 'snowman-old', 'dragon-old', 'mermaid-old', 'eclipse-old', 'imp-old'],
       position: { x: 45, y: 32 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
@@ -345,20 +345,20 @@ export const useCampaign = () => {
       completed: false,
       unlocks: ['node-a2', 'node-ne1'],
       knownCards: [],
-      rules: ['high', 'one']
+      rules: ['low', 'conquered']
     },
     {
       id: 'node-a2',
       name: t('node-a2.name'),
       description: t('node-a2.desc'),
       // Late-game Reef: 80% Middle, 20% Old
-      npcDeck: ['shark-middle', 'mermaid-old', 'eel-middle', 'mammoth-middle', 'snowflower-middle', 'turtoise-old', 'piranha-middle', 'yeti-middle', 'snogrin-middle', 'mormyx-middle'],
+      npcDeck: ['shark-middle', 'mermaid-old', 'piranha-old', 'yeti-middle', 'eel-middle', 'mammoth-middle', 'snowflower-middle', 'turtoise-old', 'piranha-middle', 'snowman-middle', 'shark-young'],
       position: { x: 68, y: 35 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
       unlocks: ['node-a3'],
       knownCards: [],
-      rules: ['high', 'plus', 'one']
+      rules: ['high', 'plus', 'conquered']
     },
     {
       id: 'node-a3',
@@ -371,7 +371,7 @@ export const useCampaign = () => {
       completed: false,
       unlocks: [],
       knownCards: [],
-      rules: ['high', 'plus', 'same', 'combo', 'random']
+      rules: ['high', 'plus', 'same', 'combo', 'all']
     },
 
     // --- TRACK 7: NORTH EASTERN ISLAND (Endgame Psi/Metal) ---
@@ -380,7 +380,7 @@ export const useCampaign = () => {
       name: t('node-ne1.name'),
       description: t('node-ne1.desc'),
       // Heavy Earth/Metal: 70% Old
-      npcDeck: ['gargoyle-old', 'bear-middle', 'armadillo-old', 'scorpion-old', 'gargoyle-middle', 'armadillo-middle', 'scorpion-middle', 'gargoyle-old', 'mouse-old', 'fox-old'],
+      npcDeck: ['bear-middle', 'imp-middle', 'mushroom-middle', 'harbringer-middle', 'harpy-middle', 'deer-middle', 'gargoyle-middle', 'armadillo-middle', 'scorpion-middle', 'gargoyle-old', 'mouse-middle', 'fox-old'],
       position: { x: 92, y: 35 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
@@ -393,7 +393,7 @@ export const useCampaign = () => {
       name: t('node-ne2.name'),
       description: t('node-ne2.desc'),
       // Psi focus: 90% Old
-      npcDeck: ['tardigrade-old', 'nightmare-middle', 'wulfberry-middle', 'tardigrade-old', 'cosmic-old', 'starlight-old', 'demon-middle', 'hag-middle', 'harbringer-middle', 'tardigrade-old'],
+      npcDeck: ['mouse-old', 'snowman-middle', 'yeti-middle', 'gorilla-middle', 'gorilla-old', 'wulfberry-middle', 'scorpion-middle', 'harpy-middle', 'cosmic-old', 'female-middle', 'demon-middle', 'hag-middle', 'harbringer-middle', 'tardigrade-old'],
       position: { x: 95, y: 15 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,

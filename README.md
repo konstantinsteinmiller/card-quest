@@ -119,12 +119,19 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 - [x] (native) dark mode adjustment
 
+- [ ] create Demo version
+
 - [ ] Crazy Web games SDK
   - [ ] make game launchable
   - [ ] ads
   - [ ] performance tracking
 
 - [ ] complete Translations
+
+- [ ] build for windows
+- [ ] build for android
+- [ ] build for ios
+- [ ] search for marketing person
 
 ## Refactorings
 

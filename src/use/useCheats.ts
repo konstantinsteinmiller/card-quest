@@ -32,6 +32,13 @@ const useCheats = () => {
     console.warn('[CHEAT] All campaign nodes completed.')
   }
 
+  const printAllIds = () => {
+    const youngIds = allCards.filter((card: GameCard) => card.id.includes('-young'))
+    const middleIds = allCards.filter((card: GameCard) => card.id.includes('-middle'))
+    const oldIds = allCards.filter((card: GameCard) => card.id.includes('-old'))
+    console.warn('[CHEAT] All sorted ids.', youngIds, middleIds, oldIds)
+  }
+
   const resetCampaign = () => {
     setSettingValue('campaign', [])
     setSettingValue('quest-campaign', false)
@@ -48,6 +55,7 @@ const useCheats = () => {
     'ctrl+shift+c': unlockAllCards,
     'ctrl+shift+b': unlockAllCampaignNodes,
     'ctrl+shift+r': resetCampaign,
+    'ctrl+shift+k': printAllIds,
     'ctrl+shift+d': () => console.log('[DEBUG] Cards:', allCards)
   }
 

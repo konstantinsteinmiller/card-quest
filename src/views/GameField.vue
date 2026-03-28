@@ -146,7 +146,9 @@ const showTradeModal = ref<boolean>(false)
 watch(isBoardFull, () => {
   if (isBoardFull.value) {
     setTimeout(() => {
-      showTradeModal.value = true
+      if (isBoardFull.value) {
+        showTradeModal.value = true
+      }
     }, 550)
   } else {
     showRules.value = !userSkipRulesModal.value
