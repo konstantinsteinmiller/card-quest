@@ -54,7 +54,7 @@ const theme = computed(() => {
       class="group relative w-full inline-block cursor-pointer select-none transition-all duration-75 active:scale-x-[95%] active:scale-y-[90%] hover:scale-[103%] active:brightness-110 touch-manipulation"
     )
       //- The "Bottom Shadow" / 3D Depth
-      span(
+      span.f-button-shadow(
         :style="{ backgroundColor: theme.shadow }"
         class="absolute inset-0 translate-y-[4px] md:translate-y-[4px] rounded-2xl"
       )

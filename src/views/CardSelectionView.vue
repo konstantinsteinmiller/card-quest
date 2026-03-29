@@ -1,8 +1,8 @@
 <template lang="pug">
   div.flex.flex-col.items-center.p-1.overflow-hidden.bg-repeat.select-none(
     data-darkmode-ignore="true"
-    class="h-[100dvh] landscape:p-1 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')]"
-    style="padding-top: env(safe-area-inset-top);"
+    class="fixed inset-0 overflow-hidden h-[100dvh] landscape:p-1 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')]"
+    style="padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);"
     :class="{ 'p-0': isMobilePortrait }"
   )
     //- Emergency Aid Overlay
@@ -20,6 +20,7 @@
     //- Main Layout: flex-col for mobile portrait, flex-row for landscape
     div.flex.w-full.max-w-6xl.min-h-0(
       class="flex-col landscape:flex-row gap-1 sm:gap-4 h-full"
+      :class="{ '!gap-1': isMobileLandscape }"
     )
       //- THE BOOK (Flex grow but must be able to shrink to avoid pushing buttons out)
       div.relative.shadow-inner.flex.flex-col.flex-grow.min-h-0(class="overflow-hidden")
@@ -90,6 +91,7 @@
               :cards="selectedDeck"
               :is-active="true"
               :selected-id="null"
+              :class="{ 'landscape-hand mt-3': isMobileLandscape }"
               @select="removeFromDeck"
               @click-card="removeFromDeck"
               @remove="removeFromDeck"
@@ -177,11 +179,25 @@ const updateDimensions = () => {
   windowHeight.value = window.innerHeight
 }
 
+const onOrientationChange = (e: any) => {
+  const isPortrait = e.matches
+
+  if (isPortrait) {
+    isStackedSize.value = '56px'
+    isStackedMargin.value = '0px'
+  } else {
+    isStackedSize.value = '50px'
+    isStackedMargin.value = '-22px'
+  }
+}
+
 onMounted(() => {
   window.addEventListener('resize', updateDimensions)
   window.scrollTo(0, 0)
   const isPractice: boolean = route?.query?.practice === true
   isPracticeMatch.value = isPractice || isPracticeMatch.value
+
+  window.matchMedia('(orientation: portrait)').addEventListener('change', onOrientationChange)
 
   // Start the interaction hint timer
   startHintTimer()
@@ -189,6 +205,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', updateDimensions)
+  window.matchMedia('(orientation: portrait)').removeEventListener('change', onOrientationChange)
   // window.removeEventListener('orientationchange', delayedResize)
   clearHint()
 })
@@ -234,15 +251,16 @@ const isStackedSize = ref('50px')
 const isStackedMargin = ref('-22px')
 
 const itemsPerPage = computed(() => {
-  const isLandScape = mobileCheck() && windowWidth.value > windowHeight.value ? 'landscape' : 'portrait'
+  const orientationMode = mobileCheck() && windowWidth.value > windowHeight.value ? 'landscape' : 'portrait'
 
-  if (isLandScape) {
+  if (orientationMode === 'landscape') {
     isStackedSize.value = '50px'
     isStackedMargin.value = '-22px'
   } else {
-    isStackedSize.value = '70px'
+    isStackedSize.value = '56px'
     isStackedMargin.value = '0px'
   }
+
   if (windowHeight.value > 600 && windowWidth.value > 1100) return 24
   if (windowHeight.value > 600 && windowWidth.value > 980) return 20
   if (windowHeight.value > 600 && windowWidth.value > 600) return 16
@@ -389,6 +407,12 @@ const onNext = () => {
   :deep(*)
     pointer-events: auto !important
 
+.landscape-hand
+  :deep(.card-wrapper)
+    width: 52px !important
+    height: 52px !important
+    margin-top: -22px
+
 :deep(.card-wrapper)
   width: 52px !important
   height: 52px !important
@@ -399,6 +423,11 @@ const onNext = () => {
   &:hover
     z-index: 100
     transform: scale(1.1)
+
+
+  @media (max-width: 500px) and (orientation: portrait)
+    width: v-bind(isStackedSize) !important
+    height: v-bind(isStackedSize) !important
 
   @media (max-width: 800px) and (orientation: landscape)
     width: v-bind(isStackedSize) !important

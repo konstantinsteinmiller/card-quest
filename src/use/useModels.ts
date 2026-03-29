@@ -1,6 +1,6 @@
 import { prependBaseUrl } from '@/utils/function'
 import { type Element, ELEMENTS } from '@/utils/enums'
-import { isCampaignTest, isDbInitialized, isDebug } from '@/use/useMatch'
+import { isCampaignTest, isDbInitialized, isDebug, isChibiTheme } from '@/use/useMatch'
 import useUser from '@/use/useUser'
 import { computed, watch } from 'vue'
 
@@ -10,6 +10,9 @@ export const modelImgPath = (id: string, element: string) => {
   } catch (error) {
     console.error('Error in modelImgPath:', error)
     return ''
+  }
+  if (isChibiTheme.value === true) {
+    return prependBaseUrl(`/models/chibi/${element}/${id}_400x400.webp`)
   }
   return prependBaseUrl(`/models/${element}/${id}_400x400.webp`)
 }
@@ -300,7 +303,10 @@ const useModels = () => {
     setSettingValue('collection', storedCollection)
   }
 
-  const startCollectionIdsList = ['mermaid-young', 'moss-young', 'dragon-young', 'piranha-young', 'mushroom-young', 'warrior-young', 'shark-young']
+  let startCollectionIdsList = ['mermaid-young', 'moss-young', 'dragon-young', 'piranha-young', 'mushroom-young', 'warrior-young', 'shark-young']
+  if (isChibiTheme.value === true) {
+    startCollectionIdsList = startCollectionIdsList.concat(['demon-young', 'sirene-young', 'tardigrade-young', 'gruffalo-young', 'butterfly-young', 'household-young', 'mammoth-young', 'eel-young', 'yeti-young', 'gargoyle-young', 'mouse-young', 'snowman-young'])
+  }
 
   const debugCollection = allCards.map(card => ({ ...card, count: 2 }))
   let cardCollection = isDebug.value

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { useCampaign, type CampaignNode, type MobileNode } from '@/use/useCampaign'
+import { useCampaign, type CampaignNode } from '@/use/useCampaign'
 import NodePopup from '@/components/organisms/NodePopup'
 import FButton from '@/components/atoms/FButton'
 import QuestReward from '@/components/QuestReward.vue'
@@ -25,16 +25,19 @@ const questType = ref<'campaign' | 'cards'>('campaign')
 
 const isLandscape = ref(windowWidth.value > windowHeight.value)
 const updateOrientation = () => {
-  isLandscape.value = windowWidth.value > windowHeight.value
+  // Use a timeout to ensure iOS has updated its internal window dimensions
+  setTimeout(() => {
+    windowWidth.value = window.innerWidth
+    windowHeight.value = window.innerHeight
+    isLandscape.value = window.innerWidth > window.innerHeight
+  }, 150)
 }
 
 const nodesList = computed(() => {
   if (isMobilePortrait.value) {
-    return campaignNodes.value.map((node, index) => {
-      return {
-        ...node, position: mobileNodes[index]?.positionPortrait || { x: 0, y: 0 }
-      }
-    })
+    return campaignNodes.value.map((node, index) => ({
+      ...node, position: mobileNodes[index]?.positionPortrait || { x: 0, y: 0 }
+    }))
   }
   if (isMobileLandscape.value) {
     return campaignNodes.value.map((node, index) => ({
@@ -89,12 +92,8 @@ const checkQuests = () => {
 
 const handleQuestClose = () => {
   showQuestReward.value = false
-  if (questType.value === 'campaign') {
-    setSettingValue('quest-campaign', true)
-  } else {
-    setSettingValue('quest-cards', true)
-  }
-  // Check again in case both were triggered simultaneously
+  if (questType.value === 'campaign') setSettingValue('quest-campaign', true)
+  else setSettingValue('quest-cards', true)
   setTimeout(checkQuests, 500)
 }
 
@@ -105,13 +104,15 @@ onMounted(() => {
 
   selectedNodeId.value = null
   window.addEventListener('resize', updateOrientation)
+  window.addEventListener('orientationchange', updateOrientation)
   updateOrientation()
-
-  // Check for rewards after a short delay for visual polish
   setTimeout(checkQuests, 1000)
 })
 
-onUnmounted(() => window.removeEventListener('resize', updateOrientation))
+onUnmounted(() => {
+  window.removeEventListener('resize', updateOrientation)
+  window.removeEventListener('orientationchange', updateOrientation)
+})
 
 const startBattle = (rules: RuleName[]) => {
   activeRules.value = !rules.length ? ['high'] : rules
@@ -120,80 +121,87 @@ const startBattle = (rules: RuleName[]) => {
 </script>
 
 <template lang="pug">
-  div.relative.w-screen.h-screen.bg-slate-900.overflow-hidden.flex.items-center.justify-center
-    //- 1. Backgrounds
-    img.absolute.inset-0.w-full.h-full.object-fit.select-none(
+  //- Use fixed inset-0 and remove padding to ensure the background fills the notch area
+  div.fixed.inset-0.bg-slate-900.overflow-hidden.flex.items-center.justify-center.game-ui-immune
+
+    //- 1. Backgrounds (The Table)
+    img.absolute.inset-0.w-full.h-full.object-fill.select-none(
       src="/images/bg/oak_600x588.webp"
       alt="table-image"
     )
 
-    img.absolute.inset-0.w-full.h-full.object-fit.select-none(
-      v-if="isMobilePortrait"
-      src="/images/bg/campaign-map_800x1600.webp"
-      alt="campaign-map"
-    )
-    img.absolute.inset-0.w-full.h-full.object-cover.select-none(
-      v-else-if="isMobileLandscape"
-      src="/images/bg/campaign-map_1600x800.webp"
-      alt="campaign-map"
-    )
-    img.absolute.inset-0.w-full.h-full.object-contain.select-none(
-      v-else
-      src="/images/bg/campaign-map_800x710.webp"
-      alt="campaign-map"
-    )
-
-    //- 2. The Interactive Node Layer
-    div.relative.node-layer-container(
-      :style="{ aspectRatio: isMobilePortrait ? '800 / 1600' : isMobileLandscape ? '1600 / 800': '800 / 710' }"
-      class="max-w-full max-h-full"
+    //- 2. The Interactive Map Scaler
+    //- We wrap the specific map image inside the scaler to ensure they share the exact same bounds
+    div.relative.map-scaler.flex.items-center.justify-center(
+      :style="{\
+        aspectRatio: isMobilePortrait ? '800 / 1600' : isMobileLandscape ? '1600 / 800': '800 / 710',\
+        maxHeight: '100dvh', \
+        maxWidth: '100dvw' \
+      }"
+      class="m-auto"
       :class="isMobileLandscape || !isMobilePortrait ? 'h-full w-auto' : 'w-full h-auto'"
     )
-      //- SVG Path Layer
-      svg.absolute.inset-0.w-full.h-full.pointer-events-none.overflow-visible(
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
+      //- The Map Image (Now contained strictly within the scaler)
+      img.w-full.h-full.object-fill.select-none(
+        v-if="isMobilePortrait"
+        src="/images/bg/campaign-map_800x1600.webp"
       )
-        defs
-          filter#glow
-            feGaussianBlur(stdDeviation="0.5" result="coloredBlur")
-            feMerge
-              feMergeNode(in="coloredBlur")
-              feMergeNode(in="SourceGraphic")
-
-        template(v-for="node in nodesList" :key="'paths-' + node.id")
-          path(
-            v-for="targetId in node.unlocks"
-            :key="node.id + '-' + targetId"
-            :d="getCurvePath(node, targetId)"
-            fill="none"
-            stroke="white"
-            stroke-width="0.5"
-            stroke-dasharray="1, 1"
-            :class="getPathClass(node, targetId)"
-            style="filter: url(#glow)"
-          )
-
-      //- The Stations (Nodes)
-      button.absolute.transform.transition-all.duration-300(
-        v-for="node in nodesList"
-        :key="node.id"
-        :style="{ left: node.position.x + '%', top: node.position.y + '%' }"
-        @click="node.unlocked && (selectedNodeId = node.id)"
-        :class="[\
-          '-translate-x-1/2 -translate-y-1/2',\
-          node.unlocked ? 'scale-80 hover:scale-100 cursor-pointer' : 'scale-65 opacity-70 cursor-not-allowed grayscale',\
-          selectedNodeId === node.id ? 'z-30' : 'z-10'\
-        ]"
+      img.w-full.h-full.object-contain.select-none(
+        v-else-if="isMobileLandscape"
+        src="/images/bg/campaign-map_1600x800.webp"
       )
-        div.relative.w-8.h-8.rounded-full.flex.items-center.justify-center.shadow-2xl.border-2(
-          class="sm:w-12 sm:h-12 sm:border-3 md:border-4 md:w-16 md:h-16 bg-slate-800/50"
-          :class="node.completed ? 'border-green-600' : 'border-yellow-500'"
+      img.w-full.h-full.object-contain.select-none(
+        v-else
+        src="/images/bg/campaign-map_800x710.webp"
+      )
+
+      //- 3. The Interactive Node Layer
+      div.absolute.inset-0.node-layer-container
+        //- SVG Path Layer
+        svg.absolute.inset-0.w-full.h-full.pointer-events-none.overflow-visible(
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
         )
-          span.text-base(v-if="node.completed" class="sm:text-xl") ✅
-          span.text-base(v-else-if="!node.unlocked" class="sm:text-xl") 🔒
-          span.text-base.animate-pulse(v-else class="sm:text-xl") ⚔️
-          div.absolute.inset-0.rounded-full.animate-ping.bg-yellow-400.opacity-40(v-if="node.unlocked && !node.completed")
+          defs
+            filter#glow
+              feGaussianBlur(stdDeviation="0.5" result="coloredBlur")
+              feMerge
+                feMergeNode(in="coloredBlur")
+                feMergeNode(in="SourceGraphic")
+
+          template(v-for="node in nodesList" :key="'paths-' + node.id")
+            path(
+              v-for="targetId in node.unlocks"
+              :key="node.id + '-' + targetId"
+              :d="getCurvePath(node, targetId)"
+              fill="none"
+              stroke="white"
+              stroke-width="0.5"
+              stroke-dasharray="1, 1"
+              :class="getPathClass(node, targetId)"
+              style="filter: url(#glow)"
+            )
+
+        //- The Stations (Nodes)
+        button.absolute.transform.transition-all.duration-300(
+          v-for="node in nodesList"
+          :key="node.id"
+          :style="{ left: node.position.x + '%', top: node.position.y + '%' }"
+          @click="node.unlocked && (selectedNodeId = node.id)"
+          :class="[\
+            '-translate-x-1/2 -translate-y-1/2',\
+            node.unlocked ? 'scale-80 hover:scale-100 cursor-pointer' : 'scale-65 opacity-70 cursor-not-allowed grayscale',\
+            selectedNodeId === node.id ? 'z-30' : 'z-10'\
+          ]"
+        )
+          div.relative.w-8.h-8.rounded-full.flex.items-center.justify-center.shadow-2xl.border-2(
+            class="sm:w-12 sm:h-12 sm:border-3 md:border-4 md:w-16 md:h-16 bg-slate-800/50"
+            :class="node.completed ? 'border-green-600' : 'border-yellow-500'"
+          )
+            span.text-base(v-if="node.completed" class="sm:text-xl") ✅
+            span.text-base(v-else-if="!node.unlocked" class="sm:text-xl") 🔒
+            span.text-base.animate-pulse(v-else class="sm:text-xl") ⚔️
+            div.absolute.inset-0.rounded-full.animate-ping.bg-yellow-400.opacity-40(v-if="node.unlocked && !node.completed")
 
       //- 4. NodePopup placed inside the relative container to expand from map center
       NodePopup(
@@ -203,7 +211,7 @@ const startBattle = (rules: RuleName[]) => {
         @start="startBattle(activeNode.rules)"
       )
 
-    //- 3. UI Overlays (Back Button)
+    //- 5. UI Buttons (Always relative to screen edges)
     div.fixed.bottom-0.left-0.z-40.p-6(
       style="padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); padding-left: calc(1.5rem + env(safe-area-inset-left));"
     )
@@ -239,9 +247,4 @@ path
 @keyframes flow
   to
     stroke-dashoffset: 0
-
-// In your style block
-.relative.w-screen
-  height: 100svh
-// Better for mobile Safari
 </style>
