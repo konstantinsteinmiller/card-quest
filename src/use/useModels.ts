@@ -2,6 +2,7 @@ import { prependBaseUrl } from '@/utils/function'
 import { type Element, ELEMENTS } from '@/utils/enums'
 import { isCampaignTest, isDbInitialized, isDebug } from '@/use/useMatch'
 import useUser from '@/use/useUser'
+import { computed, watch } from 'vue'
 
 export const modelImgPath = (id: string, element: string) => {
   try {
@@ -328,17 +329,19 @@ const useModels = () => {
         return 0
       })
 
-  const getSortedCollection = () => {
-    if (!userCollection.value) return []
-
-    const storedCollection = typeof userCollection.value === 'string'
+  const storedCollection = computed(() => {
+    return typeof userCollection.value === 'string'
       ? JSON.parse(userCollection.value)
       : userCollection.value
+  })
+
+  const getSortedCollection = () => {
+    if (!userCollection.value) return []
 
     // 1. Map existing stored cards to full Card objects
     // Filter out any cards that might have been removed from allCards (the code)
     let updatedCollection = allCards.map(baseCard => {
-      const stored = storedCollection.find((storedCard: any) => storedCard.id === baseCard.id)
+      const stored = storedCollection.value.find((storedCard: any) => storedCard.id === baseCard.id)
       return {
         ...baseCard,
         count: stored ? stored.count : 0 // If not in storage, it's a new card: set to 0
@@ -347,8 +350,8 @@ const useModels = () => {
 
     // 2. Check for mismatches to trigger a silent save back to DB
     const hasMismatch =
-      storedCollection.length !== allCards.length ||
-      storedCollection.some((storedCard: any) => !allCards.find(a => a.id === storedCard.id))
+      storedCollection.value.length !== allCards.length ||
+      storedCollection.value.some((storedCard: any) => !allCards.find(a => a.id === storedCard.id))
 
     if (hasMismatch) {
       // We wrap this in nextTick or setTimeout to avoid side-effects during a computed/render phase
@@ -371,24 +374,21 @@ const useModels = () => {
     })
   }
 
-  /* save a default card collection if there is none yet */
-  userCollection.value === '[]' && setTimeout(() => {
-    isDbInitialized.value && userCollection.value === '[]' && saveCollection(cardCollection)
-  }, 200)
+  watch(isDbInitialized, () => {
+    if (storedCollection.value.length >= 1 && storedCollection.value.every((card: StoredCollectionCard) => card.count === 0)) {
+      saveCollection(cardCollection)
+    }
+  }, { once: true })
 
   const addCardToCollection = (card: Card) => {
-    const storedCollection: StoredCollectionCard[] = typeof userCollection.value === 'string'
-      ? JSON.parse(userCollection.value)
-      : []
-
-    const foundCard = storedCollection.find((c: StoredCollectionCard) => c.id === card.id)
+    const foundCard = storedCollection.value.find((c: StoredCollectionCard) => c.id === card.id)
 
     if (foundCard) {
       foundCard.count += 1
     } else {
-      storedCollection.push({ id: card.id, count: 1 })
+      storedCollection.value.push({ id: card.id, count: 1 })
     }
-    saveCollection(storedCollection)
+    saveCollection(storedCollection.value)
   }
 
   return {

@@ -152,6 +152,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] trade leaving you with one card on hand even when only 1 card lost
 - [x] pause music when page not visible
 - [ ] fix premature game over
+- [x] no start collection bug after reload on deck
+- [x] dark mode trade card white -> cant fix
 
 ## Nice-to-have
 

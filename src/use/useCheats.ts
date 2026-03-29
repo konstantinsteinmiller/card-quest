@@ -73,7 +73,7 @@ const useCheats = () => {
     // 2. Add the actual key (normalized to lowercase)
     const mainKey = e.key.toLowerCase()
 
-    console.log('keys: ', keys)
+    // console.log('keys: ', keys)
     // Avoid adding 'control', 'shift', etc., as the main key if they are modifiers
     if (!['control', 'shift', 'alt', 'meta'].includes(mainKey)) {
       keys.push(mainKey)
