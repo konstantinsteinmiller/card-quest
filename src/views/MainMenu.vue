@@ -13,7 +13,7 @@
         span.text-2xl(v-if="isMuted") 🔇
         span.text-2xl(v-else) 🔊
 
-      div.text-xs.text-slate-200.opacity-70.text-shadow  v.{{ version }}
+      div.text-xs.text-slate-200.opacity-70.text-shadow v.{{ version }}{{ isDemo ? '-demo': ''}}
 
     // Menu box
     div.relative.p-10.flex.flex-col.gap-4.text-center.self-end(
@@ -46,7 +46,7 @@ import { useRouter } from 'vue-router'
 import OptionsModal from '@/components/organisms/OptionsModal'
 import FButton from '@/components/atoms/FButton'
 import { activeRules, isPracticeMatch } from '@/use/useMatch'
-import useUser, { version } from '@/use/useUser'
+import useUser, { version, isDemo } from '@/use/useUser'
 import FModal from '@/components/molecules/FModal'
 import { mobileCheck } from '@/utils/function'
 

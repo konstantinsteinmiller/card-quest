@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { useCampaign, type CampaignNode } from '@/use/useCampaign'
+import { useCampaign, type CampaignNode, demoCampaignNodes } from '@/use/useCampaign'
 import NodePopup from '@/components/organisms/NodePopup'
 import FButton from '@/components/atoms/FButton'
 import QuestReward from '@/components/QuestReward.vue'
@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { isPracticeMatch, activeRules, playerSelection } from '@/use/useMatch'
 import type { RuleName } from '@/use/useBattleRules'
-import useUser, { isMobileLandscape, isMobilePortrait, windowWidth, windowHeight } from '@/use/useUser'
+import useUser, { isMobileLandscape, isMobilePortrait, windowWidth, windowHeight, isDemo } from '@/use/useUser'
 import useModels from '@/use/useModels'
 import type { GameCard } from '@/types/game'
 
@@ -21,7 +21,7 @@ const { allCards } = useModels()
 isPracticeMatch.value = false
 
 const showQuestReward = ref(false)
-const questType = ref<'campaign' | 'cards'>('campaign')
+const questType = ref<'campaign' | 'demo-campaign' | 'cards'>('campaign')
 
 const isLandscape = ref(windowWidth.value > windowHeight.value)
 const updateOrientation = () => {
@@ -70,6 +70,7 @@ const getPathClass = (startNode: CampaignNode, targetId: string) => {
   return 'opacity-50 stroke-grey-500'
 }
 
+let demoCampaignFinished = false
 const checkQuests = () => {
   // 1. Check Campaign Completion
   const allNodesCompleted = campaignNodes.value.every(node => node.completed)
@@ -77,6 +78,17 @@ const checkQuests = () => {
     questType.value = 'campaign'
     showQuestReward.value = true
     return // Show one at a time
+  }
+
+  if (isDemo) {
+    // 1.5. Check Demo Campaign Completion
+    const allDemoNodesCompleted = demoCampaignNodes.every(demo => campaignNodes.value.some(node => demo.id === node.id && node.completed))
+    if (allDemoNodesCompleted && !demoCampaignFinished) {
+      questType.value = 'demo-campaign'
+      showQuestReward.value = true
+      demoCampaignFinished = true
+      return // Show one at a time
+    }
   }
 
   // 2. Check Card Collection Completion

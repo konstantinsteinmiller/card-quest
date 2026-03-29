@@ -32,7 +32,7 @@ import useSound from '@/use/useSound'
 
 const props = defineProps<{
   modelValue: boolean
-  type: 'campaign' | 'cards'
+  type: 'campaign' | 'demo-campaign' | 'cards'
 }>()
 
 const emit = defineEmits<{
@@ -45,7 +45,11 @@ const canContinue = ref(false)
 const progress = ref(0)
 
 const message = computed(() => {
-  return props.type === 'campaign' ? t('campaignFinished') : t('cardsFinished')
+  return props.type === 'campaign'
+    ? t('campaignFinished')
+    : props.type === 'demo-campaign'
+      ? t('demoCampaignFinished')
+      : t('cardsFinished')
 })
 
 const startTimer = () => {
@@ -87,10 +91,12 @@ const handleClose = () => {
 <i18n lang="yaml">
 en:
   congratulations: "Congratulations!"
+  demoCampaignFinished: "You have finished the demo campaign! If you like the game I would like to get some constructive feedback on what you like and what not. Die Vollversion wird bald veröffentlicht."
   campaignFinished: "You have finished the campaign! Congratulation! You are a worthy card tactician! But have you collected every card yet? Only the best trading card collectors achieve this ultimate goal!"
   cardsFinished: "Congratulation! You have collected every card. You are the greatest card collector of all time!"
 de:
   congratulations: "Glückwunsch!"
+  demoCampaignFinished: "Du hast die Demo-Kampagne beendet! Wenn dir das Spiel gefällt, würde ich mich über konstruktives Feedback freuen, was dir gefällt und was nicht. Die Vollversion wird bald veröffentlicht."
   campaignFinished: "Du hast die Kampagne beendet! Glückwunsch! Du bist ein würdiger Kartentaktiker! Aber hast du schon jede Karte gesammelt? Nur die besten Trading-Card-Sammler erreichen dieses ultimative Ziel!"
   cardsFinished: "Glückwunsch! Du hast jede Karte gesammelt. Du bist der größte Karten Sammler aller Zeiten!"
 </i18n>

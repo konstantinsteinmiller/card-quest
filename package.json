@@ -10,6 +10,7 @@
     "build-github-develop": "vite build --base=/card-quest/develop/ --outDir=dist/develop",
     "validated-build": "vue-tsc -b && vite build",
     "deploy": "vite build && surge dist/ --domain card-quest.surge.sh",
+    "deploy-demo": "vite build && surge dist/ --domain card-quest-demo.surge.sh",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "format": "prettier --write --experimental-cli src",

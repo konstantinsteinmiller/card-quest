@@ -22,6 +22,10 @@ export default {
       name: 'Mistral Duelist',
       desc: 'A master of the winds. Dare to face their Plus and Same techniques early?'
     },
+    'node-w-all': {
+      name: 'All-eating Worm',
+      desc: 'A gambler at heart. Dare to face their Plus and Same techniques with brutal Combo rules early?'
+    },
 
     // Track 2: Desert & Steppe (Eastern)
     'node-e1': {
@@ -124,6 +128,10 @@ export default {
     'node-w-chal': {
       name: 'Mistral-Duellant',
       desc: 'Ein Meister der Winde. Wagst du es, dich früh seinen Plus- und Gleich-Techniken zu stellen?'
+    },
+    'node-w-all': {
+      name: 'All-fressender Wurm',
+      desc: 'Ein Glücksspieler durch und durch. Wagst du es, dich früh seinen Plus- und Gleich-Techniken mit brutalen Combo-Regeln zu stellen?'
     },
 
     // Track 2: Desert & Steppe (Eastern)

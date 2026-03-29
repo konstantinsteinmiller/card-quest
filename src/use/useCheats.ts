@@ -1,15 +1,17 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import useModels from '@/use/useModels'
-import useUser from '@/use/useUser'
-import useCampaign from '@/use/useCampaign'
+import useUser, { isDemo } from '@/use/useUser'
+import useCampaign, { demoCampaignNodes, type MobileNode } from '@/use/useCampaign'
 import type { GameCard } from '@/types/game'
 
 const storedCheat = localStorage.getItem('cheat') || 'false'
 const isCheat = ref<boolean>(JSON.parse(storedCheat))
 
 
+
 const useCheats = () => {
   if (!isCheat.value) return {}
+  const { saveCampaign } = useCampaign()
 
   const { allCards } = useModels()
   const { setSettingValue } = useUser()
@@ -30,6 +32,22 @@ const useCheats = () => {
   const unlockAllCampaignNodes = () => {
     campaignNodes.value = campaignNodes.value.map(node => ({ ...node, completed: true }))
     console.warn('[CHEAT] All campaign nodes completed.')
+  }
+
+  const unlockAllDemoCampaignNodes = () => {
+    if (!isDemo) return
+    // campaignNodes.value = campaignNodes.value.reduce((all, node) => {
+    //   return all.concat([{ ...node, completed: demoCampaignNodes.some(demo => demo.id === node.id) }])
+    // }, [])
+    campaignNodes.value = campaignNodes.value.reduce((all, node) => {
+      return all.concat([{
+        ...node,
+        completed: demoCampaignNodes.some(demo => demo.id === node.id) && node.id !== 'node-e2-b' && node.id !== 'node-w2'
+      }])
+    }, [])
+    saveCampaign({ id: 'node-w-all', knownCards: [] })
+
+    console.warn('[CHEAT] All DEMO campaign nodes completed.')
   }
 
   const printAllIds = () => {
@@ -54,6 +72,7 @@ const useCheats = () => {
   const cheatsMap: Record<string, () => void> = {
     'ctrl+shift+c': unlockAllCards,
     'ctrl+shift+b': unlockAllCampaignNodes,
+    'ctrl+shift+g': unlockAllDemoCampaignNodes,
     'ctrl+shift+r': resetCampaign,
     'ctrl+shift+k': printAllIds,
     'ctrl+shift+d': () => console.log('[DEBUG] Cards:', allCards)

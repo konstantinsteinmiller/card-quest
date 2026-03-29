@@ -1,5 +1,5 @@
 import { ref, computed, type ComputedRef, watch } from 'vue'
-import useUser from '@/use/useUser'
+import useUser, { isDemo } from '@/use/useUser'
 import { useI18n } from 'vue-i18n'
 import type { RuleName } from '@/use/useBattleRules'
 import { isCampaignTest, isDebug } from '@/use/useMatch'
@@ -22,6 +22,23 @@ export interface MobileNode {
   positionPortrait: { x: number; y: number }
   positionLandscape: { x: number; y: number }
 }
+
+
+export const demoCampaignNodes: Array<{ id: string }> = [
+  // --- TRACK 1: WESTERN COAST ---
+  { id: 'node-w1' },
+  { id: 'node-w1-b' },
+  { id: 'node-w-chal' },
+  { id: 'node-w-all' },
+  // --- TRACK 2: EASTERN DESERT ---
+  { id: 'node-e1' },
+  { id: 'node-e1-b' },
+  { id: 'node-e-chal' },
+  { id: 'node-e2' },
+
+  { id: 'node-w2' },
+  { id: 'node-e2-b' }
+]
 
 export const selectedNodeId = ref<string | null>(null)
 export const campaignNodes = ref<CampaignNode[]>([])
@@ -57,10 +74,10 @@ export const useCampaign = () => {
       description: t('node-w1-b.desc'),
       // Node 2: 100% Young Metal/Earth/Neutral
       npcDeck: ['scorpion-young', 'piranha-young', 'warrior-young', 'dragon-young', 'gruffalo-young', 'gargoyle-young', 'cosmic-young', 'tardigrade-young', 'eel-young'],
-      position: { x: 42, y: 82 },
+      position: { x: 38, y: 68 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
-      unlocks: ['node-w2'],
+      unlocks: ['node-w2', 'node-w-all'],
       knownCards: [],
       rules: ['high', 'one']
     },
@@ -70,12 +87,25 @@ export const useCampaign = () => {
       description: t('node-w-chal.desc'),
       // Side Challenge (Branch of Node 1): Intro to Middle Air cards (20% Middle)
       npcDeck: ['postman-middle', 'butterfly-middle', 'sirene-young', 'scorpion-young', 'warrior-young', 'gruffalo-young', 'gargoyle-young', 'mouse-young', 'cosmic-young', 'eel-young'],
-      position: { x: 38, y: 68 },
+      position: { x: 42, y: 82 },
       unlocked: isCampaignTest.value ? true : false,
       completed: false,
       unlocks: ['node-w2'],
       knownCards: [],
       rules: ['high', 'plus', 'same', 'one']
+    },
+    {
+      id: 'node-w-all',
+      name: t('node-w-all.name'),
+      description: t('node-w-all.desc'),
+      // Side Challenge (Branch of challenge Node 1): Intro to all rule cards (young only)
+      npcDeck: ['postman-middle', 'butterfly-middle', 'sirene-young', 'shark-young', 'mermaid-young', 'scorpion-young', 'turtoise-young', 'mushroom-young', 'warrior-young', 'gruffalo-young', 'gargoyle-young', 'mouse-young', 'cosmic-young', 'eel-young'],
+      position: { x: 22, y: 65 },
+      unlocked: isCampaignTest.value ? true : false,
+      completed: false,
+      unlocks: [],
+      knownCards: [],
+      rules: ['high', 'plus', 'same', 'combo', 'all']
     },
     {
       id: 'node-w2',
@@ -426,12 +456,17 @@ export const useCampaign = () => {
     {
       id: 'node-w1-b',
       positionPortrait: { x: 48, y: 75 },
-      positionLandscape: { x: 68, y: 92 }
+      positionLandscape: { x: 53, y: 85 }
     },
     {
       id: 'node-w-chal',
       positionPortrait: { x: 55, y: 86 },
-      positionLandscape: { x: 53, y: 85 }
+      positionLandscape: { x: 68, y: 92 }
+    },
+    {
+      id: 'node-w-all',
+      positionPortrait: { x: 33, y: 76 },
+      positionLandscape: { x: 46, y: 78 }
     },
     {
       id: 'node-w2',
@@ -578,6 +613,10 @@ export const useCampaign = () => {
       if (campaignList?.[0]) {
         campaignList[0].unlocked = true
       }
+
+      const demoRelevantNodes = JSON.parse(JSON.stringify(demoCampaignNodes))
+      demoRelevantNodes.pop()
+      demoRelevantNodes.pop()
       campaignList?.forEach((saved: any) => {
         const node = campaignNodes.value.find(n => n.id === saved.id)
         if (node) {
@@ -585,6 +624,8 @@ export const useCampaign = () => {
           node.knownCards = saved.knownCards || []
           // If a node is completed, unlock its children
           if (node.completed) {
+            if (isDemo && !demoRelevantNodes.some(demo => demo.id === node.id)) return
+
             node.unlocks.forEach(childId => {
               const child = campaignNodes.value.find(c => c.id === childId)
               if (child) child.unlocked = true
@@ -601,9 +642,15 @@ export const useCampaign = () => {
     const oldNode = campaignNodes.value.find(n => n.id === currentNode.id)
     if (!oldNode) return
 
+    const demoRelevantNodes = JSON.parse(JSON.stringify(demoCampaignNodes))
+    demoRelevantNodes.pop()
+    demoRelevantNodes.pop()
+
     oldNode.completed = true
     oldNode.knownCards = currentNode.knownCards
     oldNode.unlocks.forEach(nextId => {
+      if (isDemo && !demoRelevantNodes.some(demo => demo.id === nextId)) return
+
       const nextNode = campaignNodes.value.find(n => n.id === nextId)
       if (nextNode) nextNode.unlocked = true
     })
