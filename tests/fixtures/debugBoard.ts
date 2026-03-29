@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { board, npcHand, originalNpcHand, originalPlayerHand, playerHand, activeRules } from '@/use/useMatch.ts'
 import { createComboPlusTestScenario, createComboSameTestScenario, createPlusTestScenario } from './comboRuleHand.ts'
 import { modelImgPath } from '@/use/useModels.ts'

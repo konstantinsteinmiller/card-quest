@@ -7,6 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+dist_electron
+__electron
+out
+
 node_modules
 .DS_Store
 dist

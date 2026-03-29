@@ -129,7 +129,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 - [ ] complete Translations
 
-- [ ] build for windows
+- [x] build for windows
 - [ ] build for android
 - [ ] build for ios
 - [ ] search for marketing person

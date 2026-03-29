@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { GameCard } from '@/types/game'
 import { modelImgPath } from '@/use/useModels'
 import { playerHand, board, npcHand, activeRules } from '@/use/useMatch'
