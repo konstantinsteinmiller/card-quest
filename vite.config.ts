@@ -10,6 +10,9 @@ import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 // https://vite.dev/config/
 export default defineConfig({
   base: '/',
+  define: {
+    APP_VERSION: JSON.stringify(process.env.npm_package_version)
+  },
   plugins: [
     tailwindcss(),
     vue(),

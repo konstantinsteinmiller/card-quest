@@ -1,6 +1,6 @@
 {
   "name": "card-quest",
-  "version": "0.1.5",
+  "version": "0.2.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,13 +8,15 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "build-github-main": "vite build --base=/card-quest/ --outDir=dist",
     "build-github-develop": "vite build --base=/card-quest/develop/ --outDir=dist/develop",
+    "build-github-demo": "vite build --mode demo --base=/card-quest/demo/ --outDir=dist/demo",
     "validated-build": "vue-tsc -b && vite build",
     "deploy": "vite build && surge dist/ --domain card-quest.surge.sh",
-    "deploy-demo": "vite build && surge dist/ --domain card-quest-demo.surge.sh",
+    "deploy-demo": "vite build --mode demo && surge dist/ --domain card-quest-demo.surge.sh",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "format": "prettier --write --experimental-cli src",
-    "test": "vitest"
+    "test": "vitest",
+    "visualize-bundle": "npx vite-bundle-visualizer"
   },
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
@@ -46,6 +48,7 @@
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
+    "vite-bundle-visualizer": "^1.2.1",
     "vite-plugin-vue-devtools": "^8.0.6",
     "vitest": "^4.1.0",
     "vue-tsc": "^3.2.5"

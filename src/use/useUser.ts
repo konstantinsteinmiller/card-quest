@@ -16,8 +16,9 @@ export const isMobilePortrait = computed(() =>
   mobileCheck() && windowWidth.value <= 500
 )
 
+declare const APP_VERSION: string
 export const isDemo = import.meta.env.VITE_APP_DEMO === 'true'
-export const version: string = import.meta.env.VITE_APP_VERSION
+export const version: string = APP_VERSION
 
 const userDifficulty: Ref<Difficulties> = ref(DIFFICULTY.HARD)
 const userSoundVolume: Ref<number> = ref(0.7)

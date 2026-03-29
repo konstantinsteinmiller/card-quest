@@ -342,7 +342,10 @@ const useModels = () => {
   })
 
   const getSortedCollection = () => {
-    if (!userCollection.value) return []
+    if (!storedCollection.value.length) {
+      userCollection.value = JSON.stringify(cardCollection)
+      return cardCollection
+    }
 
     // 1. Map existing stored cards to full Card objects
     // Filter out any cards that might have been removed from allCards (the code)
@@ -384,7 +387,7 @@ const useModels = () => {
     if (storedCollection.value.length >= 1 && storedCollection.value.every((card: StoredCollectionCard) => card.count === 0)) {
       saveCollection(cardCollection)
     }
-  }, { once: true })
+  }, { immediate: true, once: true })
 
   const addCardToCollection = (card: Card) => {
     const foundCard = storedCollection.value.find((c: StoredCollectionCard) => c.id === card.id)

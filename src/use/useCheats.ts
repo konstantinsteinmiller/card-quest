@@ -73,7 +73,7 @@ const useCheats = () => {
     'ctrl+shift+c': unlockAllCards,
     'ctrl+shift+b': unlockAllCampaignNodes,
     'ctrl+shift+g': unlockAllDemoCampaignNodes,
-    'ctrl+shift+r': resetCampaign,
+    'ctrl+shift+n': resetCampaign,
     'ctrl+shift+k': printAllIds,
     'ctrl+shift+d': () => console.log('[DEBUG] Cards:', allCards)
   }
