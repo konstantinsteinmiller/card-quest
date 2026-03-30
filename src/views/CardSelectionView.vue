@@ -32,13 +32,14 @@
           :class="{ 'gap-y-6': isMobileLandscape, ' !pt-13 !gap-x-2': isMobilePortrait, 'sm:pt-14 md:pt-[5rem] !gap-x-4': !isMobileLandscape && windowHeight > 600 && windowWidth > 700 }"
         )
           div.relative.group(
-            v-for="card in paginatedCollection"
-            :key="card.id"
+            v-for="(card, index) in paginatedCollection"
+            :key="card.id + index"
             :ref="el => cardRefs[card.id] = el"
             @click="addToDeck(card, $event)"
             class="card-container flex items-center justify-center cursor-pointer"
             :class="[\
               card.count === 0 ? 'out-of-stock' : '',\
+              card?.invisible ? '!opacity-0': '',\
               (showHint && !isHintDisabled && selectedDeck.length < 5 && card.id === hintTargetId) ? 'hint-bounce' : ''\
             ]"
           )
@@ -261,6 +262,8 @@ const itemsPerPage = computed(() => {
     isStackedMargin.value = '0px'
   }
 
+  if (windowHeight.value > 920 && windowWidth.value > 1100) return 36
+  if (windowHeight.value > 760 && windowWidth.value > 1100) return 30
   if (windowHeight.value > 600 && windowWidth.value > 1100) return 24
   if (windowHeight.value > 600 && windowWidth.value > 980) return 20
   if (windowHeight.value > 600 && windowWidth.value > 600) return 16
@@ -275,7 +278,20 @@ const collection = computed(() => inventory.value.map(card => ({
 const totalPages = computed(() => Math.ceil(collection.value.length / itemsPerPage.value))
 const paginatedCollection = computed(() => {
   const start = currentPage.value * itemsPerPage.value
-  return collection.value.slice(start, start + itemsPerPage.value)
+  const pageItems = collection.value.slice(start, start + itemsPerPage.value)
+
+  /* if there are too few cards in the last page book add invisible items */
+  if (pageItems.length < itemsPerPage.value) {
+    const lastItem = JSON.parse(JSON.stringify(pageItems[pageItems.length - 1]))
+    const missingCount = itemsPerPage.value - pageItems.length
+    const addedItems: any = Array(missingCount).fill(null).map((item) => ({
+      ...lastItem,
+      invisible: true
+    }))
+
+    return pageItems.concat(addedItems)
+  }
+  return pageItems
 })
 
 const animateFlight = (card: any, startRect: DOMRect, endRect: DOMRect) => {

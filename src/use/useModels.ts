@@ -341,6 +341,10 @@ const useModels = () => {
       : userCollection.value
   })
 
+  const getStartCollection = () => {
+    return cardCollection
+  }
+
   const getSortedCollection = () => {
     if (!storedCollection.value.length) {
       userCollection.value = JSON.stringify(cardCollection)
@@ -407,6 +411,7 @@ const useModels = () => {
     getSortedCollection,
     addCardToCollection,
     startCollectionIdsList,
+    getStartCollection,
     modelImgPath
   }
 }

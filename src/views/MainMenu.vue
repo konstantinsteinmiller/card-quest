@@ -13,7 +13,7 @@
         span.text-2xl(v-if="isMuted") 🔇
         span.text-2xl(v-else) 🔊
 
-      div.text-xs.text-slate-200.opacity-70.text-shadow v.{{ version }}{{ isDemo ? '-demo': ''}}
+      div.text-xs.text-slate-200.opacity-70.text-shadow {{ isNative && false ? 'native:': ''}} v.{{ version }}{{ isDemo ? '-demo': ''}}
 
     // Menu box
     div.relative.p-10.flex.flex-col.gap-4.text-center.self-end(
@@ -24,14 +24,7 @@
         FButton(@click="onCampaign") {{ t('play') }}
         FButton(@click="onPracticeClick") {{ t('practice') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
-
-    FModal(v-if="false" v-model="showOptions" title="New Card!")
-      div(class="flex flex-col items-center")
-        //img(src="/path/to/card.png" class="w-40 h-40 object-contain mb-4")
-        p(class="text-lg opacity-90") You've unlocked a rare model!
-
-      template(#footer)
-        FButton(label="AWESOME!" @click="showOptions = false")
+        FButton(v-if="isNative" type="secondary" @click="handleExit") {{ t('quitApp') }}
 
     OptionsModal(
       :is-open="showOptions"
@@ -46,8 +39,7 @@ import { useRouter } from 'vue-router'
 import OptionsModal from '@/components/organisms/OptionsModal'
 import FButton from '@/components/atoms/FButton'
 import { activeRules, isPracticeMatch } from '@/use/useMatch'
-import useUser, { version, isDemo } from '@/use/useUser'
-import FModal from '@/components/molecules/FModal'
+import useUser, { version, isDemo, isNative } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 
 const router = useRouter()
@@ -91,6 +83,15 @@ const onPracticeClick = () => {
   isPracticeMatch.value = true
   router.push({ name: 'deck', query: isPracticeMatch.value ? { practice: 'true' } : undefined })
 }
+
+const handleExit = () => {
+  // Check if we are actually in Electron to avoid errors in browser
+  if (window?.electronAPI) {
+    window.electronAPI?.quitApp()
+  } else {
+    console.log('Exit requested (Browser mode - no action taken)')
+  }
+}
 </script>
 
 <style lang="sass" scoped>
@@ -106,8 +107,10 @@ en:
   play: "Spielen"
   practice: "Practice"
   settings: "Settings"
+  quitApp: "Quit Game"
 de:
   play: "Spielen"
   practice: "Trainieren"
   settings: "Einstellungen"
+  quitApp: "Spiel beenden"
 </i18n>

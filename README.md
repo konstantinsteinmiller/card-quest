@@ -1,6 +1,8 @@
 # Card Quest
 
-A fairy card battle game
+A fairy card battle game.
+
+It features a github pages deployed CI cd pipeline and a windows build + demo build.
 
 WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
@@ -102,6 +104,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] language options
   - [x] Volume slider for music and sound effects
   - [x] remove sound options on mobile
+  - [ ] reset progress button
   - [ ] Opt: Feature request button
 
 - [x] Sound and bg music
@@ -128,8 +131,10 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [ ] performance tracking
 
 - [ ] complete Translations
+- [ ] full-version protection for web
 
 - [x] build for windows
+  - [x] exit button for native games
 - [ ] build for android
 - [ ] build for ios
 - [ ] search for marketing person

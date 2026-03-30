@@ -3,6 +3,8 @@ import type { Ref } from 'vue'
 import useUserDb from '@/use/useUserDb'
 import { type Difficulties, DIFFICULTY } from '@/utils/enums'
 import { mobileCheck } from '@/utils/function'
+import type { GameCard } from '@/types/game.ts'
+import useModels from '@/use/useModels.ts'
 
 export const windowWidth = ref(window.innerWidth)
 export const windowHeight = ref(window.innerHeight)
@@ -17,6 +19,7 @@ export const isMobilePortrait = computed(() =>
 )
 
 declare const APP_VERSION: string
+export const isNative = import.meta.env.VITE_APP_NATIVE === 'true'
 export const isDemo = import.meta.env.VITE_APP_DEMO === 'true'
 export const version: string = APP_VERSION
 
@@ -114,6 +117,17 @@ const useUser = () => {
     })
   }
 
+  const resetGameProgress: () => void = () => {
+    const { getStartCollection, saveCollection } = useModels()
+
+    saveCollection(getStartCollection())
+    setSettingValue('campaign', [])
+    setSettingValue('hand', [])
+    setSettingValue('quest-campaign', false)
+    setSettingValue('quest-cards', false)
+    setSettingValue('skipRulesModal', false)
+  }
+
   return {
     userDifficulty,
     userSoundVolume,
@@ -129,6 +143,7 @@ const useUser = () => {
     tutorialPhase,
     allowTutorial,
     setSettingValue,
+    resetGameProgress,
     isOptionsModalOpen
   }
 }

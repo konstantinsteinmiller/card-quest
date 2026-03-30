@@ -9,6 +9,8 @@ lerna-debug.log*
 
 dist_electron
 __electron
+electron/dist
+electron/dist-demo
 out
 
 node_modules

@@ -6,7 +6,7 @@ import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
 import FSwitch from '@/components/atoms/FSwitch'
 import FSlider from '@/components/atoms/FSlider'
-import FSelect from '@/components/atoms/FSelect' // Import FSelect
+import FSelect from '@/components/atoms/FSelect'
 import { DIFFICULTY, LANGUAGES } from '@/utils/enums' // Import LANGUAGES
 import { prependBaseUrl } from '@/utils/function'
 
@@ -27,7 +27,8 @@ const {
   userDifficulty,
   userSkipRulesModal,
   userSoundVolume,
-  userMusicVolume
+  userMusicVolume,
+  resetGameProgress
 } = useUser()
 
 const currentTab = ref('general')
@@ -68,6 +69,13 @@ const languagesList = computed(() => {
   }))
 })
 
+const showAskResetModal = ref<boolean>(false)
+const askReset = () => {
+  showAskResetModal.value = true
+}
+const doResetProgress = () => {
+  resetGameProgress()
+}
 </script>
 
 <template lang="pug">
@@ -83,8 +91,9 @@ const languagesList = computed(() => {
     div(v-if="currentTab === 'general'")
       div(class="flex flex-col gap-2 p-2")
         //- Language Selection
-        div(class="flex flex-col gap-2")
+        div(class="flex flex-col gap-2 scale-80 sm:scale-100")
           FSelect(
+            class="!text-[10px] md:text-[12px]"
             :label="t('language')"
             :options="languagesList"
             :model-value="userLanguage"
@@ -93,13 +102,26 @@ const languagesList = computed(() => {
 
         hr(class="border-slate-600 my-1 md:my-2 pt-0")
 
-        div(class="flex items-center justify-between")
-          span(class="text-sm md:text-base font-black text-white uppercase italic") {{ t('showRulesModal') }}
+        div(class="flex items-center justify-between !text-[10px]")
+          div.flex-grow-1(class="!text-[10px] md:text-[12px] font-black text-white uppercase italic") {{ t('resetCampaign') }}
+          div.flex.justify-end.scale-60.flex-shrink-1
+            FButton.flex-shrink-1(type="secondary" @click="askReset") {{ t('reset') }}
+        div(class="flex items-center justify-between !text-[10px]")
+          span(class="!text-[10px] md:text-[12px] font-black text-white uppercase italic") {{ t('showRulesModal') }}
           FSwitch(
             :model-value="!userSkipRulesModal"
             @update:model-value="setSettingValue('skipRulesModal', !$event)"
           )
         hr(class="border-slate-600 my-1 md:my-2 pt-0")
+        FModal(v-model:model-value="showAskResetModal"
+          :title="`${t('reset')}?`"
+          :is-closable="true"
+          @update:model-value="showAskResetModal = false"
+        ) {{ t('sureResetCampaign') }}
+          template(#footer)
+            FButton(type="secondary" @click="showAskResetModal = false") {{ t('cancel') }}
+            FButton(type="primary" @click="doResetProgress(); showAskResetModal = false") {{ t('reset') }}
+
 
     //- Difficulty Tab
     div(v-else-if="currentTab === 'diff'")
@@ -138,6 +160,9 @@ en:
   audio: "Audio"
   language: "Language"
   showRulesModal: "Show Match Rules before game"
+  resetCampaign: "Reset Game Progress"
+  reset: "Reset"
+  sureResetCampaign: "Are you sure you want to reset the campaign and your card collection?"
   audioSettingsPlaceholder: "Audio Settings coming soon..."
   easy: "Novice"
   medium: "Squire"
@@ -160,6 +185,9 @@ de:
   audio: "Audio"
   language: "Sprache"
   showRulesModal: "Kampfregeln vor dem Spiel anzeigen"
+  resetCampaign: "Spielfortschritt zurücksetzen"
+  reset: "zurücksetzen"
+  sureResetCampaign: "Bist du sicher, dass du den Fortschritt der Kampagne und deine Kartensammlung zurücksetzen möchtest?"
   audioSettingsPlaceholder: "Audio-Einstellungen folgen in Kürze..."
   easy: "Anfänger"
   medium: "Knappe"
