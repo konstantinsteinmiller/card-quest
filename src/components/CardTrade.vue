@@ -316,7 +316,7 @@ const executeTrade = (selectedCard?: any) => {
   animation: flyDown 1s ease-in-out forwards
 </style>
 
-<i18n lang="yaml">
+<i18n>
 en:
   win: "Victory"
   lose: "Defeat"
@@ -331,4 +331,46 @@ de:
   enemyCards: "Gegnerische Karten"
   yourCards: "Deine Karten"
   tradeRule: "Tauschregel: {rule}"
+fr:
+  win: "Victoire"
+  lose: "Défaite"
+  draw: "Égalité"
+  enemyCards: "Cartes de l'ennemi"
+  yourCards: "Vos cartes"
+  tradeRule: "Règle d'échange : {rule}"
+es:
+  win: "Victoria"
+  lose: "Derrota"
+  draw: "Empate"
+  enemyCards: "Cartas del enemigo"
+  yourCards: "Tus cartas"
+  tradeRule: "Regla de intercambio: {rule}"
+jp:
+  win: "勝利"
+  lose: "敗北"
+  draw: "引き分け"
+  enemyCards: "相手のカード"
+  yourCards: "自分のカード"
+  tradeRule: "トレードルール: {rule}"
+kr:
+  win: "승리"
+  lose: "패배"
+  draw: "무승부"
+  enemyCards: "상대 카드"
+  yourCards: "나의 카드"
+  tradeRule: "거래 규칙: {rule}"
+zh:
+  win: "胜利"
+  lose: "失败"
+  draw: "平局"
+  enemyCards: "对方卡牌"
+  yourCards: "你的卡牌"
+  tradeRule: "交换规则：{rule}"
+ru:
+  win: "Победа"
+  lose: "Поражение"
+  draw: "Ничья"
+  enemyCards: "Карты противника"
+  yourCards: "Ваши карты"
+  tradeRule: "Правило обмена: {rule}"
 </i18n>

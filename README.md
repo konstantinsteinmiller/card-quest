@@ -94,7 +94,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] EmergencyAid component with 2 new cards from the starters
   - [x] edit town names on map
   - [x] different levels with different NPCs
-  - [ ] Opt: Storyline
+  - [ ] Opt: Storymode button with speech bubbles
 
 - [x] OptionsModal
   - [x] music
@@ -134,9 +134,10 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [ ] ads
     - [ ] performance tracking
 
-- [ ] complete Translations
+- [x] complete Translations
 - [x] full-version protection for web
 - [ ] search for marketing person
+- [ ] Opt: 2nd card Theme: gibli
 
 
 ## Refactorings
@@ -170,9 +171,5 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [ ] 100 card designs
 - [ ] more campaign tracks
 - [ ] show values involved in battle by highlighting them
-
-## NPC Algo:
-
-- [ ] 
 
 Sounds generated with [elevenLabs](https://elevenlabs.io/app/sound-effects/generate)

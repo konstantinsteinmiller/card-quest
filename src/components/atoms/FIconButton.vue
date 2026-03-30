@@ -62,7 +62,3 @@ const selectedIcon = computed(() => {
             :d="selectedIcon.path"
           )
 </template>
-
-<style scoped lang="sass">
-/* No changes needed here */
-</style>

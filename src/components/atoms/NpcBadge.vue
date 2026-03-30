@@ -58,9 +58,27 @@ span
 
 <i18n>
 en:
-  grandmaster: 'Grandmaster'
-  tactician: 'Tactician'
+  grandmaster: "Grandmaster"
+  tactician: "Tactician"
 de:
-  grandmaster: 'Großmeister'
-  tactician: 'Taktiker'
+  grandmaster: "Großmeister"
+  tactician: "Taktiker"
+fr:
+  grandmaster: "Grand Maître"
+  tactician: "Tacticien"
+es:
+  grandmaster: "Gran Maestro"
+  tactician: "Táctico"
+jp:
+  grandmaster: "グランドマスター"
+  tactician: "タクティシャン"
+kr:
+  grandmaster: "그랜드마스터"
+  tactician: "전술가"
+zh:
+  grandmaster: "宗师"
+  tactician: "战术家"
+ru:
+  grandmaster: "Гроссмейстер"
+  tactician: "Тактик"
 </i18n>

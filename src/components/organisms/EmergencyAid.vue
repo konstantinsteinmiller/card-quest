@@ -93,9 +93,21 @@ const handleComplete = () => {
     transform: translateY(0) rotate(0) scale(1)
 </style>
 
-<i18n lang="yaml">
+<i18n>
 en:
   suppliesArrived: "Emergency Cards!"
 de:
   suppliesArrived: "Notfall Karten!"
+fr:
+  suppliesArrived: "Cartes d'urgence !"
+es:
+  suppliesArrived: "¡Cartas de emergencia!"
+jp:
+  suppliesArrived: "緊急カード！"
+kr:
+  suppliesArrived: "긴급 카드 보급!"
+zh:
+  suppliesArrived: "紧急卡牌！"
+ru:
+  suppliesArrived: "Экстренные карты!"
 </i18n>

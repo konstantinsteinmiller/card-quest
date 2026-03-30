@@ -68,12 +68,3 @@ const handleOverlayClick = () => {
 .brawl-text
   text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000
 </style>
-
-<i18n lang="yaml">
-en:
-  tapToContinue: "Tap to continue"
-  clickToContinue: "Click to continue"
-de:
-  tapToContinue: "Tippen zum Fortfahren"
-  clickToContinue: "Klicken zum Fortfahren"
-</i18n>

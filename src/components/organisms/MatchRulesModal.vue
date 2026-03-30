@@ -58,4 +58,22 @@ en:
 de:
   matchRules: "Kampfregeln"
   doNotBother: "Nicht mehr anzeigen"
+fr:
+  matchRules: "Règles du match"
+  doNotBother: "Ne plus afficher"
+es:
+  matchRules: "Reglas del juego"
+  doNotBother: "No volver a mostrar"
+jp:
+  matchRules: "対戦ルール"
+  doNotBother: "再表示しない"
+kr:
+  matchRules: "경기 규칙"
+  doNotBother: "다시 보지 않기"
+zh:
+  matchRules: "比赛规则"
+  doNotBother: "不再显示"
+ru:
+  matchRules: "Правила боя"
+  doNotBother: "Больше не показывать"
 </i18n>

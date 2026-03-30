@@ -91,7 +91,7 @@ const doResetProgress = () => {
     div(v-if="currentTab === 'general'")
       div(class="flex flex-col gap-2 p-2")
         //- Language Selection
-        div(class="flex flex-col gap-2 scale-80 sm:scale-100")
+        div(class="z-[100] flex flex-col gap-2 scale-80 sm:scale-100")
           FSelect(
             class="!text-[10px] md:text-[12px]"
             :label="t('language')"
@@ -210,6 +210,9 @@ fr:
   audio: "Audio"
   language: "Langue"
   showRulesModal: "Afficher les règles avant le match"
+  resetCampaign: "Réinitialiser la progression"
+  reset: "Réinitialiser"
+  sureResetCampaign: "Êtes-vous sûr de vouloir réinitialiser la campagne et votre collection de cartes ?"
   audioSettingsPlaceholder: "Paramètres audio bientôt disponibles..."
   easy: "Novice"
   medium: "Écuyer"
@@ -232,6 +235,9 @@ es:
   audio: "Audio"
   language: "Idioma"
   showRulesModal: "Mostrar reglas antes del juego"
+  resetCampaign: "Reiniciar progreso del juego"
+  reset: "Reiniciar"
+  sureResetCampaign: "¿Estás seguro de que quieres reiniciar la campaña и tu colección de cartas?"
   audioSettingsPlaceholder: "Ajustes de audio próximamente..."
   easy: "Novicio"
   medium: "Escudero"
@@ -254,6 +260,9 @@ jp:
   audio: "オーディオ"
   language: "言語"
   showRulesModal: "対戦前にルールを表示する"
+  resetCampaign: "ゲームの進行状況をリセット"
+  reset: "リセット"
+  sureResetCampaign: "キャンペーンとカードコレクションをリセットしてもよろしいですか？"
   audioSettingsPlaceholder: "オーディオ設定は近日公開予定..."
   easy: "初級"
   medium: "従騎士"
@@ -276,6 +285,9 @@ kr:
   audio: "오디오"
   language: "언어"
   showRulesModal: "경기 전 규칙 표시"
+  resetCampaign: "게임 진행 상황 초기화"
+  reset: "초기화"
+  sureResetCampaign: "캠페인과 카드 컬렉션을 초기화하시겠습니까?"
   audioSettingsPlaceholder: "오디오 설정이 곧 추가될 예정입니다..."
   easy: "초보"
   medium: "종자"
@@ -298,6 +310,9 @@ zh:
   audio: "音频"
   language: "语言"
   showRulesModal: "游戏前显示比赛规则"
+  resetCampaign: "重置游戏进度"
+  reset: "重置"
+  sureResetCampaign: "您确定要重置战役和您的卡牌收藏吗？"
   audioSettingsPlaceholder: "音频设置即将推出..."
   easy: "新手"
   medium: "侍从"
@@ -320,6 +335,9 @@ ru:
   audio: "Аудио"
   language: "Язык"
   showRulesModal: "Показывать правила перед игрой"
+  resetCampaign: "Сбросить игровой прогресс"
+  reset: "Сброс"
+  sureResetCampaign: "Вы уверены, что хотите сбросить кампанию и вашу коллекцию карт?"
   audioSettingsPlaceholder: "Настройки звука скоро появятся..."
   easy: "Новичок"
   medium: "Оруженосец"

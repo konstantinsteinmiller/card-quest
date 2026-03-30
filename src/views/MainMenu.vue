@@ -104,7 +104,7 @@ const handleExit = () => {
 
 <i18n>
 en:
-  play: "Spielen"
+  play: "Play"
   practice: "Practice"
   settings: "Settings"
   quitApp: "Quit Game"
@@ -113,4 +113,34 @@ de:
   practice: "Trainieren"
   settings: "Einstellungen"
   quitApp: "Spiel beenden"
+fr:
+  play: "Jouer"
+  practice: "S'entraîner"
+  settings: "Paramètres"
+  quitApp: "Quitter le jeu"
+es:
+  play: "Jugar"
+  practice: "Practicar"
+  settings: "Ajustes"
+  quitApp: "Salir del juego"
+jp:
+  play: "プレイ"
+  practice: "練習"
+  settings: "設定"
+  quitApp: "ゲームを終了"
+kr:
+  play: "플레이"
+  practice: "연습"
+  settings: "설정"
+  quitApp: "게임 종료"
+zh:
+  play: "开始游戏"
+  practice: "练习"
+  settings: "设置"
+  quitApp: "退出游戏"
+ru:
+  play: "Играть"
+  practice: "Тренировка"
+  settings: "Настройки"
+  quitApp: "Выйти из игры"
 </i18n>

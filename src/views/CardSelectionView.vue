@@ -461,10 +461,3 @@ const onNext = () => {
       &:first-child
         margin-top: 0
 </style>
-
-<i18n>
-en:
-  ready: "Ready"
-de:
-  ready: "Bereit"
-</i18n>
