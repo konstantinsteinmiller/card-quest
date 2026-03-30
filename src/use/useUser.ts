@@ -20,6 +20,7 @@ export const isMobilePortrait = computed(() =>
 
 declare const APP_VERSION: string
 export const isNative = import.meta.env.VITE_APP_NATIVE === 'true'
+export const isWeb = import.meta.env.VITE_APP_NATIVE !== 'true'
 export const isDemo = import.meta.env.VITE_APP_DEMO === 'true'
 export const version: string = APP_VERSION
 
@@ -36,6 +37,7 @@ const userHand: Ref<any> = ref('[]')
 const userCollection: Ref</*StoredCollectionCard[] | */string> = ref('[]')
 const userCampaign: Ref<any> = ref('[]')
 const userSkipRulesModal: Ref<boolean> = ref(false)
+const userUnlocked: Ref<boolean> = ref(false)
 const userQuestCampaign: Ref<boolean> = ref(false)
 const userQuestCards: Ref<boolean> = ref(false)
 
@@ -60,6 +62,7 @@ const { storeUser } = useUserDb({
   userCollection,
   userCampaign,
   userSkipRulesModal,
+  userUnlocked,
   userQuestCampaign,
   userQuestCards
 })
@@ -81,6 +84,9 @@ const useUser = () => {
         break
       case 'skipRulesModal':
         userSkipRulesModal.value = value
+        break
+      case 'unlocked':
+        userUnlocked.value = value
         break
       case 'quest-campaign':
         userQuestCampaign.value = value
@@ -108,6 +114,7 @@ const useUser = () => {
       userMusicVolume: +userMusicVolume.value,
       userLanguage: userLanguage.value,
       userSkipRulesModal: userSkipRulesModal.value,
+      userUnlocked: userUnlocked.value,
       userTutorialsDoneMap: userTutorialsDoneMap.value,
       userHand: userHand.value,
       userCollection: userCollection.value,
@@ -138,6 +145,7 @@ const useUser = () => {
     userCollection,
     userCampaign,
     userSkipRulesModal,
+    userUnlocked,
     userQuestCampaign,
     userQuestCards,
     tutorialPhase,

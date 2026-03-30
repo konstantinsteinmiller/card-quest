@@ -104,7 +104,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] language options
   - [x] Volume slider for music and sound effects
   - [x] remove sound options on mobile
-  - [ ] reset progress button
+  - [x] reset progress button
   - [ ] Opt: Feature request button
 
 - [x] Sound and bg music
@@ -122,22 +122,22 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 - [x] (native) dark mode adjustment
 
-- [x] create Demo version
-  - [x] create Demo build
-
-- [ ] Crazy Web games SDK
-  - [ ] make game launchable
-  - [ ] ads
-  - [ ] performance tracking
+- Build-Toolchain
+  - [x] create Demo version
+    - [x] create Demo build
+  - [x] build for windows
+    - [x] exit button for native games
+  - [ ] build for android
+  - [ ] build for ios
+  - [ ] Crazy Web games SDK
+    - [ ] make game launchable
+    - [ ] ads
+    - [ ] performance tracking
 
 - [ ] complete Translations
-- [ ] full-version protection for web
-
-- [x] build for windows
-  - [x] exit button for native games
-- [ ] build for android
-- [ ] build for ios
+- [x] full-version protection for web
 - [ ] search for marketing person
+
 
 ## Refactorings
 

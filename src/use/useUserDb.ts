@@ -11,6 +11,7 @@ const useUserDb = ({
                      userMusicVolume,
                      userLanguage,
                      userSkipRulesModal,
+                     userUnlocked,
                      userTutorialsDoneMap,
                      userHand,
                      userCollection,
@@ -23,6 +24,7 @@ const useUserDb = ({
   userMusicVolume: Ref<number>
   userLanguage: Ref<string>
   userSkipRulesModal: Ref<boolean>
+  userUnlocked: Ref<boolean>
   userTutorialsDoneMap: Ref<string>
   userHand: Ref<string>
   userCollection: Ref<string>
@@ -58,6 +60,7 @@ const useUserDb = ({
     objectStore.createIndex('userMusicVolume', 'userMusicVolume', { unique: false })
     objectStore.createIndex('userLanguage', 'userLanguage', { unique: false })
     objectStore.createIndex('userSkipRulesModal', 'userSkipRulesModal', { unique: false })
+    objectStore.createIndex('userUnlocked', 'userUnlocked', { unique: false })
     objectStore.createIndex('userTutorialsDoneMap', 'userTutorialsDoneMap', { unique: false })
     objectStore.createIndex('userHand', 'userHand', { unique: false })
     objectStore.createIndex('userCollection', 'userCollection', { unique: false })
@@ -82,6 +85,9 @@ const useUserDb = ({
 
         if (request.result.userSkipRulesModal) {
           userSkipRulesModal.value = JSON.parse(request.result.userSkipRulesModal)
+        }
+        if (request.result.userUnlocked) {
+          userUnlocked.value = JSON.parse(request.result.userUnlocked)
         }
         if (request.result.userQuestCampaign) {
           userQuestCampaign.value = JSON.parse(request.result.userQuestCampaign)
@@ -108,6 +114,7 @@ const useUserDb = ({
           userMusicVolume: userMusicVolume.value,
           userLanguage: userLanguage.value,
           userSkipRulesModal: userSkipRulesModal.value,
+          userUnlocked: userUnlocked.value,
           userQuestCampaign: userQuestCampaign.value,
           userQuestCards: userQuestCards.value,
           userTutorialsDoneMap: userTutorialsDoneMap.value,
@@ -133,6 +140,9 @@ const useUserDb = ({
 
     if (Object.keys(params.userSkipRulesModal)?.length) {
       params.userSkipRulesModal = JSON.stringify(userSkipRulesModal)
+    }
+    if (Object.keys(params.userUnlocked)?.length) {
+      params.userUnlocked = JSON.stringify(userUnlocked)
     }
     if (Object.keys(params.userQuestCampaign)?.length) {
       params.userQuestCampaign = JSON.stringify(userQuestCampaign)
