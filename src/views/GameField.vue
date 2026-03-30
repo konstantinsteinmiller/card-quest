@@ -4,6 +4,13 @@
     data-darkmode-ignore="true"
     :style="shakeStyle"
   )
+    //FSpeechBubble(
+    //  v-model="showDialogue"
+    //  :text="activeNode?.description || ''"
+    //  :speaker-name="activeNode?.name"
+    //  @complete="onDialogueComplete"
+    //)
+
     MatchRulesModal(
       :is-open="showRules && nonStandardRules.length > 0"
       :rules="nonStandardRules"
@@ -101,6 +108,7 @@ import useUser from '@/use/useUser'
 import useCampaign from '@/use/useCampaign'
 import NpcBadge from '@/components/atoms/NpcBadge'
 import { useScreenshake } from '@/use/useScreenshake'
+// import FSpeechBubble from '@/components/molecules/FSpeechBubble.vue'
 
 const {
   turn,
@@ -127,18 +135,36 @@ const { activeNode, completeNode, saveCampaign } = useCampaign()
 const { shakeStyle } = useScreenshake()
 
 const { playerHand: playerHandRef } = useMatch()
+const showDialogue = ref(false)
+const isInitialDialogueDone = ref(true)
 
 const {
   isGrandmasterMatch,
   isThinking
-} = useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules, playerHandRef)
+} = useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules, playerHandRef, isInitialDialogueDone)
 
 const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'high'))
 
 onMounted(() => {
   resetGame(activeNode)
+
+  // // Show dialogue if node has a description and we haven't seen it yet this session
+  // if (activeNode.value?.description) {
+  //   showDialogue.value = true
+  // } else {
+  //   isInitialDialogueDone.value = true
+  // }
 })
+
+// const onDialogueComplete = () => {
+//   isInitialDialogueDone.value = true
+//   // The NPC logic or player can now start
+// }
+
+// 1. Block Player Interaction
+// Update handleDrop and handleSlotTap to check isInitialDialogueDone
+// const canInteract = computed(() => turn.value === 'player' && isInitialDialogueDone.value)
 
 const isGameOver = ref<boolean>(false)
 const showTradeModal = ref<boolean>(false)

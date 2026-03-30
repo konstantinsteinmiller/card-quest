@@ -18,7 +18,7 @@ const router = createRouter({
 })
 
 // --- THE ROUTER HOOK ---
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   const { userUnlocked, setSettingValue } = useUser()
 
   const url = window.location.href
@@ -33,20 +33,19 @@ router.beforeEach((to, from, next) => {
     const isDev = url.includes('localhost:5173/')
 
     if (isDev) {
-      next()
-      return
+      return true
     }
 
     // If user is on Full or Develop without the unlock param, boot them to Demo
     if ((isFullVersion || isDevelopVersion) && !isUnlocked) {
       window.location.href = 'https://konstantinsteinmiller.github.io/card-quest/demo/'
-      return // Stop execution
+      return false// Stop execution
     } else if (isUnlocked && (isFullVersion || isDevelopVersion)) {
       localStorage.setItem('full_unlocked', 'true')
     }
   }
 
-  next()
+  return true
 })
 
 export default router

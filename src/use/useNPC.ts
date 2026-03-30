@@ -13,7 +13,8 @@ export const useNPC = (
   placeCard: (card: GameCard, x: number, y: number) => void,
   difficulty: Ref<Difficulties>,
   activeRules: Ref<RuleName[]>,
-  playerHand: Ref<GameCard[]>
+  playerHand: Ref<GameCard[]>,
+  isInitialDialogueDone: Ref<boolean>
 ) => {
   const ADJ = [
     { dx: 0, dy: -1, side: 'top' as const, opp: 'bottom' as const },
@@ -213,6 +214,13 @@ export const useNPC = (
   onUnmounted(() => {
     if (worker) worker.terminate()
   })
+
+  // Inside useNPC.ts
+  watch([turn, isInitialDialogueDone], ([currentTurn, dialogueDone]) => {
+    if (currentTurn === 'npc' && dialogueDone) {
+      makeMove() // Only start timer if dialogue is closed
+    }
+  }, { immediate: true })
 
   watch(turn, (newTurn) => {
     if (newTurn === 'npc') makeMove()
