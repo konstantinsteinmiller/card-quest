@@ -1,6 +1,14 @@
 # Card Quest
 
-A fairy card battle game.
+Card Quest is a card battle game with Triple Triad game rules und strong fantasy visuals,
+where you progress through the campaign map by encountering enemies with different battle rules and completely unique
+card decks.
+
+The goal is not only to beat every enemy, but also to collect all cards and complete the collection book of uniquely
+designed fairy monsters.
+Start the adventure and find the best card combinations to beat your opponents and collect all cards!
+Learn to make combos and sweep the board with your powerful cards, but be careful, because your opponents can also turn
+your cards and steal them from you!
 
 It features a github pages deployed CI cd pipeline and a windows build + demo build.
 
@@ -114,6 +122,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] sound effect for card turn
   - [x] sound effect for plus, same, combo
   - [x] sound effect Reward continue
+  - [x] battle music and switch between main theme and battle theme
 
 - [x] Card selection Page
     - [x] animate card selection
@@ -138,6 +147,12 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] full-version protection for web
 - [ ] search for marketing person
 - [ ] Opt: 2nd card Theme: gibli
+-
+- [ ] easy mode has 60% chance to make medium move
+- [x] quick win for first encounter
+- [ ] main song redo gimini
+
+- [ ] Steam page
 
 
 ## Refactorings

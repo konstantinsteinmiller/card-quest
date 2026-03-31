@@ -1,4 +1,4 @@
-import { watch, type Ref, ref, onUnmounted } from 'vue'
+import { watch, type Ref, ref, onUnmounted, type ComputedRef } from 'vue'
 import type { GameCard, BoardSlot, GameTurn } from '@/types/game'
 import { type Difficulties, DIFFICULTY } from '@/utils/enums'
 import type { RuleName } from '@/use/useBattleRules'
@@ -14,7 +14,8 @@ export const useNPC = (
   difficulty: Ref<Difficulties>,
   activeRules: Ref<RuleName[]>,
   playerHand: Ref<GameCard[]>,
-  isInitialDialogueDone: Ref<boolean>
+  isInitialDialogueDone: Ref<boolean>,
+  hasWonAnyGame: ComputedRef<boolean>
 ) => {
   const ADJ = [
     { dx: 0, dy: -1, side: 'top' as const, opp: 'bottom' as const },
@@ -27,6 +28,73 @@ export const useNPC = (
   const isGrandmasterMatch = ref(Math.random() < 0.7)
   const isThinking = ref(false)
   let worker: Worker | null = null
+
+  /**
+   * Pity Logic:
+   * Used for the player's very first game.
+   * NPC tries to place cards next to player cards but deliberately chooses moves
+   * that do not result in a capture.
+   */
+  const calculatePityMove = () => {
+    const moves: { cardInstanceId: string; x: number; y: number; score: number; isAdjacent: boolean }[] = []
+
+    npcHand.value.forEach((card) => {
+      board.value.forEach((row, y) => {
+        row.forEach((slot, x) => {
+          if (slot.card) return
+
+          let isAdjacent = false
+          ADJ.forEach(adj => {
+            const nx = x + adj.dx
+            const ny = y + adj.dy
+            if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
+              if (board.value[ny][nx].card?.owner === 'player') isAdjacent = true
+            }
+          })
+
+          moves.push({ cardInstanceId: card.instanceId!, x, y, score: 0, isAdjacent })
+        })
+      })
+    })
+
+    const isLowRule = activeRules.value.includes('low')
+
+    // Evaluate "threat" - we want a score of 0 (no capture)
+    moves.forEach((move) => {
+      const card = npcHand.value.find(c => c.instanceId === move.cardInstanceId)!
+      let score = 0
+
+      ADJ.forEach(adj => {
+        const nx = move.x + adj.dx
+        const ny = move.y + adj.dy
+        if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
+          const target = board.value[ny][nx].card
+          if (target?.owner === 'player') {
+            const valAtk = card.values[adj.side]
+            const valDef = target.values[adj.opp]
+
+            // Simple capture check
+            if (isLowRule) {
+              if (valAtk < valDef) score += 1
+            } else {
+              if (valAtk > valDef) score += 1
+            }
+          }
+        }
+      })
+      move.score = score
+    })
+
+    // Filter for moves that capture nothing
+    const nonCapturingMoves = moves.filter(m => m.score === 0)
+    const candidates = nonCapturingMoves.length > 0 ? nonCapturingMoves : moves
+
+    // Prioritize adjacency to look "challenging" but fair
+    const adjacentCandidates = candidates.filter(m => m.isAdjacent)
+    const finalPool = adjacentCandidates.length > 0 ? adjacentCandidates : candidates
+
+    return finalPool[Math.floor(Math.random() * finalPool.length)]
+  }
 
   const calculateBestMove = () => {
     const moves: { cardInstanceId: string; x: number; y: number; score: number }[] = []
@@ -154,6 +222,15 @@ export const useNPC = (
     if (turn.value !== 'npc' || npcHand.value.length === 0) return
     isThinking.value = true
 
+    // Check for Pity Logic (First Win)
+    if (!hasWonAnyGame.value) {
+      const pityMove = calculatePityMove()
+      setTimeout(() => {
+        performMove(pityMove)
+      }, 900)
+      return
+    }
+
     const usePerfect = difficulty.value === DIFFICULTY.HARD && activeRules.value.includes('open') && isGrandmasterMatch.value
 
     if (!usePerfect) {
@@ -193,7 +270,7 @@ export const useNPC = (
       clearTimeout(timeout)
       complexMove.value = event.data
       if (!complexTimeout) {
-        console.warn('NPC: Perfect play directly  --- after waiting', event.data)
+        // console.warn('NPC: Perfect play directly --- after waiting', event.data)
         performMove(event.data)
       }
       if (worker) {
@@ -215,15 +292,10 @@ export const useNPC = (
     if (worker) worker.terminate()
   })
 
-  // Inside useNPC.ts
   watch([turn, isInitialDialogueDone], ([currentTurn, dialogueDone]) => {
     if (currentTurn === 'npc' && dialogueDone) {
-      makeMove() // Only start timer if dialogue is closed
+      makeMove()
     }
-  }, { immediate: true })
-
-  watch(turn, (newTurn) => {
-    if (newTurn === 'npc') makeMove()
   }, { immediate: true })
 
   return { makeMove, isGrandmasterMatch, isThinking }

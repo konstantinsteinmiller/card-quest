@@ -636,6 +636,8 @@ export const useCampaign = () => {
     }
   }, { immediate: true })
 
+  const hasWonAnyGame = computed(() => campaignNodes.value.some(n => n.completed))
+
   const completeNode = (currentNode: CampaignNode) => {
     if (!currentNode) return
 
@@ -683,7 +685,8 @@ export const useCampaign = () => {
     selectedNodeId,
     saveCampaign,
     activeNode,
-    completeNode
+    completeNode,
+    hasWonAnyGame
   }
 }
 

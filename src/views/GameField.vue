@@ -131,7 +131,7 @@ const {
   handleTapSelect,
   handleSlotTap
 } = useInteraction(playerHand, placeCard)
-const { activeNode, completeNode, saveCampaign } = useCampaign()
+const { activeNode, completeNode, saveCampaign, hasWonAnyGame } = useCampaign()
 const { shakeStyle } = useScreenshake()
 
 const { playerHand: playerHandRef } = useMatch()
@@ -141,7 +141,7 @@ const isInitialDialogueDone = ref(true)
 const {
   isGrandmasterMatch,
   isThinking
-} = useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules, playerHandRef, isInitialDialogueDone)
+} = useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules, playerHandRef, isInitialDialogueDone, hasWonAnyGame)
 
 const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'high'))

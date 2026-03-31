@@ -13,8 +13,8 @@ const { initMusic, pauseMusic, continueMusic } = useMusic()
 useExtensionGuard()
 useCheats()
 
-// Point to your 2MB file in the public folder
-initMusic('shadows-in-silence_slow-tired-powerless_main-menu.ogg')
+
+initMusic('adventure_main-menu.mp3')
 
 const portraitQuery = window.matchMedia('(orientation: portrait)')
 const onTouchStart = (event: any) => {

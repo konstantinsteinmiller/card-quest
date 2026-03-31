@@ -2,6 +2,7 @@ import { prependBaseUrl } from '@/utils/function'
 import useUser from '@/use/useUser'
 
 import { ref, onMounted, watch, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 // We keep the audio instance outside the hook so it's a true Singleton
 const bgMusic = ref<HTMLAudioElement | null>(null)
@@ -10,6 +11,7 @@ const isPlaying = ref(false)
 
 export const useMusic = () => {
   const { userMusicVolume } = useUser()
+  const route = useRoute()
 
   watch(userMusicVolume, () => {
     if (!bgMusic.value) return
@@ -31,15 +33,40 @@ export const useMusic = () => {
     }
   }
 
+  watch(() => route, () => {
+    console.log('route.name: ', route.name, bgMusic.value?.dataset?.name)
+    if (bgMusic.value && bgMusic.value?.dataset?.name !== undefined && route.name === 'match') {
+      bgMusic.value?.pause()
+      const filename = 'battle.ogg'
+      bgMusic.value.dataset.name = filename
+      bgMusic.value.src = prependBaseUrl('/audio/music/' + filename)
+      bgMusic.value.addEventListener('canplaythrough', () => {
+        isLoaded.value = true
+        playWithFade()
+      }, { once: true })
+    } else if (bgMusic.value && bgMusic.value?.dataset?.name === 'battle.ogg' && route.name !== 'match') {
+      bgMusic.value?.pause()
+      const filename = 'adventure_main-menu.mp3'
+      bgMusic.value.dataset.name = filename
+      bgMusic.value.src = prependBaseUrl('/audio/music/' + filename)
+      bgMusic.value.addEventListener('canplaythrough', () => {
+        isLoaded.value = true
+        playWithFade()
+      }, { once: true })
+    }
+  }, { deep: true, immediate: true })
+
   const initMusic = (filename: string) => {
     onMounted(() => {
-      if (bgMusic.value) return // Already initialized
+      console.log('initMusic bgMusic.value?.dataset?.name: ', bgMusic.value?.dataset?.name)
+      if (bgMusic.value && bgMusic.value?.dataset.name === filename) return // Already initialized
       // 1. Create the audio object
       const audio = new Audio()
       audio.src = prependBaseUrl('/audio/music/' + filename)
       audio.loop = true
-      audio.volume = userMusicVolume.value * 0.05
+      audio.volume = userMusicVolume.value * 0.001
       audio.preload = 'auto'
+      audio.dataset.name = filename
 
       // 2. Wait for the browser to have enough data to play through
       audio.addEventListener('canplaythrough', () => {
@@ -78,7 +105,7 @@ export const useMusic = () => {
     if (!bgMusic.value) return
     let vol = 0
     const interval = setInterval(() => {
-      if (vol < userMusicVolume.value * 0.075) {
+      if (vol < userMusicVolume.value * 0.035) {
         vol += 0.005
         bgMusic.value!.volume = vol
       } else {
