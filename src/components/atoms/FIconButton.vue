@@ -32,7 +32,7 @@ const selectedIcon = computed(() => {
 <template lang="pug">
   button(
     @click="emit('close')"
-    class="absolute top-0 right-0 group cursor-pointer z-10 hover:scale-[103%] transition-transform active:scale-40 sm:active:scale-90 scale-60 sm:scale-100 sm:top-4 sm:right-4 "
+    class="absolute group cursor-pointer z-10 hover:scale-[103%] transition-transform active:scale-40 sm:active:scale-90 scale-60 sm:scale-100"
   )
     div(class="relative")
       div(

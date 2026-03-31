@@ -41,7 +41,7 @@
     )
 
     div.flex.items-center.justify-center.w-full.h-full.gap-1(
-      class="flex-col landscape:flex-row lg:flex-row lg:gap-8"
+      class="flex-col landscape:flex-row lg:flex-row lg:gap-4"
     )
       //- NPC Hand
       div.hand-container.flex-shrink-0.flex.items-center.justify-center.w-full(

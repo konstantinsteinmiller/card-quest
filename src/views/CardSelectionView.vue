@@ -1,11 +1,9 @@
 <template lang="pug">
-  div.flex.flex-col.items-center.p-1.overflow-hidden.bg-repeat.select-none(
-    data-darkmode-ignore="true"
-    class="fixed inset-0 overflow-hidden h-[100dvh] landscape:p-1 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')]"
+  div(
+    class="fixed inset-0 flex flex-col items-center overflow-hidden bg-repeat select-none bg-[url('/images/board/papyrus-tile_128x128.webp')]"
     style="padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);"
-    :class="{ 'p-0': isMobilePortrait }"
+    data-darkmode-ignore="true"
   )
-    //- Emergency Aid Overlay
     EmergencyAid(
       v-if="showEmergencyAid"
       :is-visible="showEmergencyAid"
@@ -13,124 +11,115 @@
       @close="showEmergencyAid = false"
     )
 
-    //- Animation Overlay
     div.flying-card(v-if="flyingCard" :style="flyingStyle")
       CardDisplay(:card="flyingCard.card" :show-tint="false")
 
-    //- Main Layout: flex-col for mobile portrait, flex-row for landscape
-    div.flex.w-full.max-w-6xl.min-h-0(
-      class="flex-col landscape:flex-row gap-1 sm:gap-4 h-full"
-      :class="{ '!gap-1': isMobileLandscape }"
-    )
-      //- THE BOOK (Flex grow but must be able to shrink to avoid pushing buttons out)
-      div.relative.shadow-inner.flex.flex-col.flex-grow.min-h-0(class="overflow-hidden")
-        img.absolute.inset-0.w-full.h-full.object-fill(src="/images/bg/book_512x401.webp")
+    //- Main Layout
+    div(class="flex flex-col landscape:flex-row w-full max-w-7xl h-full gap-2 p-1 sm:p-2 min-h-0")
 
-        //- Inner scrollable area for cards
-        div.flex-1.relative.z-10.ml-1.px-5.pt-12.flex.flex-wrap.justify-center.content-start.overflow-y-auto(
-          class="gap-x-4 gap-y-4 sm:gap-x-10 sm:pt-12 md:px-12 md:pt-16 pb-12"
-          :class="{ 'gap-y-6': isMobileLandscape, ' !pt-13 !gap-x-2': isMobilePortrait, 'sm:pt-14 md:pt-[5rem] !gap-x-4': !isMobileLandscape && windowHeight > 600 && windowWidth > 700 }"
+      //- THE BOOK
+      div(class="relative flex flex-col flex-grow min-h-0 shadow-2xl overflow-hidden rounded-lg")
+        img(class="absolute inset-0 w-full h-full object-fill" src="/images/bg/book_800x609.webp")
+
+        div(
+          ref="gridArea"
+          class="relative z-10 flex-1 px-[10%] pt-[14%] pb-[12%] lg:pt-[10%] overflow-hidden scrollbar-hide"
+          :class="{ '!pt-[8%] ': isMobileLandscape }"
         )
-          div.relative.group(
-            v-for="(card, index) in paginatedCollection"
-            :key="card.id + index"
-            :ref="el => cardRefs[card.id] = el"
-            @click="addToDeck(card, $event)"
-            class="card-container flex items-center justify-center cursor-pointer"
-            :class="[\
-              card.count === 0 ? 'out-of-stock' : '',\
-              card?.invisible ? '!opacity-0': '',\
-              (showHint && !isHintDisabled && selectedDeck.length < 5 && card.id === hintTargetId) ? 'hint-bounce' : ''\
-            ]"
+          div(
+            class="grid gap-3 sm:gap-4 content-start justify-items-center w-full h-full"
+            :style="{ \
+              gridTemplateColumns: `repeat(${gridLayout.cols}, 1fr)`, \
+              gridTemplateRows: `repeat(${gridLayout.rows}, min-content)` \
+            }"
           )
-            div.w-full.h-full.transition-transform.duration-200(class="group-hover:scale-105 active:scale-95")
-              CardDisplay(:card="card" :is-selection="true" :show-tint="false")
-
-            div.counter-bubble.absolute.-bottom-1.-right-1.text-white.rounded-full.flex.items-center.justify-center.font-bold.z-20(
-              class="w-4 h-4 text-[9px] sm:w-5 sm:h-5 sm:text-[10px]"
-              :class="card.count === 0 ? 'bg-slate-400' : 'bg-slate-600'"
+            div(
+              v-for="(card, index) in paginatedCollection"
+              :key="card.id + index"
+              :ref="el => cardRefs[card.id] = el"
+              @click="addToDeck(card, $event)"
+              class="relative group aspect-square cursor-pointer transition-transform duration-200 active:scale-95 hover:scale-105 min-w-0 w-full"
+              :class="[\
+                card.count === 0 ? 'out-of-stock' : '',\
+                card?.invisible ? 'invisible pointer-events-none': '',\
+                (showHint && !isHintDisabled && selectedDeck.length < 5 && card.id === hintTargetId) ? 'hint-bounce' : ''\
+              ]"
             )
-              span {{ card.count }}
+              CardDisplay(:card="card" :is-selection="true" :show-tint="false")
+              div(
+                class="absolute -bottom-1 -right-1 text-white rounded-full flex items-center justify-center font-bold z-20 w-5 h-5 text-[10px] sm:w-6 sm:h-6 sm:text-xs"
+                :class="card.count === 0 ? 'bg-slate-400' : 'bg-slate-600'"
+              )
+                span {{ card.count }}
 
-        //- Pagination Controls (Absolute positioned within the book container)
         FIconButton(
           icon="left"
-          class="absolute !right-auto !top-1/2 -translate-y-[100%] text-orange-900 hover:scale-125 transition-transform disabled:opacity-20"
-          :class="{ '!left-[1%] !scale-70 !-translate-y-[70%]': isMobileLandscape, '!left-[0%] !-translate-y-[80%]': isMobilePortrait, '!left-[2.5%]': !isMobileLandscape && !isMobilePortrait }"
+          class="absolute left-[1%] top-1/2 -translate-y-1/2 text-orange-900 transition-transform hover:scale-110 disabled:opacity-20 z-30"
           @click="prevPage"
           :disabled="currentPage === 0"
         )
 
-        div(
-          class="bottom-[8%]"
-          :class="{ '!bottom-[9%]': !isMobileLandscape && windowWidth > 800 }"
-        ).absolute.left-0.right-0.flex.justify-center.items-center.gap-6.z-30
-
-          div.text-center.font-bold.text-shadow(class="text-amber-500 text-[10px] sm:text-xs")
+        div(class="absolute bottom-[5%] left-0 right-0 flex justify-center items-center z-30")
+          div(class="bg-black/30 text-shadow backdrop-blur-sm px-3 py-0.5 rounded-full font-bold text-amber-500 text-[10px] sm:text-xs")
             | {{ currentPage + 1 }} / {{ totalPages }}
 
         FIconButton(
           icon="right"
-          class="absolute !right-[3%] !top-1/2 -translate-y-[100%] text-orange-900 hover:scale-125 transition-transform disabled:opacity-20"
-          :class="{ '!right-[0%] -mr-[2%] !scale-70 !-translate-y-[70%]': isMobileLandscape, '!right-[0%] -mr-[4%] !-translate-y-[80%]': isMobilePortrait, '!right-[2%] -mr-[.5%]': !isMobileLandscape && !isMobilePortrait }"
+          class="absolute right-[1%] top-1/2 -translate-y-1/2 text-orange-900 transition-transform hover:scale-110 disabled:opacity-20 z-30"
           @click="nextPage"
           :disabled="currentPage >= totalPages - 1"
         )
 
-      //- Sidebar / Deck Dock (Shrink-0 prevents this being squeezed on small screens)
-      div.flex.flex-col.gap-0.shrink-0.items-center.justify-between(
-        class="portrait:w-full portrait:h-auto portrait:pb-2 landscape:w-32 landscape:sm:w-40 landscape:md:w-48"
-      )
-        //- Deck Area
-        div.flex.flex-col.items-center.w-full.deck-target(
-          class="portrait:justify-center min-h-[80px]"
-        )
-          div.flex.w-full.justify-center.relative.z-40.hand-interact-zone(
-            class="landscape:flex-col landscape:items-center landscape:justify-start"
-          )
-            PlayerHandCard(
-              :cards="selectedDeck"
-              :is-active="true"
-              :selected-id="null"
-              :class="{ 'landscape-hand mt-3': isMobileLandscape }"
-              @select="removeFromDeck"
-              @click-card="removeFromDeck"
-              @remove="removeFromDeck"
-            )
+      //- Sidebar / Deck Area
+      div(class="flex flex-col shrink-0 items-center justify-between landscape:w-32 landscape:md:w-44 landscape:h-full portrait:w-full portrait:h-40 min-h-0 overflow-hidden")
 
-        //- Action Buttons (Always at bottom in portrait)
-        div.flex.gap-1.w-full.px-2(class="portrait:flex-row landscape:flex-col landscape:mb-4")
-          FButton.text-xs.flex-1(
+        //- Deck Target - Ultimate Fix: absolute positioning avoids nested flex auto-height collapse
+        div(class="deck-target relative flex-1 min-h-0 min-w-0 w-full")
+          PlayerHandCard(
+            :cards="selectedDeck"
+            :is-active="true"
+            :selected-id="null"
+            @select="removeFromDeck"
+            @click-card="removeFromDeck"
+            @remove="removeFromDeck"
+            class="absolute inset-0"
+          )
+
+        //- Buttons
+        div(class="flex shrink-0 w-full portrait:flex-row landscape:flex-col portrait:pb-2")
+          FButton(
             type="secondary"
-            :size="'md'"
-            class="sm:text-sm"
+            size="md"
+            class="flex-1 text-xs sm:text-sm !pb-1"
             @click="router.push({ name: 'main-menu'})"
           ) {{ t('back') }}
-          FButton.text-xs.flex-1.btn-battle(
-            :size="'md'"
-            class="sm:text-sm"
+
+          FButton(
+            size="md"
+            class="flex-1 btn-battle text-xs sm:text-sm"
             :disabled="selectedDeck.length < 5"
             :attention="selectedDeck.length === 5"
             :class="{ 'opacity-50 grayscale': selectedDeck.length < 5 }"
             @click="onNext"
           )
             span.whitespace-nowrap {{ t(isPracticeMatch ? 'battle': 'ready' ) }} ({{ selectedDeck.length }}/5)
+
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter, useRoute } from 'vue-router'
+import { useResizeObserver } from '@vueuse/core'
 import type { GameCard } from '@/types/game'
 import FButton from '@/components/atoms/FButton'
 import CardDisplay from '@/components/CardDisplay'
 import PlayerHandCard from '@/components/PlayerHandCard'
 import EmergencyAid from '@/components/organisms/EmergencyAid'
-import { playerSelection, isPracticeMatch, isDbInitialized, isDebug, isCampaignTest } from '@/use/useMatch'
-import useModels, { modelImgPath, type StoredCollectionCard } from '@/use/useModels'
-import useUser, { orientation, isMobilePortrait, isMobileLandscape } from '@/use/useUser'
-import { windowWidth, windowHeight } from '@/use/useUser'
-import { mobileCheck } from '@/utils/function'
+import { playerSelection, isPracticeMatch, isDbInitialized, isCampaignTest } from '@/use/useMatch'
+import useModels, { modelImgPath } from '@/use/useModels'
+import useUser from '@/use/useUser'
+import { isMobileLandscape } from '@/use/useUser'
 import FIconButton from '@/components/atoms/FIconButton.vue'
 
 const { setSettingValue, userHand, userCollection } = useUser()
@@ -148,10 +137,38 @@ const cardRefs = ref<Record<string, any>>({})
 const flyingCard = ref<{ card: any; start: DOMRect; end: DOMRect } | null>(null)
 const flyingStyle = ref<Record<string, string>>({})
 
-// Hint state
 const showHint = ref<boolean>(false)
 const isHintDisabled = ref<boolean>(false)
 let hintTimeout: ReturnType<typeof setTimeout> | null = null
+
+const gridArea = ref<HTMLElement | null>(null)
+const gridInnerWidth = ref(0)
+const gridInnerHeight = ref(0)
+
+useResizeObserver(gridArea, (entries) => {
+  const entry = entries[0]
+  gridInnerWidth.value = Math.floor(entry.contentRect.width)
+  gridInnerHeight.value = Math.floor(entry.contentRect.height)
+})
+
+const gridLayout = computed(() => {
+  if (gridInnerWidth.value <= 0 || gridInnerHeight.value <= 0) return { cols: 3, rows: 2, count: 6 }
+  const gap = isMobileLandscape.value ? 12 : 16
+  const minW = isMobileLandscape.value ? 60 : 80
+  const cols = Math.floor((gridInnerWidth.value + gap) / (minW + gap))
+  const safeCols = Math.max(cols, 2)
+  const actualCardW = (gridInnerWidth.value - (safeCols - 1) * gap) / safeCols
+  const rows = Math.floor((gridInnerHeight.value + gap) / (actualCardW + gap + 4))
+  return { cols: safeCols, rows: Math.max(rows, 1), count: safeCols * Math.max(rows, 1) }
+})
+
+const itemsPerPage = computed(() => gridLayout.value.count)
+
+watch(itemsPerPage, () => {
+  if (currentPage.value >= totalPages.value && totalPages.value > 0) {
+    currentPage.value = totalPages.value - 1
+  }
+})
 
 const startHintTimer = () => {
   clearHint()
@@ -163,58 +180,21 @@ const startHintTimer = () => {
 }
 
 const clearHint = () => {
-  if (hintTimeout) {
-    clearTimeout(hintTimeout)
-    hintTimeout = null
-  }
+  if (hintTimeout) clearTimeout(hintTimeout)
   showHint.value = false
 }
 
-// Find the first card on the current page that has at least 1 count
-const hintTargetId = computed(() => {
-  return paginatedCollection.value.find(c => c.count > 0)?.id || null
-})
-
-const updateDimensions = () => {
-  windowWidth.value = window.innerWidth
-  windowHeight.value = window.innerHeight
-}
-
-const onOrientationChange = (e: any) => {
-  const isPortrait = e.matches
-
-  if (isPortrait) {
-    isStackedSize.value = '56px'
-    isStackedMargin.value = '0px'
-  } else {
-    isStackedSize.value = '50px'
-    isStackedMargin.value = '-22px'
-  }
-}
+const hintTargetId = computed(() => paginatedCollection.value.find(c => c.count > 0)?.id || null)
 
 onMounted(() => {
-  window.addEventListener('resize', updateDimensions)
-  window.scrollTo(0, 0)
-  const isPractice: boolean = route?.query?.practice === true
-  isPracticeMatch.value = isPractice || isPracticeMatch.value
-
-  window.matchMedia('(orientation: portrait)').addEventListener('change', onOrientationChange)
-
-  // Start the interaction hint timer
+  isPracticeMatch.value = route?.query?.practice === true || isPracticeMatch.value
   startHintTimer()
 })
 
-onUnmounted(() => {
-  window.removeEventListener('resize', updateDimensions)
-  window.matchMedia('(orientation: portrait)').removeEventListener('change', onOrientationChange)
-  // window.removeEventListener('orientationchange', delayedResize)
-  clearHint()
-})
+onUnmounted(() => clearHint())
 
 watch(userCollection, () => {
-  if (!userCollection.value) return
-
-  inventory.value = getSortedCollection()
+  if (userCollection.value) inventory.value = getSortedCollection()
 }, { immediate: true })
 
 watch(userHand, () => {
@@ -222,74 +202,19 @@ watch(userHand, () => {
   selectedDeck.value = Array.isArray(hand) ? [...hand] : []
 }, { immediate: true })
 
-// Watch for the "Bankrupt" state
-watch(inventory, (newInv) => {
-  if (!isDbInitialized.value) return
-
-  setTimeout(() => {
-    const coll = typeof userCollection.value === 'string' ? JSON.parse(userCollection.value) : userCollection.value
-    const totalCount = coll?.reduce((sum, c) => sum + c.count, 0) || 0
-    const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
-    const totalInSelection = hand.length
-
-    // Trigger if player has less than 5 cards total, and we aren't already showing the aid
-    if (totalCount + totalInSelection < 5 && !showEmergencyAid.value) {
-      setTimeout(() => {
-        showEmergencyAid.value = true
-      }, 1200)
-    }
-  }, 300)
-}, { deep: true, immediate: true })
-
-const aidAmount = computed(() => {
-  const coll = typeof userCollection.value === 'string' ? JSON.parse(userCollection.value) : userCollection.value
-  const totalCount = coll?.reduce((sum, c) => sum + c.count, 0) || 0
-  const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
-  const totalInSelection = hand.length
-  return Math.min(7 - (totalCount + totalInSelection), 3)
-})
-const isStackedSize = ref('50px')
-const isStackedMargin = ref('-22px')
-
-const itemsPerPage = computed(() => {
-  const orientationMode = mobileCheck() && windowWidth.value > windowHeight.value ? 'landscape' : 'portrait'
-
-  if (orientationMode === 'landscape') {
-    isStackedSize.value = '50px'
-    isStackedMargin.value = '-22px'
-  } else {
-    isStackedSize.value = '56px'
-    isStackedMargin.value = '0px'
-  }
-
-  if (windowHeight.value > 920 && windowWidth.value > 1100) return 36
-  if (windowHeight.value > 760 && windowWidth.value > 1100) return 30
-  if (windowHeight.value > 600 && windowWidth.value > 1100) return 24
-  if (windowHeight.value > 600 && windowWidth.value > 980) return 20
-  if (windowHeight.value > 600 && windowWidth.value > 600) return 16
-  if (isMobilePortrait || isMobileLandscape) return 12
-  return windowWidth.value < 801 ? 8 : 16
-})
-
 const collection = computed(() => inventory.value.map(card => ({
   ...card, owner: 'player' as const, image: modelImgPath(card.id, card.element)
 })))
 
 const totalPages = computed(() => Math.ceil(collection.value.length / itemsPerPage.value))
+
 const paginatedCollection = computed(() => {
   const start = currentPage.value * itemsPerPage.value
   const pageItems = collection.value.slice(start, start + itemsPerPage.value)
-
-  /* if there are too few cards in the last page book add invisible items */
   if (pageItems.length < itemsPerPage.value) {
-    const lastItem = JSON.parse(JSON.stringify(pageItems[pageItems.length - 1]))
     const missingCount = itemsPerPage.value - pageItems.length
-    const addedItems: any = Array(missingCount).fill(null).map((item) => ({
-      ...lastItem,
-      invisible: true
-    }))
-
-    return pageItems.concat(addedItems)
+    const addedItems = Array(missingCount).fill(null).map(() => ({ invisible: true }))
+    return [...pageItems, ...addedItems]
   }
   return pageItems
 })
@@ -306,13 +231,11 @@ const animateFlight = (card: any, startRect: DOMRect, endRect: DOMRect) => {
       flyingStyle.value = {
         top: `${endRect.top}px`, left: `${endRect.left}px`,
         width: `${endRect.width}px`, height: `${endRect.height}px`,
-        opacity: '0', transform: 'rotate(10deg) scale(0.8)',
+        opacity: '0', transform: 'rotate(12deg) scale(0.6)',
         transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
       }
     }, 20)
-    setTimeout(() => {
-      flyingCard.value = null
-    }, 520)
+    setTimeout(() => (flyingCard.value = null), 520)
   })
 }
 
@@ -343,32 +266,19 @@ const addToDeck = (cardTemplate: any, event: MouseEvent) => {
 }
 
 const removeFromDeck = (payload: any) => {
-  let idToFind = ''
-  if (typeof payload === 'string') idToFind = payload
-  else if (payload?.instanceId) idToFind = payload.instanceId
-  else if (payload?.id) idToFind = payload.id
-
+  const idToFind = payload?.instanceId || payload?.id || payload
   const index = selectedDeck.value.findIndex(c => c.instanceId === idToFind || c.id === idToFind)
-
   if (index !== -1) {
     const card = selectedDeck.value[index]
     const invItem = inventory.value.find(inv => inv.id === card.id)
     const bookEl = cardRefs.value[card.id]
     const startEl = document.querySelector('.deck-target')
-
-    if (bookEl && startEl) {
-      animateFlight(card, startEl.getBoundingClientRect(), bookEl.getBoundingClientRect())
-    }
-
+    if (bookEl && startEl) animateFlight(card, startEl.getBoundingClientRect(), bookEl.getBoundingClientRect())
     if (invItem) invItem.count++
     selectedDeck.value.splice(index, 1)
     setSettingValue('hand', [...selectedDeck.value])
     saveCollection(inventory.value)
-
-    // Resume hint timer if we just dropped below full capacity and haven't manually interacted with collection yet
-    if (selectedDeck.value.length < 5 && !isHintDisabled.value) {
-      startHintTimer()
-    }
+    if (selectedDeck.value.length < 5 && !isHintDisabled.value) startHintTimer()
   }
 }
 
@@ -378,17 +288,39 @@ const nextPage = () => {
 const prevPage = () => {
   if (currentPage.value > 0) currentPage.value--
 }
+
 const onNext = () => {
   if (selectedDeck.value.length < 5) return
   playerSelection.value = [...selectedDeck.value]
   setSettingValue('hand', [...selectedDeck.value])
-
-  if (isPracticeMatch.value) {
-    router.push({ name: 'match' })
-  } else {
-    router.push({ name: 'campaign' })
-  }
+  router.push({ name: isPracticeMatch.value ? 'match' : 'campaign' })
 }
+
+// Watch for the "Bankrupt" state
+watch(inventory, (newInv) => {
+  if (!isDbInitialized.value) return
+
+  setTimeout(() => {
+    const coll = typeof userCollection.value === 'string' ? JSON.parse(userCollection.value) : userCollection.value
+    const totalCount = coll?.reduce((sum, c) => sum + c.count, 0) || 0
+    const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
+    const totalInSelection = hand.length
+
+    // Trigger if player has less than 5 cards total, and we aren't already showing the aid
+    if (totalCount + totalInSelection < 5 && !showEmergencyAid.value) {
+      setTimeout(() => {
+        showEmergencyAid.value = true
+      }, 1200)
+    }
+  }, 300)
+}, { deep: true, immediate: true })
+
+const aidAmount = computed(() => {
+  const coll = typeof userCollection.value === 'string' ? JSON.parse(userCollection.value) : userCollection.value
+  const totalCount = coll?.reduce((sum: number, c: any) => sum + c.count, 0) || 0
+  const hand = typeof userHand.value === 'string' ? JSON.parse(userHand.value) : userHand.value
+  return Math.min(7 - (totalCount + (hand?.length || 0)), 3)
+})
 </script>
 
 <style lang="sass" scoped>
@@ -403,61 +335,21 @@ const onNext = () => {
   z-index: 9999
   pointer-events: none
 
-.card-container
-  width: calc(30% - 8px)
-  aspect-ratio: 1 / 1
-  @media (min-width: 450px)
-    width: calc(27% - 8px)
-  @media (max-width: 800px) and (orientation: landscape)
-    width: calc(15% - 8px)
-  @media (min-width: 801px)
-    width: calc(24% - 18px)
-  @media (min-width: 980px)
-    width: calc(18% - 18px)
-  @media (min-width: 1100px)
-    width: calc(15% - 18px)
+.scrollbar-hide
+  -ms-overflow-style: none
+  scrollbar-width: none
 
-.hand-interact-zone
-  pointer-events: auto !important
+  &::-webkit-scrollbar
+    display: none
 
-  :deep(*)
-    pointer-events: auto !important
 
-.landscape-hand
-  :deep(.card-wrapper)
-    width: 52px !important
-    height: 52px !important
-    margin-top: -22px
+:deep(.player-hand)
+  gap: 0 !important
 
 :deep(.card-wrapper)
-  width: 52px !important
-  height: 52px !important
   transition: transform 0.2s ease
-  cursor: pointer !important
-  pointer-events: auto !important
 
   &:hover
     z-index: 100
     transform: scale(1.1)
-
-
-  @media (max-width: 500px) and (orientation: portrait)
-    width: v-bind(isStackedSize) !important
-    height: v-bind(isStackedSize) !important
-
-  @media (max-width: 800px) and (orientation: landscape)
-    width: v-bind(isStackedSize) !important
-    height: v-bind(isStackedSize) !important
-    margin-top: v-bind(isStackedMargin)
-    &:first-child
-      margin-top: 0
-
-  @media (min-width: 801px)
-    width: 90px !important
-    height: 90px !important
-    .landscape &
-      margin-top: -40px
-
-      &:first-child
-        margin-top: 0
 </style>
