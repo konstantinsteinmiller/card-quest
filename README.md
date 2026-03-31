@@ -37,6 +37,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] show campaign finish and all cards collected Reward
   - [x] bounce first collection card if playerSelection < 5 and min 1 card with min 1 count in collection if player is
     not selecting anything
+  - [x] easy mode has 60% chance to make medium move
+  - [x] quick win for first encounter
 
 - [x] static selected cards
   - [x] drag and drop for a card
@@ -123,6 +125,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [x] sound effect for plus, same, combo
   - [x] sound effect Reward continue
   - [x] battle music and switch between main theme and battle theme
+  - [x] main song redo gimini
 
 - [x] Card selection Page
     - [x] animate card selection
@@ -147,10 +150,6 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 - [x] full-version protection for web
 - [ ] search for marketing person
 - [ ] Opt: 2nd card Theme: gibli
--
-- [ ] easy mode has 60% chance to make medium move
-- [x] quick win for first encounter
-- [ ] main song redo gimini
 
 - [ ] Steam page
 

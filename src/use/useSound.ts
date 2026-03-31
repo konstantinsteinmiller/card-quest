@@ -15,7 +15,7 @@ export const useMusic = () => {
 
   watch(userMusicVolume, () => {
     if (!bgMusic.value) return
-    bgMusic.value.volume = userMusicVolume.value * 0.05
+    bgMusic.value.volume = userMusicVolume.value * 0.015
   })
 
   const pauseMusic = () => {
@@ -34,7 +34,6 @@ export const useMusic = () => {
   }
 
   watch(() => route, () => {
-    console.log('route.name: ', route.name, bgMusic.value?.dataset?.name)
     if (bgMusic.value && bgMusic.value?.dataset?.name !== undefined && route.name === 'match') {
       bgMusic.value?.pause()
       const filename = 'battle.ogg'
@@ -58,7 +57,6 @@ export const useMusic = () => {
 
   const initMusic = (filename: string) => {
     onMounted(() => {
-      console.log('initMusic bgMusic.value?.dataset?.name: ', bgMusic.value?.dataset?.name)
       if (bgMusic.value && bgMusic.value?.dataset.name === filename) return // Already initialized
       // 1. Create the audio object
       const audio = new Audio()
@@ -105,7 +103,7 @@ export const useMusic = () => {
     if (!bgMusic.value) return
     let vol = 0
     const interval = setInterval(() => {
-      if (vol < userMusicVolume.value * 0.035) {
+      if (vol < userMusicVolume.value * 0.025) {
         vol += 0.005
         bgMusic.value!.volume = vol
       } else {

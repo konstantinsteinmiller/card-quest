@@ -106,8 +106,14 @@ export const useNPC = (
       })
     })
 
+    /** * EASY Logic: 60% of the time it plays randomly.
+     * The other 40% it ignores this block and uses the Medium/Heuristic logic below.
+     */
     if (difficulty.value === DIFFICULTY.EASY) {
-      return moves[Math.floor(Math.random() * moves.length)]
+      const shouldBeCompletelyRandom = Math.random() < 0.6
+      if (shouldBeCompletelyRandom) {
+        return moves[Math.floor(Math.random() * moves.length)]
+      }
     }
 
     const isLowRule = activeRules.value.includes('low')
