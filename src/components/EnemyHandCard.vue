@@ -21,7 +21,7 @@
         template(v-else)
           //- Card Backside image (Standard hidden hand)
           img.absolute.inset-0.w-full.h-full.object-fill.rounded-lg.shadow-md(
-            src="/images/backside/backside-1_256x256.webp"
+            src="/images/back-face_256x256.webp"
             alt="Card Back"
           )
 </template>

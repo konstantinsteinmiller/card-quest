@@ -148,6 +148,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 - [x] complete Translations
 - [x] full-version protection for web
+- [ ] asset loader step for web build to avoid poping images
 - [ ] search for marketing person
 - [ ] Opt: 2nd card Theme: gibli
 

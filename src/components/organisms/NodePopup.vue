@@ -50,7 +50,7 @@
               img(
                 v-else
                 class="w-full h-full object-fill shadow-md rounded-sm"
-                src="/images/backside/backside-1_256x256.webp"
+                src="/images/back-face_256x256.webp"
                 alt="Card Back"
               )
           //- Rules

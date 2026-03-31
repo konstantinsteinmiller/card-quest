@@ -8,7 +8,7 @@
     )
       //- The reusable fancy frame
       img.absolute.inset-0.w-full.h-full.pointer-events-none(
-        src="/images/frames/fancy-frame_512x512.webp"
+        src="/images/frames/fancy-frame_512x512.png"
         class="z-0 scale-y-[112%] scale-x-[108%] object-fill"
       )
 
