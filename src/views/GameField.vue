@@ -94,7 +94,7 @@
 
 <script setup lang="ts">
 import { onMounted, computed, watch, ref } from 'vue'
-import { useMatch } from '@/use/useMatch'
+import { isPracticeMatch, useMatch } from '@/use/useMatch'
 import { useNPC } from '@/use/useNPC'
 import { useInteraction } from '@/use/useInteraction'
 import PlayerHandCard from '@/components/PlayerHandCard'
@@ -173,7 +173,10 @@ watch(isBoardFull, () => {
   if (isBoardFull.value) {
     setTimeout(() => {
       if (isBoardFull.value) {
-        showTradeModal.value = true
+        showTradeModal.value = !isPracticeMatch ? true : false
+        if (isPracticeMatch) {
+          isGameOver.value = true
+        }
       }
     }, 550)
   } else {

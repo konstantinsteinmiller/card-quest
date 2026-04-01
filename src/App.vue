@@ -8,10 +8,12 @@ import { useMusic } from '@/use/useSound'
 import { useExtensionGuard } from '@/use/useExtensionGuard'
 import { windowWidth, windowHeight } from '@/use/useUser'
 import useCheats from '@/use/useCheats'
+import useAssets from '@/use/useAssets'
 
 const { initMusic, pauseMusic, continueMusic } = useMusic()
 useExtensionGuard()
 useCheats()
+const { resourceCache } = useAssets()
 
 
 initMusic('adventure_main-menu.mp3')

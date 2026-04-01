@@ -12,9 +12,9 @@ export const modelImgPath = (id: string, element: string) => {
     return ''
   }
   if (isChibiTheme.value === true) {
-    return prependBaseUrl(`/models/chibi/${element}/${id}_400x400.webp`)
+    return prependBaseUrl(`models/chibi/${element}/${id}_400x400.webp`)
   }
-  return prependBaseUrl(`/models/${element}/${id}_400x400.webp`)
+  return prependBaseUrl(`models/${element}/${id}_400x400.webp`)
 }
 
 /**

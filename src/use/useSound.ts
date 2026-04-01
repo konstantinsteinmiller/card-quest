@@ -38,7 +38,7 @@ export const useMusic = () => {
       bgMusic.value?.pause()
       const filename = 'battle.ogg'
       bgMusic.value.dataset.name = filename
-      bgMusic.value.src = prependBaseUrl('/audio/music/' + filename)
+      bgMusic.value.src = prependBaseUrl('audio/music/' + filename)
       bgMusic.value.addEventListener('canplaythrough', () => {
         isLoaded.value = true
         playWithFade()
@@ -47,7 +47,7 @@ export const useMusic = () => {
       bgMusic.value?.pause()
       const filename = 'adventure_main-menu.mp3'
       bgMusic.value.dataset.name = filename
-      bgMusic.value.src = prependBaseUrl('/audio/music/' + filename)
+      bgMusic.value.src = prependBaseUrl('audio/music/' + filename)
       bgMusic.value.addEventListener('canplaythrough', () => {
         isLoaded.value = true
         playWithFade()
@@ -60,7 +60,7 @@ export const useMusic = () => {
       if (bgMusic.value && bgMusic.value?.dataset.name === filename) return // Already initialized
       // 1. Create the audio object
       const audio = new Audio()
-      audio.src = prependBaseUrl('/audio/music/' + filename)
+      audio.src = prependBaseUrl('audio/music/' + filename)
       audio.loop = true
       audio.volume = userMusicVolume.value * 0.001
       audio.preload = 'auto'
@@ -120,7 +120,7 @@ const useSounds = () => {
   const { userSoundVolume } = useUser()
 
   const playSound = (effect: string, ratio = 0.025) => {
-    const audio = new Audio(prependBaseUrl(`/audio/sfx/${effect}.ogg`))
+    const audio = new Audio(prependBaseUrl(`audio/sfx/${effect}.ogg`))
     // iOS requires volume to be set BEFORE play()
     audio.volume = userSoundVolume.value * ratio
     audio.play().catch(e => console.warn('SFX play blocked:', e))

@@ -97,9 +97,9 @@
           FButton(
             size="md"
             class="flex-1 btn-battle text-xs sm:text-sm"
+            :is-disabled="selectedDeck.length < 5"
             :disabled="selectedDeck.length < 5"
             :attention="selectedDeck.length === 5"
-            :class="{ 'opacity-50 grayscale': selectedDeck.length < 5 }"
             @click="onNext"
           )
             span.whitespace-nowrap {{ t(isPracticeMatch ? 'battle': 'ready' ) }} ({{ selectedDeck.length }}/5)
@@ -211,10 +211,17 @@ const totalPages = computed(() => Math.ceil(collection.value.length / itemsPerPa
 const paginatedCollection = computed(() => {
   const start = currentPage.value * itemsPerPage.value
   const pageItems = collection.value.slice(start, start + itemsPerPage.value)
+
+  /* if there are too few cards in the last page book add invisible items */
   if (pageItems.length < itemsPerPage.value) {
+    const lastItem = JSON.parse(JSON.stringify(pageItems[pageItems.length - 1]))
     const missingCount = itemsPerPage.value - pageItems.length
-    const addedItems = Array(missingCount).fill(null).map(() => ({ invisible: true }))
-    return [...pageItems, ...addedItems]
+    const addedItems: any = Array(missingCount).fill(null).map((item) => ({
+      ...lastItem,
+      invisible: true
+    }))
+
+    return pageItems.concat(addedItems)
   }
   return pageItems
 })

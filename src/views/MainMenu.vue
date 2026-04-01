@@ -1,6 +1,9 @@
 <template lang="pug">
   div.h-screen.w-screen.bg-slate-200.flex.items-center.justify-center.p-4(class="bg-[url('/images/bg/bg_1024x1024.webp')] bg-cover bg-center")
-    img.absolute(class="left-1/2 top-12 -translate-x-1/2 w-32 h-32 sm:top-4 sm:w-[8rem] sm:h-[8rem] md:w-[10rem] md:h-[10rem] landscape:left-2 landscape:top-2 landscape:-translate-x-0 landscape:md:left-1/2 landscape:md:top-12 landscape:md:-translate-x-1/2" src="/images/logo/logo_512x512.webp" alt="logo")
+    FLogoProgress.absolute(
+      class="left-1/2 top-12 -translate-x-1/2 w-32 h-32 sm:top-4 sm:w-[8rem] sm:h-[8rem] md:w-[10rem] md:h-[10rem] landscape:left-2\
+             landscape:top-2 landscape:-translate-x-0 landscape:md:left-1/2 landscape:md:top-12 landscape:md:-translate-x-1/2"
+    )
 
     // UI Bottom Right (Mute + Version)
     div.absolute.bottom-2.right-2.flex.flex-col.items-end.gap-1
@@ -21,8 +24,8 @@
     )
       // Menu
       div.flex.flex-col.gap-4.relative.z-10
-        FButton(@click="onCampaign") {{ t('play') }}
-        FButton(@click="onPracticeClick") {{ t('practice') }}
+        FButton(@click="onCampaign" :is-disabled="loadingProgress < 100") {{ t('play') }}
+        FButton(@click="onPracticeClick" :is-disabled="loadingProgress < 100") {{ t('practice') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
         FButton(v-if="isNative" type="secondary" @click="handleExit") {{ t('quitApp') }}
 
@@ -41,10 +44,13 @@ import FButton from '@/components/atoms/FButton'
 import { activeRules, isPracticeMatch } from '@/use/useMatch'
 import useUser, { version, isDemo, isNative } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
+import FLogoProgress from '@/components/atoms/FLogoProgress'
+import useAssets from '@/use/useAssets'
 
 const router = useRouter()
 const { t } = useI18n()
 const { userSoundVolume, userMusicVolume, setSettingValue } = useUser()
+const { loadingProgress } = useAssets()
 
 const showOptions = ref(false)
 
@@ -76,10 +82,12 @@ const toggleMute = () => {
 }
 
 const onCampaign = () => {
+  if (loadingProgress.value < 100) return
   router.push({ name: 'deck' })
 }
 
 const onPracticeClick = () => {
+  if (loadingProgress.value < 100) return
   isPracticeMatch.value = true
   router.push({ name: 'deck', query: isPracticeMatch.value ? { practice: 'true' } : undefined })
 }

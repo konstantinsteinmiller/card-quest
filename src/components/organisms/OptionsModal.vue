@@ -45,17 +45,17 @@ const tabs = computed(() => {
     const list = [
       {
         value: 'general', label: t('general'),
-        icon: prependBaseUrl('/images/icons/settings-icon_128x128.webp')
+        icon: prependBaseUrl('images/icons/settings-icon_128x128.webp')
       },
       {
         value: 'diff', label: t('difficulty'),
-        icon: prependBaseUrl('/images/icons/difficulty-icon_128x128.webp')
+        icon: prependBaseUrl('images/icons/difficulty-icon_128x128.webp')
       }
     ]
     return !isMobile.value ? list.concat({
       label: t('audio'),
       value: 'audio',
-      icon: prependBaseUrl('/images/icons/sound-icon_128x128.webp')
+      icon: prependBaseUrl('images/icons/sound-icon_128x128.webp')
     }) : list
   }
 )

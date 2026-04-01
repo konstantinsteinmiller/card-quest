@@ -4,6 +4,7 @@ import { computed } from 'vue'
 interface Props {
   label?: string
   type?: 'primary' | 'secondary'
+  isDisabled?: boolean
   colorFrom?: string
   colorTo?: string
   shadowColor?: string
@@ -41,12 +42,13 @@ const theme = computed(() => {
   div(
     class="w-full"
     :class="{\
-    'scale-60' : size === 'sm',\
-    'scale-80' : size === 'md',\
-    'scale-110' : size === 'lg',\
-    'scale-120' : size === 'xl',\
-    'attention-bounce': attention\
-  }"
+      'scale-60' : size === 'sm',\
+      'scale-80' : size === 'md',\
+      'scale-110' : size === 'lg',\
+      'scale-120' : size === 'xl',\
+      'attention-bounce': attention,\
+      'opacity-50 grayscale': isDisabled\
+    }"
   )
     button(
       type="button"

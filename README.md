@@ -142,13 +142,14 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [ ] build for android
   - [ ] build for ios
   - [ ] Crazy Web games SDK
+    - [ ] pass QA of Crazy Web Games Basic Launch
     - [ ] make game launchable
     - [ ] ads
     - [ ] performance tracking
 
 - [x] complete Translations
 - [x] full-version protection for web
-- [ ] asset loader step for web build to avoid poping images
+- [x] asset loader step for web build to avoid poping images FLogoProgress
 - [ ] search for marketing person
 - [ ] Opt: 2nd card Theme: gibli
 
