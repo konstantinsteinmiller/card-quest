@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { orientation } from '@/use/useUser'
+import { isCrazyWeb, orientation } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 import RuleExplainModal from '@/components/organisms/RuleExplainModal'
 import { useMusic } from '@/use/useSound'
@@ -94,13 +94,25 @@ onUnmounted(() => {
   document.removeEventListener('gesturestart', onGestureStart)
   portraitQuery.removeEventListener('change', onOrientationChange)
 })
+
+function isCrazyGamesUrl() {
+  const hostname = window.location.hostname
+  const parts = hostname.split('.')
+  const idx = parts.indexOf('crazygames')
+  return idx !== -1 && idx >= parts.length - 3
+}
+
+const allowedToShow = computed(() => (isCrazyWeb && isCrazyGamesUrl()) || !isCrazyWeb)
 </script>
 
 <template lang="pug">
-  div(id="app-root").h-screen.w-screen.app-container.root-protection.game-ui-immune
+  div(v-if="allowedToShow" id="app-root").h-screen.w-screen.app-container.root-protection.game-ui-immune
     RouterView
 
     RuleExplainModal
+  div.relative.w-full.h-full(v-else-if="isCrazyWeb")
+    h1.absolute(class="left-1/2 -translate-x-[50%] top-1/2 -translate-y-[50%] text-3xl") This game is only available on
+      span.ml-2.text-amber-500 CrazyGames.com
 </template>
 
 <style lang="sass">

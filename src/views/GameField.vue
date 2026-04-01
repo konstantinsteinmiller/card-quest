@@ -178,8 +178,8 @@ watch(isBoardFull, () => {
   if (isBoardFull.value) {
     setTimeout(() => {
       if (isBoardFull.value) {
-        showTradeModal.value = !isPracticeMatch ? true : false
-        if (isPracticeMatch) {
+        showTradeModal.value = !isPracticeMatch.value ? true : false
+        if (isPracticeMatch.value) {
           isGameOver.value = true
         }
       }

@@ -143,6 +143,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
   - [ ] build for ios
   - [ ] Crazy Web games SDK
     - [ ] pass QA of Crazy Web Games Basic Launch
+    - [x] add obfuscation for native and crazy build
+    - [x] sitelock for crazywebgames domains
     - [ ] make game launchable
     - [ ] ads
     - [ ] performance tracking
