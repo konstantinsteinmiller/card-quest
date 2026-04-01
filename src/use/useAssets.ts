@@ -42,7 +42,14 @@ const STATIC_IMAGES = [
 
 const BG_IMAGE = [
   '/images/board/papyrus-tile_128x128.webp',
-  '/images/bg/bg_1024x1024.webp'
+  'images/board/papyrus-tile_128x128.webp',
+  './images/board/papyrus-tile_128x128.webp',
+  '/images/bg/bg_1024x1024.webp',
+  'images/bg/bg_1024x1024.webp',
+  './images/bg/bg_1024x1024.webp',
+  '/images/back-face_256x256.webp',
+  'images/back-face_256x256.webp',
+  './images/back-face_256x256.webp'
 ]
 
 // 1. We define the raw paths without any prefixes

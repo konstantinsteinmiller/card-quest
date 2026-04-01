@@ -1,6 +1,6 @@
 <template lang="pug">
   //- Container with dynamic glow and border colors
-  div.flex.items-center.rounded-md.border.transition-all.duration-500(
+  div.npc-badge.flex.items-center.rounded-md.border.transition-all.duration-500(
     class="px-2 gap-1.5 py-0.5"
     :class="[\
       isGrandmaster ? 'bg-amber-900/30 border-amber-500/50' : 'bg-slate-800/40 border-indigo-600/50',\

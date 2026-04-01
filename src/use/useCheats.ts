@@ -8,7 +8,6 @@ const storedCheat = localStorage.getItem('cheat') || 'false'
 const isCheat = ref<boolean>(JSON.parse(storedCheat))
 
 
-
 const useCheats = () => {
   if (!isCheat.value) return {}
   const { saveCampaign } = useCampaign()
@@ -30,7 +29,7 @@ const useCheats = () => {
   }
 
   const unlockAllCampaignNodes = () => {
-    campaignNodes.value = campaignNodes.value.map(node => ({ ...node, completed: true }))
+    campaignNodes.value = campaignNodes.value.map(node => ({ ...node, completed: true, unlocked: true }))
     console.warn('[CHEAT] All campaign nodes completed.')
   }
 

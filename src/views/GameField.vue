@@ -43,16 +43,21 @@
     div.flex.items-center.justify-center.w-full.h-full.gap-1(
       class="flex-col landscape:flex-row lg:flex-row lg:gap-4"
     )
-      //- NPC Hand
-      div.hand-container.flex-shrink-0.flex.items-center.justify-center.w-full(
+      //- NPC Hand (Synchronized with Player Hand structure)
+      div.hand-container.relative.flex-shrink-0.flex.items-center.justify-center.w-full.transition-all.duration-300(
         class="h-auto landscape:w-auto landscape:h-full"
       )
-        div.flex.flex-col.items-center.gap-0
-          NpcBadge.-mt-2(v-if="activeRules.includes('open') && userDifficulty === 'hard'" :is-grandmaster="isGrandmasterMatch" :is-thinking="isThinking")
-          EnemyHandCard(
-            :cards="npcHand"
-            :is-active="turn === 'npc'"
-          )
+        //NpcBadge.-mt-2.absolute.top-0(
+        //  v-if="activeRules.includes('open') && userDifficulty === 'hard'"
+        //  :is-grandmaster="isGrandmasterMatch"
+        //  :is-thinking="isThinking"
+        //  class="left-1/2 -translate-x-1/2"
+        //)
+        EnemyHandCard.flex-1.w-full(
+          :class="turn === 'npc' ? 'opacity-100' : 'opacity-40 grayscale-[50%]'"
+          :cards="npcHand"
+          :is-active="turn === 'npc'"
+        )
 
       //- 3x3 Board
       div.flex.items-center.justify-center.p-1(
