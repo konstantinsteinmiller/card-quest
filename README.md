@@ -141,8 +141,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] exit button for native games
   - [ ] build for android
   - [ ] build for ios
+  - [ ] Poki.io launch
   - [ ] Crazy Web games SDK
-    - [ ] pass QA of Crazy Web Games Basic Launch
+    - [x] pass QA of Crazy Web Games Basic Launch
     - [x] add obfuscation for native and crazy build
     - [x] sitelock for crazywebgames domains
     - [ ] make game launchable

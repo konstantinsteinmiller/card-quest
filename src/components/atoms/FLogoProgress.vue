@@ -3,7 +3,7 @@
     div(class="relative flex flex-col items-center")
 
       //- Logo Progress Container
-      div(class="relative w-full h-full sm:w-32 sm:h-32")
+      div(class="relative w-32 h-32 sm:w-32 sm:h-32")
         //- Background (Grayscale)
         img(
           src="/images/logo/logo_512x512.webp" alt="logo loader"
