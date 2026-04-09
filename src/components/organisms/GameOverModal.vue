@@ -6,6 +6,7 @@ import FModal from '@/components/molecules/FModal'
 import FButton from '@/components/atoms/FButton'
 import { activeNode, type CampaignNode, useCampaign } from '@/use/useCampaign'
 import { isPracticeMatch, originalNpcHand } from '@/use/useMatch.ts'
+import { showMidgameAd } from '@/use/useCrazyGames'
 
 const props = defineProps<{
   isOpen: boolean
@@ -53,16 +54,28 @@ watch(() => props.isBoardFull, () => {
   areKnownCardsSaved.value = true
 })
 
-const onContinue = () => {
+const onContinue = async () => {
   if (isPracticeMatch.value || !activeNode?.value) {
     emit('reset')
     return
   }
+  // Every campaign game ends here. Play a CrazyGames interstitial before
+  // we hand the player back to the campaign map. `showMidgameAd` is a
+  // silent no-op outside the full CG release / when the SDK isn't active,
+  // so this is safe to call unconditionally.
+  await showMidgameAd()
   emit('reset')
   router.push({ name: 'campaign' })
 }
 
-const onBackToMenu = () => {
+const onBackToMenu = async () => {
+  // Same midgame-ad gate as onContinue: a campaign match just ended, so
+  // play the interstitial before letting the player escape to the main
+  // menu. Practice matches and modal dismissals without an active node
+  // skip the ad. No-op outside the full CG release.
+  if (!isPracticeMatch.value && activeNode?.value) {
+    await showMidgameAd()
+  }
   emit('reset')
   router.push({ name: 'main-menu' })
 }

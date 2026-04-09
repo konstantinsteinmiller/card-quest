@@ -13,6 +13,7 @@ const chibiSaved = localStorage.getItem('chibi') || 'false'
 export const isDebug = ref(!!JSON.parse(debugSaved))
 export const isCampaignTest = ref(!!JSON.parse(campaignTestSaved))
 export const isChibiTheme = ref(!!JSON.parse(chibiSaved))
+export const isCrazyGamesFullRelease = import.meta.env.VITE_APP_CRAZY_GAMES_FULL_RELEASE === 'true'
 
 export const isSplashScreenVisible = ref<boolean>(false)
 export const isDbInitialized = ref<boolean>(false)

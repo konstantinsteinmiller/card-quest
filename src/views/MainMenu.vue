@@ -41,29 +41,48 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import OptionsModal from '@/components/organisms/OptionsModal'
 import FButton from '@/components/atoms/FButton'
-import { activeRules, isPracticeMatch } from '@/use/useMatch'
+import { activeRules, isPracticeMatch, isDbInitialized } from '@/use/useMatch'
 import useUser, { version, isDemo, isNative, isCrazyWeb } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 import FLogoProgress from '@/components/atoms/FLogoProgress'
 import useAssets from '@/use/useAssets'
+import { isSdkActive, crazyLocale } from '@/use/useCrazyGames'
+import { LANGUAGES } from '@/utils/enums'
 
 const router = useRouter()
-const { t } = useI18n()
-const { userSoundVolume, userMusicVolume, setSettingValue } = useUser()
+const { t, locale } = useI18n()
+const { userSoundVolume, userMusicVolume, userLanguage, setSettingValue } = useUser()
 const { loadingProgress } = useAssets()
 
 const showOptions = ref(false)
 
-// Logic to determine if muted based on current volumes
+// Logic to determine if muted based on current volumes. The actual
+// SDK <-> volumes sync happens globally in App.vue so it works in any
+// view, not just the menu.
 const isMuted = computed(() => userMusicVolume.value === 0 && userSoundVolume.value === 0)
 
 // Store previous volumes to restore them when unmuting
-const prevMusicVol = ref(userMusicVolume.value || 0.5)
+const prevMusicVol = ref(userMusicVolume.value || 0.15)
 const prevSoundVol = ref(userSoundVolume.value || 0.7)
 
 onMounted(() => {
   isPracticeMatch.value = false
   activeRules.value = ['high']
+
+  if (isSdkActive.value) {
+    // Push the CrazyGames system locale into our user language setting,
+    // but only when the player hasn't explicitly chosen one yet (i.e.
+    // they're still on the default we picked at app boot) and the
+    // locale we got back is one of our supported translations.
+    const sdkLang = crazyLocale.value
+    if (sdkLang && LANGUAGES.includes(sdkLang) && userLanguage.value !== sdkLang) {
+      const persistedLang = isDbInitialized.value ? userLanguage.value : null
+      if (!persistedLang || persistedLang === 'en') {
+        setSettingValue('language', sdkLang)
+        locale.value = sdkLang
+      }
+    }
+  }
 })
 
 const toggleMute = () => {
@@ -79,6 +98,7 @@ const toggleMute = () => {
     setSettingValue('music', prevMusicVol.value || 0.5)
     setSettingValue('sound', prevSoundVol.value || 0.7)
   }
+  // The global watcher in App.vue forwards the new mute state to the SDK.
 }
 
 const onCampaign = () => {

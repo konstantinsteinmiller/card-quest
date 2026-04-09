@@ -91,7 +91,7 @@ const doResetProgress = () => {
     div(v-if="currentTab === 'general'")
       div(class="flex flex-col gap-2 p-2")
         //- Language Selection
-        div(class="z-[100] flex flex-col gap-2 scale-80 sm:scale-100")
+        div(class="z-[10] flex flex-col gap-2 scale-80 sm:scale-100")
           FSelect(
             class="!text-[10px] md:text-[12px]"
             :label="t('language')"

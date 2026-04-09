@@ -1,9 +1,29 @@
 import type { Ref } from 'vue'
 import { isDbInitialized, isSplashScreenVisible } from '@/use/useMatch'
 import clonedeep from 'lodash.clonedeep'
+import { isSdkActive, getSdkItem, setSdkItem } from '@/use/useCrazyGames'
 
 
 let db: any
+
+// All keys we mirror to the CrazyGames data module. Kept in lockstep with
+// the indexedDB indices below so progress can roam between devices when the
+// player is signed in. The indexedDB store remains the source of truth for
+// non-crazy builds and as a same-device fallback when the SDK is active.
+const SDK_DATA_KEYS = [
+  'userDifficulty',
+  'userSoundVolume',
+  'userMusicVolume',
+  'userLanguage',
+  'userSkipRulesModal',
+  'userUnlocked',
+  'userTutorialsDoneMap',
+  'userHand',
+  'userCollection',
+  'userCampaign',
+  'userQuestCampaign',
+  'userQuestCards'
+] as const
 
 const useUserDb = ({
                      userDifficulty,
@@ -74,7 +94,7 @@ const useUserDb = ({
     // Open transaction, get object store, and get() each video by name
     const objectStore = db.transaction('user_os').objectStore('user_os')
     const request = objectStore.get('user')
-    request.addEventListener('success', () => {
+    request.addEventListener('success', async () => {
       // If the result exists in the database (is not undefined)
       // console.log('request.result: ', request.result)
       if (request.result) {
@@ -123,6 +143,17 @@ const useUserDb = ({
           userCampaign: userCampaign.value
         })
       }
+
+      // When the CrazyGames SDK is active its data module is the source of
+      // truth (it roams across devices). After we've populated everything
+      // from the local indexedDB cache, override any keys that the SDK has
+      // a value for. We intentionally only override when the SDK actually
+      // returns a non-null value so a brand new CG account doesn't wipe
+      // existing local progress.
+      if (isSdkActive.value) {
+        await hydrateFromSdk()
+      }
+
       isDbInitialized.value = true
 
       setTimeout(() => {
@@ -132,6 +163,67 @@ const useUserDb = ({
     request.addEventListener('error', () => {
       isSplashScreenVisible.value = false
     })
+  }
+
+  // Pull every persisted setting from the CrazyGames data module and
+  // overwrite the corresponding local ref. Each field is wrapped in its
+  // own try/catch so a single corrupt entry can't block the rest from
+  // hydrating.
+  async function hydrateFromSdk() {
+    const apply = (key: string, raw: string | null) => {
+      if (raw == null) return
+      try {
+        switch (key) {
+          case 'userDifficulty':
+            userDifficulty.value = raw as any
+            break
+          case 'userSoundVolume':
+            userSoundVolume.value = Number(raw)
+            break
+          case 'userMusicVolume':
+            userMusicVolume.value = Number(raw)
+            break
+          case 'userLanguage':
+            userLanguage.value = raw as any
+            break
+          case 'userSkipRulesModal':
+            userSkipRulesModal.value = JSON.parse(raw)
+            break
+          case 'userUnlocked':
+            userUnlocked.value = JSON.parse(raw)
+            break
+          case 'userTutorialsDoneMap':
+            userTutorialsDoneMap.value = JSON.parse(raw)
+            break
+          case 'userHand':
+            userHand.value = JSON.parse(raw)
+            break
+          case 'userCollection':
+            userCollection.value = JSON.parse(raw)
+            break
+          case 'userCampaign':
+            userCampaign.value = JSON.parse(raw)
+            break
+          case 'userQuestCampaign':
+            userQuestCampaign.value = JSON.parse(raw)
+            break
+          case 'userQuestCards':
+            userQuestCards.value = JSON.parse(raw)
+            break
+        }
+      } catch (e) {
+        console.warn(`[crazygames] hydrate field "${key}" failed`, e)
+      }
+    }
+
+    // Fetch all keys in parallel — the SDK's data module is async and
+    // there's no benefit to serializing them.
+    await Promise.all(
+      SDK_DATA_KEYS.map(async (key) => {
+        const value = await getSdkItem(key)
+        apply(key, value)
+      })
+    )
   }
 
   // Define the storeUser() function
@@ -181,6 +273,20 @@ const useUserDb = ({
 
     // request.addEventListener('success', () => console.log('Record update attempt finished'))
     request.addEventListener('error', () => console.error(request.error))
+
+    // Mirror to the CrazyGames data module so progress survives a device
+    // change. Values that are already JSON-stringified above are written
+    // straight through; primitives are coerced to a string so the SDK
+    // (which only accepts strings) doesn't reject them. The mirror is a
+    // no-op when the SDK is inactive.
+    if (isSdkActive.value) {
+      for (const key of SDK_DATA_KEYS) {
+        const v = (record as any)[key]
+        if (v === undefined || v === null) continue
+        const serialized = typeof v === 'string' ? v : String(v)
+        setSdkItem(key, serialized)
+      }
+    }
   }
 
   return { storeUser }

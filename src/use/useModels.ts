@@ -296,7 +296,7 @@ const useModels = () => {
     { id: 'turtoise-old', name: 'Quadoire', element: ELEMENTS.WATER, values: { top: 5, right: 6, bottom: 10, left: 8 } }
   ]
 
-  const { setSettingValue, userCollection } = useUser()
+  const { setSettingValue, userCollection, userHand } = useUser()
 
   const saveCollection = (collection: Array<InventoryCard | StoredCollectionCard>) => {
     const storedCollection: StoredCollectionCard[] = collection.map(card => ({ id: card.id, count: card.count }))
@@ -389,7 +389,13 @@ const useModels = () => {
 
   watch(isDbInitialized, () => {
     if (storedCollection.value.length >= 1 && storedCollection.value.every((card: StoredCollectionCard) => card.count === 0)) {
-      saveCollection(cardCollection)
+      // Only refill the default starter collection if the player also has no cards in their hand.
+      // Otherwise the player legitimately drained their collection into their hand and we'd duplicate cards.
+      const handRaw = userHand.value
+      const hand = typeof handRaw === 'string' ? JSON.parse(handRaw || '[]') : (handRaw || [])
+      if (!Array.isArray(hand) || hand.length === 0) {
+        saveCollection(cardCollection)
+      }
     }
   }, { immediate: true, once: true })
 

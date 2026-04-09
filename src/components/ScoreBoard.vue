@@ -26,7 +26,7 @@
       )
         span(class="text-xs sm:text-lg landscape:text-xs") 🧚
       div.flex.flex-col
-        span.uppercase.tracking-widest.text-blue-300(class="text-[10px] leading-tight hidden sm:block landscape:hidden") Player
+        span.uppercase.tracking-widest.text-blue-300(class="text-[10px] leading-tight hidden sm:block landscape:hidden") {{ playerLabel }}
         span.font-black.leading-none(class="text-lg sm:text-2xl landscape:text-lg") {{ scores.player }}
 </template>
 
@@ -35,6 +35,7 @@ import { computed } from 'vue'
 import type { BoardSlot, GameCard } from '@/types/game'
 import { useMatch } from '@/use/useMatch'
 import RuleIcon from '@/components/atoms/RuleIcon.vue'
+import { crazyPlayerName } from '@/use/useCrazyGames'
 
 const props = defineProps<{
   board: BoardSlot[][]
@@ -43,6 +44,10 @@ const props = defineProps<{
 }>()
 
 const { activeRules } = useMatch()
+
+// Show the CrazyGames username when we have one (player is signed in on
+// crazygames.com), otherwise fall back to the generic 'Player' label.
+const playerLabel = computed(() => crazyPlayerName.value || 'Player')
 
 const scores = computed(() => {
   let pCount = props.playerHand.length

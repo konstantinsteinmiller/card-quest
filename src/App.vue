@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { isCrazyWeb, orientation } from '@/use/useUser'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import useUser, { isCrazyWeb, orientation } from '@/use/useUser'
 import { mobileCheck } from '@/utils/function'
 import RuleExplainModal from '@/components/organisms/RuleExplainModal'
 import { useMusic } from '@/use/useSound'
@@ -9,11 +9,93 @@ import { useExtensionGuard } from '@/use/useExtensionGuard'
 import { windowWidth, windowHeight } from '@/use/useUser'
 import useCheats from '@/use/useCheats'
 import useAssets from '@/use/useAssets'
+import { isDbInitialized } from '@/use/useMatch'
+import {
+  isSdkActive,
+  setCrazyMuted,
+  onCrazyMuteChange
+} from '@/use/useCrazyGames'
 
 const { initMusic, pauseMusic, continueMusic } = useMusic()
 useExtensionGuard()
 useCheats()
 const { resourceCache } = useAssets()
+
+// ─── CrazyGames mute sync (global, route-independent) ──────────────────────
+//
+// Lives in App.vue (rather than MainMenu) so the platform-side mute toggle
+// from the CrazyGames chrome controls in-game audio no matter which view
+// the player is currently on.
+//
+// Direction of truth: the CG SDK is the source of truth for the mute state
+// — there's no public setter, the platform chrome owns it. We listen for
+// changes and mirror them into our local sound/music volumes, remembering
+// the previous values so we can restore them on unmute. We also propagate
+// in-game mute toggles into our shared `isSdkMuted` ref so any other code
+// reading it stays consistent (the SDK side won't change, but our app
+// state does).
+
+const { userSoundVolume, userMusicVolume, setSettingValue } = useUser()
+
+const isMuted = computed(() =>
+  userMusicVolume.value === 0 && userSoundVolume.value === 0
+)
+const prevMusicVol = ref(userMusicVolume.value || 0.5)
+const prevSoundVol = ref(userSoundVolume.value || 0.7)
+
+const applyLocalMuteToVolumes = (muted: boolean) => {
+  if (muted && !isMuted.value) {
+    // Save current values before zeroing them so we can restore on unmute.
+    if (userMusicVolume.value > 0) prevMusicVol.value = userMusicVolume.value
+    if (userSoundVolume.value > 0) prevSoundVol.value = userSoundVolume.value
+    setSettingValue('music', 0)
+    setSettingValue('sound', 0)
+  } else if (!muted && isMuted.value) {
+    setSettingValue('music', prevMusicVol.value || 0.5)
+    setSettingValue('sound', prevSoundVol.value || 0.7)
+  }
+}
+
+let unsubscribeCrazyMute: (() => void) | null = null
+
+// Subscribe to platform-side mute toggles. `onCrazyMuteChange` immediately
+// replays the *current* SDK mute state to the new subscriber (when known),
+// so this single hook covers both the initial sync and future toggles —
+// no separate "apply once" watcher needed.
+//
+// We do still gate on `isDbInitialized` for the very first apply so we
+// don't fight the indexedDB hydration: if the DB isn't ready, we defer
+// the apply until it is. After that, every subsequent SDK toggle goes
+// through immediately.
+const pendingInitialMute = ref<boolean | null>(null)
+
+const handleSdkMute = (muted: boolean) => {
+  if (!isDbInitialized.value) {
+    pendingInitialMute.value = muted
+    return
+  }
+  applyLocalMuteToVolumes(muted)
+}
+
+watch(isDbInitialized, (ready) => {
+  if (!ready || pendingInitialMute.value === null) return
+  applyLocalMuteToVolumes(pendingInitialMute.value)
+  pendingInitialMute.value = null
+})
+
+onMounted(() => {
+  unsubscribeCrazyMute = onCrazyMuteChange(handleSdkMute)
+})
+onUnmounted(() => {
+  unsubscribeCrazyMute?.()
+  unsubscribeCrazyMute = null
+})
+
+// Forward in-game mute toggles into the shared `isSdkMuted` ref so the
+// rest of the app stays coherent. There's no platform-side setter to call.
+watch(isMuted, (muted) => {
+  if (isSdkActive.value) setCrazyMuted(muted)
+})
 
 
 initMusic('adventure_main-menu.mp3')
@@ -98,6 +180,7 @@ onUnmounted(() => {
 function isCrazyGamesUrl() {
   const hostname = window.location.hostname
   const parts = hostname.split('.')
+  if (parts.includes('localhost')) return true
   const idx = parts.indexOf('crazygames')
   return idx !== -1 && idx >= parts.length - 3
 }

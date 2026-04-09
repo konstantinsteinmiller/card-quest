@@ -98,8 +98,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, watch, ref } from 'vue'
+import { onMounted, onBeforeUnmount, computed, watch, ref } from 'vue'
 import { isPracticeMatch, useMatch } from '@/use/useMatch'
+import { startGameplay, stopGameplay } from '@/use/useCrazyGames'
 import { useNPC } from '@/use/useNPC'
 import { useInteraction } from '@/use/useInteraction'
 import PlayerHandCard from '@/components/PlayerHandCard'
@@ -151,8 +152,43 @@ const {
 const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'high'))
 
+const isGameOver = ref<boolean>(false)
+const showTradeModal = ref<boolean>(false)
+
+// True only while the player can actually interact with the board:
+//   - mounted in the arena view
+//   - rules intro modal not blocking input (matches the modal's own
+//     `showRules && nonStandardRules.length > 0` visibility gate)
+//   - trade screen not blocking input
+//   - game over modal not up
+//
+// We drive `gameplayStart()` / `gameplayStop()` off this single computed
+// so the CrazyGames platform sees an accurate picture of "the player is
+// actually playing" — which is what their docs ask for. Both helpers in
+// useCrazyGames are idempotent, so flipping rapidly is safe.
+const isMounted = ref(false)
+const isRulesModalBlocking = computed(() =>
+  showRules.value && nonStandardRules.value.length > 0
+)
+const isActivelyPlaying = computed(() =>
+  isMounted.value &&
+  !isRulesModalBlocking.value &&
+  !showTradeModal.value &&
+  !isGameOver.value
+)
+
+watch(isActivelyPlaying, (playing) => {
+  if (playing) startGameplay()
+  else stopGameplay()
+}, { immediate: false })
+
 onMounted(() => {
   resetGame(activeNode)
+  isMounted.value = true
+  // If we're not opening on top of a blocking modal, fire the initial
+  // gameplayStart immediately. (The watcher above is `immediate: false`
+  // because at script-setup time `isActivelyPlaying` is still false.)
+  if (isActivelyPlaying.value) startGameplay()
 
   // // Show dialogue if node has a description and we haven't seen it yet this session
   // if (activeNode.value?.description) {
@@ -171,8 +207,14 @@ onMounted(() => {
 // Update handleDrop and handleSlotTap to check isInitialDialogueDone
 // const canInteract = computed(() => turn.value === 'player' && isInitialDialogueDone.value)
 
-const isGameOver = ref<boolean>(false)
-const showTradeModal = ref<boolean>(false)
+onBeforeUnmount(() => {
+  // Leaving the arena view — let the CG SDK know gameplay has ended so
+  // platform UI / ad pacing can resume their menu state. The watcher
+  // would also fire on `isMounted=false`, but stopping explicitly here
+  // is robust against teardown ordering.
+  isMounted.value = false
+  stopGameplay()
+})
 
 watch(isBoardFull, () => {
   if (isBoardFull.value) {
